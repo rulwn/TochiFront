@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@600&display=swap');
+
 * {
     margin: 0;
     padding: 0;
@@ -5,7 +7,7 @@
 }
 
 body {
-    font-family: Arial, sans-serif;
+    font-family: 'Poppins', sans-serif;
 }
 
 .navbar {
@@ -13,34 +15,116 @@ body {
     align-items: center;
     justify-content: space-between;
     background-color: white;
+    padding: 25px 2% 20px; /* Aumentado padding-top a 25px y bottom a 20px */
     position: relative;
-    padding: 10px 20px;
+    height: 85px; /* Aumentada la altura total */
 }
 
-.navbar img {
-    height: 50px;
+.logo-link {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.logo-link img {
+    height: 40px; /* Ajustamos tamaño del logo */
+    width: auto;
+    object-fit: contain;
+}
+
+.location-container {
     position: absolute;
     left: 50%;
     transform: translateX(-50%);
+    top: 60px; /* Posición debajo del logo */
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 12px;
+    white-space: nowrap;
 }
-
 
 .nav-options {
     display: flex;
     align-items: center;
     gap: 30px;
+    margin-left: auto;
+    height: 100%; /* Para alinear verticalmente los items */
 }
 
 .nav-item {
     display: flex;
     flex-direction: column;
     align-items: center;
+    justify-content: center; /* Centrado vertical */
     text-decoration: none;
     color: black;
     font-size: 14px;
+    gap: 5px; /* Espacio entre icono y texto */
+    height: 100%; /* Para alinear verticalmente */
+    padding: 5px 0; /* Padding interno para los items */
+    transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94); /* Animación más suave */
+    position: relative;
+    overflow: visible; /* Permite que el círculo se muestre correctamente */
+    z-index: 1; /* Asegura que el item esté por encima del círculo */
 }
 
-.nav-item img {
-    width: 29px;
-    height: 26px;
+.nav-item svg {
+    color: black;
+    flex-shrink: 0;
+    position: relative; /* Para el z-index */
+    z-index: 2; /* Coloca el icono sobre el círculo */
+    transition: all 0.3s ease;
+} 
+
+/* Círculo de fondo animado */
+.nav-item::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 0;
+    height: 0;
+    background: rgba(0, 191, 99, 0.2); /* Verde translúcido */
+    border-radius: 50%;
+    transform: translate(-50%, -50%);
+    transition: all 0.4s cubic-bezier(0.68, -0.55, 0.27, 1.55);
+    z-index: 1;
+}
+
+.nav-item:hover::before {
+    width: 50px;
+    height: 50px;
+    opacity: 0.3;
+}
+
+/* ELIMINADO el estilo .nav-item.active::before */
+
+/* Efectos hover */
+.nav-item:hover svg,
+.nav-item:hover {
+    color: #00BF63;
+    transform: translateY(-2px) scale(1.05);
+}
+
+/* Estilo active (solo cambia color, sin transformaciones) */
+.nav-item.active svg,
+.nav-item.active {
+    color: #00BF63;
+}
+
+/* Quitar animación pulsante (eliminado el @keyframes y su aplicación) */
+
+/* Ajuste para pantallas pequeñas */
+@media (max-width: 768px) {
+    .navbar {
+        padding: 20px 2% 15px;
+        height: 80px;
+    }
+    
+    .nav-item:hover::before {
+        width: 40px;
+        height: 40px;
+    }
 }
