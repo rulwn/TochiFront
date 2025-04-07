@@ -6,9 +6,9 @@
     box-sizing: border-box;
 }
 
-body {
+body, .nav-item, .product-card {
     font-family: 'Poppins', sans-serif;
-}
+  }
 
 .navbar {
     display: flex;
@@ -52,6 +52,30 @@ body {
     margin-left: auto;
     height: 100%; /* Para alinear verticalmente los items */
 }
+
+.cart-container {
+    position: relative;
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+  }
+  
+  .cart-badge {
+    position: absolute;
+    top: -5px;
+    right: -10px;
+    background-color: #00BF63;
+    color: white;
+    border-radius: 50%;
+    width: 18px;
+    height: 18px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 10px;
+    font-weight: bold;
+    pointer-events: none; /* Para que no interfiera con los clicks */
+  }
 
 .nav-item {
     display: flex;
