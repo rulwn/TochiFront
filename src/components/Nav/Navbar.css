@@ -28,7 +28,7 @@ body, .nav-item, .product-card {
 }
 
 .logo-link img {
-    height: 40px; /* Ajustamos tamaño del logo */
+    height: 50px; /* Ajustamos tamaño del logo */
     width: auto;
     object-fit: contain;
 }
@@ -37,7 +37,7 @@ body, .nav-item, .product-card {
     position: absolute;
     left: 50%;
     transform: translateX(-50%);
-    top: 60px; /* Posición debajo del logo */
+    top: 70px; /* Posición debajo del logo */
     display: flex;
     align-items: center;
     gap: 5px;
