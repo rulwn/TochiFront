@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import ProductCard from '../../components/Products/ProductCard';
 import CategoriesCard from '../../components/Products/CategoriesCard';
 import './Home.css';
-
+import SearchBar from '../../components/Search Bar/Search'; 
 function Home({ onAddToCart, cartItems }) {
   // Datos de productos destacados
   const featuredProducts = [
@@ -67,6 +67,8 @@ function Home({ onAddToCart, cartItems }) {
 
   return (
     <div className="home-container">
+      <SearchBar />
+      <br />
       <h1>Bienvenido a Tochi</h1>
       <p>Descubre nuestros productos exclusivos y ofertas especiales.</p>
 
