@@ -1,6 +1,6 @@
 import React from 'react';
 import '../Nav/Navbar.css';
-import logo from '../../assets/logo.png';
+import logo from '../../assets/Logo.png';
 import { Link, useLocation } from 'react-router-dom';
 import { LuTextSearch, LuUser, LuStore, LuShoppingCart, LuMapPin } from "react-icons/lu";
 import { MdOutlineNewspaper } from "react-icons/md";
