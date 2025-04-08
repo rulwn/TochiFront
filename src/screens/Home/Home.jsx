@@ -70,8 +70,6 @@ function Home({ onAddToCart, cartItems }) {
     <div className="home-container">
       <SearchBar />
       <br />
-      <h1>Bienvenido a Tochi</h1>
-      <p>Descubre nuestros productos exclusivos y ofertas especiales.</p>
       <br />  
       {/* Sección del carrusel */}
       <Carousel/>
