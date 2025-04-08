@@ -32,7 +32,7 @@ const ProductCard = ({ product, onAddToCart, isInCart }) => {
       <div className="product-card">
         <div className="product-image-container">
           <img 
-            src={product.imageUrl} 
+            src={product.imageUrl || 'https://via.placeholder.com/200x150?text=No+Image'} 
             alt={product.name} 
             className="product-image"
             onError={(e) => {
@@ -42,8 +42,9 @@ const ProductCard = ({ product, onAddToCart, isInCart }) => {
         </div>
         <div className="product-name">{product.name}</div>
         <div className="product-details">
-          {product.quantity && <span>{product.quantity}, </span>}
-          {product.unit}
+          {product.quantity && <span>{product.quantity}</span>}
+          {product.quantity && product.unit && <span>, </span>}
+          {product.unit && <span>{product.unit}</span>}
         </div>
         <div className="product-footer">
           <div className="product-price">${product.price}</div>

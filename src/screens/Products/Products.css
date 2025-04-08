@@ -1,0 +1,51 @@
+.products-container {
+    padding: 20px 20px 20px 0px;
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+  
+  .search-container {
+    display: flex;
+    justify-content: center; /* Centra los elementos hijos */
+    align-items: center;
+    gap: 15px;
+    margin-bottom: 20px;
+    width: 100%;
+  }
+  
+  .search-combobox-group {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 15px;
+    width: auto; /* Ancho según contenido */
+    max-width: 100%; /* No exceder el ancho del contenedor padre */
+  }
+  
+  .search-wrapper {
+    width: 695px; /* Ancho fijo como en tu configuración */
+  }
+  
+  .combobox-wrapper {
+    width: 250px; /* Ancho fijo como en tu configuración */
+  }
+  
+  /* Ajustes para el SearchBar */
+  .search-container form {
+    width: 100%;
+    margin: 0;
+  }
+  
+  .search-container .search {
+    width: 100%;
+  }
+  
+  /* Ajustes para el Combobox */
+  .search-container .combobox-container {
+    width: 100%;
+    margin: 0;
+  }
+  
+  .search-container .combobox {
+    width: 100%;
+  }

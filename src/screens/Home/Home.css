@@ -8,32 +8,93 @@
   margin: 20px 0;
 }
 
-.products-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-  gap: 20px;
+/* Estilos para el scroll horizontal de productos */
+.products-scroll-container {
+  width: 100%;
+  overflow-x: auto;
+  padding-bottom: 20px; /* Espacio para el scroll */
   margin: 10px 0;
 }
 
+.products-scroll {
+  display: inline-flex;
+  gap: 20px;
+  padding: 0 10px;
+}
+
+/* Ocultar scrollbar en algunos navegadores */
+.products-scroll-container::-webkit-scrollbar {
+  height: 8px;
+}
+
+.products-scroll-container::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 10px;
+}
+
+.products-scroll-container::-webkit-scrollbar-thumb {
+  background: #888;
+  border-radius: 10px;
+}
+
+.products-scroll-container::-webkit-scrollbar-thumb:hover {
+  background: #555;
+}
+
+.shop-now-container {
+  display: flex;
+  justify-content: center;
+  margin: 40px 0;
+  padding: 20px 0;
+}
+
 .shop-now-btn {
-  display: inline-block;
-  padding: 10px 20px;
-  background-color: #4CAF50;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 15px 60px;
+  background-color: #00BF63;
   color: white;
   text-decoration: none;
-  border-radius: 5px;
-  margin-top: 20px;
+  border-radius: 15px;
+  font-size: 1.3rem;
+  font-weight: 600;
+  letter-spacing: 1px;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 15px rgba(76, 175, 80, 0.3);
+  width: 700px;
+  height: 60px;
+  border: none;
+  cursor: pointer;
 }
 
 .shop-now-btn:hover {
-  background-color: #45a049;
+  background-color: #069952;
+  transform: translateY(-3px);
+  box-shadow: 0 6px 20px rgba(76, 175, 80, 0.4);
+}
+
+.shop-now-btn:active {
+  transform: translateY(1px);
+}
+
+.loading-spinner {
+  border: 3px solid rgba(255, 255, 255, 0.3);
+  border-radius: 50%;
+  border-top: 3px solid white;
+  width: 20px;
+  height: 20px;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
 }
 
 .categories-section {
   margin-top: 2rem;
-  /* Reducido de 3rem */
   padding: 0.5rem 0;
-  /* Reducido de 1rem */
 }
 
 .categories-section h2 {
@@ -41,15 +102,12 @@
   font-size: 1.5rem;
   color: #333;
   margin-bottom: 1rem;
-  /* Reducido de 1.5rem */
 }
 
 .categories-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(270px, 1fr));
-  /* Igual al nuevo ancho de la card */
   gap: 0.6rem;
-  /* Reducido desde 0.8rem */
   margin-bottom: 1.5rem;
 }
 
@@ -64,6 +122,11 @@
     grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
     gap: 0.7rem;
   }
+  
+  .shop-now-btn {
+    width: 90%;
+    font-size: 1.1rem;
+  }
 }
 
 @media (max-width: 480px) {
@@ -74,9 +137,7 @@
 
   .categories-card {
     width: 100%;
-    /* Ocupa todo el ancho disponible */
     height: 95px;
-    /* Altura ligeramente reducida */
   }
 
   .category-image-container {
@@ -86,5 +147,9 @@
 
   .category-name {
     font-size: 18px;
+  }
+  
+  .products-scroll {
+    gap: 15px;
   }
 }

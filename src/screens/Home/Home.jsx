@@ -1,95 +1,50 @@
-import React from 'react';
+
+import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import ProductCard from '../../components/Products/ProductCard';
 import CategoriesCard from '../../components/Products/CategoriesCard';
 import SearchBar from '../../components/Search Bar/Search'; 
 import Carousel from '../../components/Carousel/Carousel';
 import './Home.css';
+import { featuredProducts, categories } from '../../assets/mockProps/mocks';
 
 function Home({ onAddToCart, cartItems }) {
-  const featuredProducts = [
-    {
-      id: 1,
-      name: "Bell Pepper Red",
-      quantity: "No",
-      unit: "Price",
-      price: 4.99,
-      imageUrl: "https://i.imgur.com/6FpegJL.png"
-    },
-    {
-      id: 2,
-      name: "Egg Chicken Red",
-      quantity: "Spec",
-      unit: "Price",
-      price: 1.99,
-      imageUrl: "https://i.imgur.com/6FpegJL.png"
-    },
-    {
-      id: 3,
-      name: "Organic Bananas",
-      quantity: "Dkg",
-      unit: "Price",
-      price: 3.00,
-      imageUrl: "https://i.imgur.com/6FpegJL.png"
-    },
-    {
-      id: 4,
-      name: "Ginger",
-      quantity: "250gm",
-      unit: "Price",
-      price: 2.99,
-      imageUrl: "https://i.imgur.com/6FpegJL.png"
-    }
-  ];
+  const [isLoading, setIsLoading] = useState(false);
 
-  // Datos de categorías
-  const categories = [
-    {
-      id: 1,
-      name: "Frutas",
-      imageUrl: "https://png.pngtree.com/png-vector/20240709/ourmid/pngtree-fruit-varieties-png-image_13034530.png"
-    },
-    {
-      id: 2,
-      name: "Verduras",
-      imageUrl: "https://static.vecteezy.com/system/resources/previews/048/051/154/non_2x/a-circular-arrangement-of-vegetables-and-fruits-transparent-background-png.png"
-    },
-    {
-      id: 3,
-      name: "Lácteos",
-      imageUrl: "https://static.vecteezy.com/system/resources/previews/050/590/571/non_2x/a-variety-of-dairy-products-including-milk-cheese-and-butter-free-png.png"
-    },
-    {
-      id: 4,
-      name: "Carnes",
-      imageUrl: "https://png.pngtree.com/png-clipart/20240508/original/pngtree-different-kind-of-meat-products-png-image_15044753.png"
-    }
-  ];
+  const handleShopNowClick = (e) => {
+    e.preventDefault();
+    setIsLoading(true);
+    setTimeout(() => {
+      window.location.href = '/explore';
+    }, 800);
+  };
 
   return (
     <div className="home-container">
       <SearchBar />
       <br />
       <br />  
-      {/* Sección del carrusel */}
       <Carousel/>
       <br />
-      {/* Sección de productos destacados */}
+      
+      {/* Sección de productos destacados con scroll horizontal */}
       <div className="featured-products">
         <h2>Productos Destacados</h2>
-        <div className="products-grid">
-          {featuredProducts.map(product => (
-            <ProductCard
-              key={product.id}
-              product={product}
-              onAddToCart={onAddToCart}
-              isInCart={cartItems.some(item => item.id === product.id)}
-            />
-          ))}
+        <div className="products-scroll-container">
+          <div className="products-scroll">
+            {featuredProducts.slice(0, 10).map(product => (
+              <ProductCard
+                key={product.id}
+                product={product}
+                onAddToCart={onAddToCart}
+                isInCart={cartItems.some(item => item.id === product.id)}
+              />
+            ))}
+          </div>
         </div>
       </div>
 
-      {/* Nueva sección de categorías */}
+      {/* Sección de categorías */}
       <div className="categories-section">
         <h2>Explora por Categorías</h2>
         <div className="categories-grid">
@@ -98,16 +53,44 @@ function Home({ onAddToCart, cartItems }) {
               <CategoriesCard
                 categoryName={category.name}
                 imageUrl={category.imageUrl}
-                index={index} // Pasa el índice para el color rotativo
+                index={index}
               />
             </Link>
           ))}
         </div>
       </div>
+      <br />
+      
+      {/* Sección de productos frescos con scroll horizontal */}
+      <div className="featured-products">
+        <h2>Productos Frescos</h2>
+        <div className="products-scroll-container">
+          <div className="products-scroll">
+            {featuredProducts.slice(0, 10).map(product => (
+              <ProductCard
+                key={product.id}
+                product={product}
+                onAddToCart={onAddToCart}
+                isInCart={cartItems.some(item => item.id === product.id)}
+              />
+            ))}
+          </div>
+        </div>
+      </div>
 
-      <Link to="/shop" className="shop-now-btn">
-        Comprar ahora
-      </Link>
+      <div className="shop-now-container">
+        <Link 
+          to="/explore" 
+          className="shop-now-btn"
+          onClick={handleShopNowClick}
+        >
+          {isLoading ? (
+            <div className="loading-spinner"></div>
+          ) : (
+            'Explorar Productos'
+          )}
+        </Link>
+      </div>
     </div>
   );
 }
