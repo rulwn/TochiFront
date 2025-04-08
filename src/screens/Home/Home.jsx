@@ -2,10 +2,11 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import ProductCard from '../../components/Products/ProductCard';
 import CategoriesCard from '../../components/Products/CategoriesCard';
-import './Home.css';
 import SearchBar from '../../components/Search Bar/Search'; 
+import Carousel from '../../components/Carousel/Carousel';
+import './Home.css';
+
 function Home({ onAddToCart, cartItems }) {
-  // Datos de productos destacados
   const featuredProducts = [
     {
       id: 1,
@@ -71,7 +72,10 @@ function Home({ onAddToCart, cartItems }) {
       <br />
       <h1>Bienvenido a Tochi</h1>
       <p>Descubre nuestros productos exclusivos y ofertas especiales.</p>
-
+      <br />  
+      {/* Sección del carrusel */}
+      <Carousel/>
+      <br />
       {/* Sección de productos destacados */}
       <div className="featured-products">
         <h2>Productos Destacados</h2>
