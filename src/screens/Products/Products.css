@@ -49,3 +49,14 @@
   .search-container .combobox {
     width: 100%;
   }
+
+  .featured-products {
+    margin: 20px 0;
+  }
+  
+  .products-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 20px;
+    margin: 10px 0;
+  }
