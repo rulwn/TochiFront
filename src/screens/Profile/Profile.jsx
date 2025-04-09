@@ -2,7 +2,14 @@ import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import './Profile.css';
 
-import { FiUser, FiHome, FiCreditCard, FiInfo, FiShoppingBag } from 'react-icons/fi';
+import { 
+  FiUser, 
+  FiHome, 
+  FiCreditCard, 
+  FiInfo, 
+  FiShoppingBag,
+  FiLogOut 
+} from 'react-icons/fi';
 import { FiChevronRight } from 'react-icons/fi';
 
 function Profile() {
@@ -10,6 +17,11 @@ function Profile() {
 
   const handleNavigation = (path) => {
     navigate(path);
+  };
+
+  const handleLogout = () => {
+        console.log('Usuario ha cerrado sesión');
+    navigate('/login'); 
   };
 
   return (
@@ -61,7 +73,7 @@ function Profile() {
           <FiChevronRight className="arrow-icon" />
         </div>
         
-        <div className="option-item" onClick={() => handleNavigation('/about')}>
+        <div className="option-item" onClick={() => handleNavigation('/termsAndConditions')}>
           <div className="option-content">
             <FiInfo className="option-icon" />
             <span>About</span>
@@ -69,6 +81,11 @@ function Profile() {
           <FiChevronRight className="arrow-icon" />
         </div>
       </div>
+
+      <button className="logout-button" onClick={handleLogout}>
+        <FiLogOut className="logout-icon" />
+        <span>Logout</span>
+      </button>
     </div>
   );
 }

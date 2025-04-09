@@ -1,0 +1,154 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap');
+
+:root {
+  --primary-color: #2e7d32;
+  --secondary-color: #e53935;
+  --text-color: #333;
+  --light-gray: #f9f9f9;
+  --divider-color: #e0e0e0;
+}
+
+/* Contenedor principal */
+.about-container {
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: 2rem;
+  font-family: 'Poppins', sans-serif;
+  color: var(--text-color);
+}
+
+/* Secciones centradas */
+.centered-section {
+  max-width: 800px;
+  width: 100%;
+  margin: 0 auto 3rem;
+  padding: 0 1.5rem;
+}
+
+/* Encabezados centrados */
+.section-header-centered {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+  margin-bottom: 1.5rem;
+}
+
+.icon-title-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+.section-icon-centered {
+  width: 64px;
+  height: 64px;
+  object-fit: contain;
+  margin-bottom: 0.5rem;
+}
+
+.section-title-centered {
+  font-size: 1.8rem;
+  color: var(--primary-color);
+  margin: 0;
+  font-weight: 500;
+}
+
+.divider-centered {
+  height: 2px;
+  width: 100px;
+  background-color: var(--divider-color);
+  margin: 0 auto 2.5rem;
+}
+
+/* Tarjetas de Misión/Visión */
+.mission-vision {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2rem;
+}
+
+.card {
+  background: var(--light-gray);
+  padding: 2rem;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+  transition: all 0.3s ease;
+  cursor: pointer;
+}
+
+.card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 6px 16px rgba(0,0,0,0.12);
+  background: #f5f5f5;
+}
+
+.card-header {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.card-icon {
+  font-size: 1.5rem;
+  color: var(--primary-color);
+}
+
+.card h3 {
+  font-size: 1.4rem;
+  color: var(--primary-color);
+  margin: 0;
+}
+
+/* Noticias */
+.news-articles {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.news-card {
+  display: flex;
+  gap: 2rem;
+  background: var(--light-gray);
+  padding: 2rem;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+  transition: all 0.3s ease;
+  cursor: pointer;
+}
+
+.news-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 6px 16px rgba(0,0,0,0.12);
+  background: #f5f5f5;
+}
+
+.news-icon {
+  display: flex;
+  align-items: center;
+}
+
+.apple-icon {
+  font-size: 2rem;
+  color: var(--primary-color);
+}
+
+.inline-icon {
+  font-size: 1rem;
+  color: var(--secondary-color);
+  margin-right: 0.5rem;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .mission-vision {
+    grid-template-columns: 1fr;
+  }
+  
+  .news-card {
+    flex-direction: column;
+    gap: 1.5rem;
+  }
+}
