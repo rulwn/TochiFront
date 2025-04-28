@@ -1,6 +1,6 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import './Profile.css';
+import './Profile.css'
 
 import { 
   FiUser, 
@@ -82,9 +82,9 @@ function Profile() {
         </div>
       </div>
 
-      <button className="logout-button" onClick={handleLogout}>
+      <button className="logout-button" onClick={() => handleNavigation('/login')}>
         <FiLogOut className="logout-icon" />
-        <span>Logout</span>
+        <span>Logout</span> 
       </button>
     </div>
   );
