@@ -13,10 +13,14 @@
   align-items: center;
   margin-bottom: 2rem;
   position: relative;
+  padding-top: 2rem; /* Add space for the back button */
 }
 
 .back-button {
-  background: none;
+  position: absolute;
+  top: 0;
+  left: 0;
+  background: transparent;
   border: none;
   display: flex;
   align-items: center;
@@ -24,12 +28,13 @@
   font-size: 1rem;
   color: #2e7d32;
   cursor: pointer;
-  position: absolute;
-  left: 0;
-  transition: all 0.2s ease;
+  padding: 0.5rem;
+  border-radius: 8px;
+  transition: background 0.2s ease, transform 0.2s ease;
 }
 
 .back-button:hover {
+  background: rgba(46, 125, 50, 0.1);
   transform: translateX(-3px);
 }
 
@@ -354,26 +359,114 @@
     padding: 1rem;
   }
   
+  .payment-methods-header h1 {
+    font-size: 1.6rem;
+    margin-top: 1.5rem; /* Space for the back button */
+    width: 100%;
+    text-align: center;
+  }
+  
   .cards-carousel {
-    padding: 0 2rem;
+    padding: 0 1.5rem;
+    margin: 1.5rem 0;
+  }
+  
+  .cards-wrapper {
+    height: 200px; /* Adjust wrapper height */
   }
   
   .payment-card {
-    height: 160px;
+    height: auto; /* Allow card to grow based on content */
+    min-height: 160px;
     padding: 1rem;
+  }
+  
+  .card-number {
+    font-size: 1rem; /* Smaller font for card number */
+    margin-bottom: 1rem;
+    word-break: break-word; /* Prevent overflow */
+  }
+  
+  .card-details {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+  
+  .card-value {
+    font-size: 0.9rem; /* Smaller font for card values */
+    word-break: break-word; /* Prevent overflow */
+  }
+  
+  .card-actions {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.5rem;
+    margin-top: 0.5rem;
+  }
+  
+  .action-btn {
+    font-size: 0.75rem;
+    padding: 0.25rem 0.5rem;
+  }
+  
+  .carousel-arrow {
+    width: 32px;
+    height: 32px;
   }
   
   .form-row {
     flex-direction: column;
-    gap: 0;
+    gap: 1rem;
   }
   
   .form-actions {
     flex-direction: column;
+    gap: 0.75rem;
   }
   
   .cancel-btn,
-  .save-btn {
+  .save-btn,
+  .add-payment-btn {
     width: 100%;
+    padding: 0.75rem 1rem;
+  }
+  
+  /* Improved payment methods list for mobile */
+  .method-info {
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+  
+  .default-tag {
+    margin-left: 0;
+    margin-top: 0.25rem;
+  }
+}
+
+/* Extra small device adjustments */
+@media (max-width: 480px) {
+  .payment-methods-header h1 {
+    font-size: 1.4rem;
+  }
+  
+  .card-header {
+    margin-bottom: 1rem;
+  }
+  
+  .card-brand-icon {
+    font-size: 2rem;
+  }
+  
+  .default-badge {
+    font-size: 0.7rem;
+    padding: 0.15rem 0.5rem;
+  }
+  
+  .payment-methods-list h2 {
+    font-size: 1.3rem;
+  }
+  
+  .add-payment-form h3 {
+    font-size: 1.2rem;
   }
 }

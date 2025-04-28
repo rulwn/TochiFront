@@ -13,8 +13,8 @@ function Orders() {
       date: '15 Nov 2023',
       status: 'completed',
       items: [
-        { name: 'Manzanas Orgánicas', quantity: 2, price: 3.50, image: 'apple.png' },
-        { name: 'Lechuga Hidropónica', quantity: 1, price: 2.00, image: 'lettuce.png' }
+        { name: 'Manzanas Orgánicas', quantity: 2, price: 3.50, image: 'https://i.imgur.com/6FpegJL.png' },
+        { name: 'Lechuga Hidropónica', quantity: 1, price: 2.00, image: 'https://i.imgur.com/6FpegJL.png' }
       ],
       total: 9.00,
       delivery: 'Av. Las Magnolias #123, San Salvador'
@@ -24,8 +24,8 @@ function Orders() {
       date: '10 Nov 2023',
       status: 'pending',
       items: [
-        { name: 'Bananas Ecológicas', quantity: 3, price: 1.75, image: 'banana.png' },
-        { name: 'Tomates Cherry', quantity: 2, price: 2.50, image: 'tomato.png' }
+        { name: 'Bananas Ecológicas', quantity: 3, price: 1.75, image: 'https://i.imgur.com/6FpegJL.png' },
+        { name: 'Tomates Cherry', quantity: 2, price: 2.50, image: 'https://i.imgur.com/6FpegJL.png' }
       ],
       total: 10.25,
       delivery: 'Calle Los Pinos #456, San Salvador'
@@ -35,8 +35,8 @@ function Orders() {
       date: '5 Nov 2023',
       status: 'completed',
       items: [
-        { name: 'Zanahorias Orgánicas', quantity: 1, price: 1.80, image: 'carrot.png' },
-        { name: 'Espinacas Frescas', quantity: 2, price: 2.20, image: 'spinach.png' }
+        { name: 'Zanahorias Orgánicas', quantity: 1, price: 1.80, image: 'https://i.imgur.com/6FpegJL.png' },
+        { name: 'Espinacas Frescas', quantity: 2, price: 2.20, image: 'https://i.imgur.com/6FpegJL.png' }
       ],
       total: 6.20,
       delivery: 'Residencial Las Flores #789, San Salvador'
@@ -98,7 +98,7 @@ function Orders() {
               {order.items.map((item, index) => (
                 <div key={index} className="order-item">
                   <div className="item-image">
-                    <img src={`/images/products/${item.image}`} alt={item.name} />
+                  <img src={item.image} alt={item.name} />
                   </div>
                   <div className="item-details">
                     <h4>{item.name}</h4>

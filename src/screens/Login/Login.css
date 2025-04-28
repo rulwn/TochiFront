@@ -22,42 +22,44 @@
   box-sizing: border-box;
 }
 
-
 /* Logo como imagen */
-.logo-img {
+.login-box .logo-img {
   display: block;
   margin: 0 auto 1.5rem auto;
-  width: 150px; /* Ajusta el tamaño que necesites */
+  width: 150px;
   height: auto;
 }
 
-
 /* Formulario */
-.login-form h2 {
+.login-box .login-form h2 {
   font-size: 1.5rem;
   margin-bottom: 0.5rem;
   text-align: center;
+  color: #333;
 }
 
-.subtitle {
+.login-box .login-form .subtitle {
   text-align: center;
   font-size: 0.9rem;
   color: gray;
   margin-bottom: 1.5rem;
 }
 
-form {
+.login-box .login-form form {
   display: flex;
   flex-direction: column;
   width: 100%;
 }
 
-label {
+.login-box .login-form form label {
   margin-bottom: 0.3rem;
   font-weight: 500;
+  color: #333;
 }
 
-input {
+.login-box .login-form form input[type="email"],
+.login-box .login-form form input[type="password"],
+.login-box .login-form form input[type="text"] {
   padding: 0.8rem;
   margin-bottom: 1.5rem;
   border: 1px solid #ccc;
@@ -65,38 +67,43 @@ input {
   font-size: 1rem;
   transition: all 0.3s ease;
   background-color: #f9f9f9;
+  width: 100%;
+  box-sizing: border-box;
 }
 
-input:focus {
+.login-box .login-form form input:focus {
   border-color: #00BF63;
   background-color: white;
   outline: none;
   box-shadow: 0 0 5px rgba(0, 191, 99, 0.3);
 }
 
-.show-password {
+.login-box .login-form .show-password {
   margin-bottom: 1rem;
   font-size: 0.85rem;
   color: gray;
+  display: flex;
+  align-items: center;
 }
 
-.show-password input {
+.login-box .login-form .show-password input[type="checkbox"] {
   margin-right: 0.5rem;
+  width: auto;
+  margin-bottom: 0;
 }
 
-
-.forgot-password {
+.login-box .login-form .forgot-password {
   text-align: right;
   margin-bottom: 1rem;
 }
 
-.forgot-password a {
+.login-box .login-form .forgot-password a {
   font-size: 0.8rem;
   text-decoration: none;
-  color: black;
+  color: #333;
 }
 
-.login-button {
+.login-box .login-form .login-button {
   background-color: #00BF63;
   color: white;
   padding: 0.8rem;
@@ -105,19 +112,22 @@ input:focus {
   font-weight: bold;
   cursor: pointer;
   margin-bottom: 1rem;
-  width: 100%; /* Asegura que el botón ocupe todo el ancho disponible */
+  width: 100%;
+  font-size: 1rem;
+  transition: background-color 0.3s ease;
 }
 
-.login-button:hover {
-  background-color: #00BF63;
+.login-box .login-form .login-button:hover {
+  background-color: #009950;
 }
 
-.signup-text {
+.login-box .login-form .signup-text {
   text-align: center;
   font-size: 0.9rem;
+  color: #333;
 }
 
-.signup-text a {
+.login-box .login-form .signup-text a {
   text-decoration: none;
   color: #00BF63;
   font-weight: bold;
@@ -134,36 +144,38 @@ input:focus {
     padding: 1.5rem;
   }
 
-  .logo-img {
-    width: 120px; /* Ajusta el tamaño para pantallas más pequeñas */
+  .login-box .logo-img {
+    width: 120px;
   }
 
-  .login-form h2 {
-    font-size: 1.3rem; /* Reduce el tamaño de los títulos */
+  .login-box .login-form h2 {
+    font-size: 1.3rem;
   }
 
-  .subtitle {
-    font-size: 0.8rem; /* Reduce el tamaño de subtítulos */
+  .login-box .login-form .subtitle {
+    font-size: 0.8rem;
   }
 
-  input {
-    font-size: 0.9rem; /* Reduce el tamaño de la fuente en los inputs */
+  .login-box .login-form form input[type="email"],
+  .login-box .login-form form input[type="password"],
+  .login-box .login-form form input[type="text"] {
+    font-size: 0.9rem;
   }
 
-  .show-password {
+  .login-box .login-form .show-password {
     font-size: 0.75rem;
   }
 
-  .forgot-password a {
-    font-size: 0.75rem; /* Ajusta el tamaño del enlace */
+  .login-box .login-form .forgot-password a {
+    font-size: 0.75rem;
   }
 
-  .login-button {
-    padding: 0.7rem; /* Ajusta el padding del botón */
+  .login-box .login-form .login-button {
+    padding: 0.7rem;
   }
 
-  .signup-text a {
-    font-size: 0.85rem; /* Ajusta el tamaño de los enlaces */
+  .login-box .login-form .signup-text {
+    font-size: 0.85rem;
   }
 }
 
@@ -173,19 +185,21 @@ input:focus {
     padding: 1.5rem;
   }
 
-  .logo-img {
-    width: 100px; /* Ajuste adicional para dispositivos muy pequeños */
+  .login-box .logo-img {
+    width: 100px;
   }
 
-  .login-form h2 {
-    font-size: 1.2rem; /* Ajusta aún más el título */
+  .login-box .login-form h2 {
+    font-size: 1.2rem;
   }
 
-  .input {
-    font-size: 0.8rem; /* Ajusta el tamaño de la fuente */
+  .login-box .login-form form input[type="email"],
+  .login-box .login-form form input[type="password"],
+  .login-box .login-form form input[type="text"] {
+    font-size: 0.8rem;
   }
 
-  .login-button {
-    padding: 0.6rem; /* Ajusta el padding del botón */
+  .login-box .login-form .login-button {
+    padding: 0.6rem;
   }
 }

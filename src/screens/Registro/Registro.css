@@ -1,59 +1,65 @@
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap');
 
-body {
-  font-family: 'Poppins', sans-serif;
-  margin: 0;
-  padding: 0;
-  background-color: #f2f2f2; /* Color de fondo suave */
-}
-
+/* Contenedor principal específico para registro */
 .registro-container {
   padding: 70px;
   min-height: 100vh;
   display: flex;
   align-items: center;
   justify-content: center;
+  background-color: #f2f2f2;
+  box-sizing: border-box;
 }
 
-.form-card {
+/* Tarjeta del formulario */
+.registro-container .form-card {
   background: white;
   border-radius: 12px;
   padding: 50px 40px;
   width: 400px;
+  max-width: 100%;
   box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
   text-align: center;
+  box-sizing: border-box;
 }
 
-.logo {
+/* Logo */
+.registro-container .form-card .logo {
   width: 130px;
   margin-bottom: 20px;
+  height: auto;
 }
 
-h2 {
+/* Títulos y texto */
+.registro-container .form-card h2 {
   margin-bottom: 8px;
   font-weight: 600;
   font-size: 24px;
+  color: #333;
 }
 
-p {
+.registro-container .form-card p {
   color: #777;
   font-size: 14px;
   margin-bottom: 25px;
 }
 
-form {
+/* Formulario */
+.registro-container .form-card form {
   display: flex;
   flex-direction: column;
   gap: 10px;
 }
 
-label {
+.registro-container .form-card form label {
   text-align: left;
   font-size: 14px;
   margin-bottom: 4px;
+  color: #333;
+  font-weight: 500;
 }
 
-input {
+.registro-container .form-card form input {
   padding: 12px 15px;
   border: 1px solid #ccc;
   border-radius: 8px;
@@ -61,15 +67,38 @@ input {
   background-color: #f9f9f9;
   transition: all 0.3s ease;
   outline: none;
+  width: 100%;
+  box-sizing: border-box;
+  font-family: 'Poppins', sans-serif;
 }
 
-input:focus {
+.registro-container .form-card form input:focus {
   border-color: #00BF63;
   background-color: #fff;
   box-shadow: 0 0 0 3px rgba(0, 191, 99, 0.1);
 }
 
-button {
+/* Términos y condiciones */
+.registro-container .form-card .terms {
+  font-size: 12px;
+  color: #888;
+  margin-top: 10px;
+  line-height: 1.4;
+}
+
+.registro-container .form-card .terms a {
+  color: #00BF63;
+  text-decoration: none;
+  font-weight: 500;
+}
+
+/* Botón */
+.registro-container .form-card .btn-link {
+  text-decoration: none;
+  display: block;
+}
+
+.registro-container .form-card button {
   background-color: #00BF63;
   color: white;
   border: none;
@@ -80,61 +109,56 @@ button {
   cursor: pointer;
   margin-top: 10px;
   transition: background-color 0.3s ease;
+  width: 100%;
+  font-family: 'Poppins', sans-serif;
 }
 
-button:hover {
+.registro-container .form-card button:hover {
   background-color: #00a653;
 }
 
-.terms {
-  font-size: 12px;
-  color: #888;
-  margin-top: 10px;
-}
-
-.terms a {
-  color: #00BF63;
-  text-decoration: none;
-}
-
-.signin-link {
+/* Enlace para iniciar sesión */
+.registro-container .form-card .signin-link {
   font-size: 13px;
   margin-top: 20px;
+  color: #777;
 }
 
-.signin-link a {
+.registro-container .form-card .signin-link a {
   color: #00BF63;
   text-decoration: none;
+  font-weight: 500;
 }
 
+/* Media Queries */
 @media (max-width: 480px) {
   .registro-container {
     padding: 40px 20px;
   }
 
-  .form-card {
+  .registro-container .form-card {
     width: 100%;
     padding: 30px 20px;
   }
 
-  .logo {
+  .registro-container .form-card .logo {
     width: 100px;
   }
 
-  h2 {
+  .registro-container .form-card h2 {
     font-size: 20px;
   }
 
-  p {
+  .registro-container .form-card p {
     font-size: 13px;
   }
 
-  input {
+  .registro-container .form-card form input {
     font-size: 13px;
     padding: 10px 12px;
   }
 
-  button {
+  .registro-container .form-card button {
     font-size: 15px;
     padding: 12px;
   }
