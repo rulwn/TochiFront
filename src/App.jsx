@@ -8,10 +8,7 @@ import Profile from './screens/Profile/Profile';
 import TermsAndConditions from './screens/TermsConditions/TermsAndConditions';
 import Navbar from './components/Nav/Navbar';
 import Footer from './components/Footer/Footer';
-import Login from './screens/Login/Login';
-import Registro from './screens/Registro/Registro';
-import PutEmail from './screens/Forgot password/PutEmail';
-import PutCode from './screens/Forgot password/PutCode';
+
 function App() {
   const [cartItems, setCartItems] = useState([]);
   const location = useLocation(); // Obtener la ruta actual
@@ -52,10 +49,6 @@ function App() {
         <Route path="/about" element={<About />} />
         <Route path="/account" element={<Profile />} />
         <Route path="/termsAndConditions" element={<TermsAndConditions />} />
-        <Route path="/login" element={<Login />} />
-        <Route path="/registro" element={<Registro />} />
-        <Route path="/putemail" element={<PutEmail />} />
-        <Route path="/putcode" element={<PutCode />} />
       </Routes>
 
       <Footer />
