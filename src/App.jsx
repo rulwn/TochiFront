@@ -8,6 +8,10 @@ import Profile from './screens/Profile/Profile';
 import TermsAndConditions from './screens/TermsConditions/TermsAndConditions';
 import Navbar from './components/Nav/Navbar';
 import Footer from './components/Footer/Footer';
+import Orders from './screens/Orders/Orders';
+import UserDetails from './screens/Userdetails/Userdetails';
+import DeliveryAddress from './screens/Deliveryaddress/Deliveryaddress';
+import PaymentMethods from './screens/Payment/Payment';
 
 function App() {
   const [cartItems, setCartItems] = useState([]);
@@ -43,6 +47,10 @@ function App() {
         <Route path="/about" element={<About />} />
         <Route path="/account" element={<Profile />} />
         <Route path="/termsAndConditions" element={<TermsAndConditions />} />
+        <Route path="/orders" element={<Orders />} />
+        <Route path="/userdetails" element={<UserDetails />} />
+        <Route path="/deliveryaddress" element={<DeliveryAddress />} />
+        <Route path="/payment" element={<PaymentMethods />} />
       </Routes>
       <Footer />
       
