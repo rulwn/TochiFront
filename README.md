@@ -1,12 +1,20 @@
-# React + Vite
+# Proyecto React
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Este proyecto está basado en React y utiliza las siguientes dependencias:
 
-Currently, two official plugins are available:
+## Dependencias Instaladas
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+- **react**: Versión `^19.0.0`
+- **react-dom**: Versión `^19.0.0`
+- **react-icons**: Versión `^5.5.0` - Proporciona un conjunto de íconos para utilizar en la interfaz.
+- **react-router-dom**: Versión `^7.5.0` - Permite la navegación entre las diferentes vistas de la aplicación.
 
-## Expanding the ESLint configuration
+Este proyecto utiliza react-router-dom para la navegación y react-icons para mostrar íconos en la interfaz de usuario. Puedes agregar y personalizar estas dependencias según sea necesario.
 
-If you are developing a production application, we recommend using TypeScript and enable type-aware lint rules. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+## Instalación
+
+Para instalar las dependencias, ejecuta el siguiente comando en el directorio del proyecto:
+
+```bash
+npm install
+

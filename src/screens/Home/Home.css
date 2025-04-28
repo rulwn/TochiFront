@@ -1,18 +1,19 @@
 .home-container {
-  padding: 20px 20px 20px 0px;
+  padding: 20px;
   max-width: 1200px;
   margin: 0 auto;
+  box-sizing: border-box;
 }
 
 .featured-products {
   margin: 20px 0;
 }
 
-/* Estilos para el scroll horizontal de productos */
+/* Scroll horizontal de productos */
 .products-scroll-container {
   width: 100%;
   overflow-x: auto;
-  padding-bottom: 20px; /* Espacio para el scroll */
+  padding-bottom: 15px;
   margin: 10px 0;
 }
 
@@ -22,7 +23,7 @@
   padding: 0 10px;
 }
 
-/* Ocultar scrollbar en algunos navegadores */
+/* Scrollbar personalizado */
 .products-scroll-container::-webkit-scrollbar {
   height: 8px;
 }
@@ -41,6 +42,7 @@
   background: #555;
 }
 
+/* Botón "Shop Now" */
 .shop-now-container {
   display: flex;
   justify-content: center;
@@ -52,7 +54,7 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  padding: 15px 60px;
+  padding: 15px 40px;
   background-color: #00BF63;
   color: white;
   text-decoration: none;
@@ -62,7 +64,8 @@
   letter-spacing: 1px;
   transition: all 0.3s ease;
   box-shadow: 0 4px 15px rgba(76, 175, 80, 0.3);
-  width: 700px;
+  width: 600px;
+  max-width: 100%;
   height: 60px;
   border: none;
   cursor: pointer;
@@ -78,6 +81,7 @@
   transform: translateY(1px);
 }
 
+/* Spinner de carga */
 .loading-spinner {
   border: 3px solid rgba(255, 255, 255, 0.3);
   border-radius: 50%;
@@ -92,6 +96,7 @@
   100% { transform: rotate(360deg); }
 }
 
+/* Sección de categorías */
 .categories-section {
   margin-top: 2rem;
   padding: 0.5rem 0;
@@ -99,15 +104,16 @@
 
 .categories-section h2 {
   font-family: 'Poppins', sans-serif;
-  font-size: 1.5rem;
+  font-size: 1.8rem;
   color: #333;
   margin-bottom: 1rem;
+  text-align: center;
 }
 
 .categories-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(270px, 1fr));
-  gap: 0.6rem;
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  gap: 1rem;
   margin-bottom: 1.5rem;
 }
 
@@ -116,40 +122,138 @@
   color: inherit;
 }
 
-/* Responsive */
-@media (max-width: 768px) {
-  .categories-grid {
-    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-    gap: 0.7rem;
+.categories-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 10px;
+  border-radius: 10px;
+  background: #fafafa;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+  transition: transform 0.2s ease;
+  height: 150px;
+}
+
+.categories-card:hover {
+  transform: translateY(-5px);
+}
+
+.category-image-container {
+  width: 80px;
+  height: 80px;
+  margin-bottom: 10px;
+}
+
+.category-image-container img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 50%;
+}
+
+.category-name {
+  font-size: 1.2rem;
+  color: #444;
+  text-align: center;
+}
+
+
+
+@media (max-width: 1024px) {
+  .shop-now-btn {
+    width: 80%;
+    font-size: 1.2rem;
+    padding: 15px 40px;
   }
-  
+
+  .categories-grid {
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: 2.4rem;
+  }
+
+  .category-image-container {
+    width: 75px;
+    height: 75px;
+  }
+
+  .category-name {
+    font-size: 1.1rem;
+  }
+
+  .products-scroll {
+    gap: 18px;
+  }
+
+  .categories-card {
+    height: 150px;
+  }
+}
+
+
+@media (max-width: 768px) {
+  .home-container {
+    padding: 15px 10px;
+    max-width: 100%;
+  }
+
+  .products-scroll-container {
+    padding: 0 5px 15px 5px;
+  }
+
+  .products-scroll {
+    gap: 15px;
+    padding: 0;
+  }
+
   .shop-now-btn {
     width: 90%;
     font-size: 1.1rem;
+    padding: 12px 30px;
+  }
+
+  .categories-grid {
+    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+    gap: 100px;
   }
 }
 
 @media (max-width: 480px) {
+  .home-container {
+    padding: 10px 5px;
+  }
+
+  .products-scroll-container {
+    padding: 0 5px 10px 5px;
+  }
+
+  .products-scroll {
+    gap: 12px;
+  }
+
   .categories-grid {
     grid-template-columns: 1fr 1fr;
-    gap: 0.6rem;
+    gap: 0.5rem;
+  }
+
+  .shop-now-btn {
+    width: 100%;
+    font-size: 1rem;
+    padding: 10px 20px;
   }
 
   .categories-card {
     width: 100%;
-    height: 95px;
+    height: 120px;
   }
 
   .category-image-container {
-    width: 70px;
-    height: 70px;
+    width: 60px;
+    height: 60px;
   }
 
   .category-name {
-    font-size: 18px;
+    font-size: 16px;
   }
-  
-  .products-scroll {
-    gap: 15px;
-  }
-} 
+}
+
