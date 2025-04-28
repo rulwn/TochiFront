@@ -18,3 +18,8 @@ Para instalar las dependencias, ejecuta el siguiente comando en el directorio de
 ```bash
 npm install
 
+## Sobre Nosotros
+
+Raul Eduardo Ochoa Marroquin
+Luis Jose Escobar Romero
+Jorge Fernando Orantes Jaimes
