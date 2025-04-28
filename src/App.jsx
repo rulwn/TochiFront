@@ -17,6 +17,7 @@ import Registro from './screens/Registro/Registro';
 import PutEmail from './screens/Forgot password/PutEmail';
 import PutCode from './screens/Forgot password/PutCode';
 import NewPassword from './screens/Forgot password/NewPassword';
+import Checkout from './screens/Checkout/Checkout';
 
 function App() {
   const [cartItems, setCartItems] = useState([]);
@@ -68,6 +69,7 @@ function App() {
         <Route path="/putemail" element={<PutEmail />} />
         <Route path="/putcode" element={<PutCode />} />
         <Route path="/newpassword" element={<NewPassword />} />
+        <Route path="/checkout" element={<Checkout />} />
       </Routes>
       <Footer />
       
