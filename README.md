@@ -1,3 +1,9 @@
+## Sobre Nosotros
+
+Raul Eduardo Ochoa Marroquin
+Luis Jose Escobar Romero
+Jorge Fernando Orantes Jaimes
+
 # Proyecto React
 
 Este proyecto está basado en React y utiliza las siguientes dependencias:
@@ -16,10 +22,6 @@ Este proyecto utiliza react-router-dom para la navegación y react-icons para mo
 Para instalar las dependencias, ejecuta el siguiente comando en el directorio del proyecto:
 
 ```bash
-npm install
+npm install.
 
-## Sobre Nosotros
 
-Raul Eduardo Ochoa Marroquin
-Luis Jose Escobar Romero
-Jorge Fernando Orantes Jaimes
