@@ -1,8 +1,8 @@
 ## Sobre Nosotros
 
-**Raul Eduardo Ochoa Marroquin.**
-**Luis Jose Escobar Romero.**
-**Jorge Fernando Orantes Jaimes.**
+- **Raul Eduardo Ochoa Marroquin.**
+- **Luis Jose Escobar Romero.**
+- **Jorge Fernando Orantes Jaimes.**
 
 # Proyecto React
 
