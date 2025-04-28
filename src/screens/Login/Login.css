@@ -1,0 +1,191 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap');
+
+/* Contenedor principal */
+.login-container {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 70px;
+  box-sizing: border-box;
+}
+
+/* Caja de login */
+.login-box {
+  background: white;
+  padding: 2rem;
+  border-radius: 10px;
+  width: 100%;
+  max-width: 400px;
+  box-shadow: 0 0 10px rgba(0,0,0,0.1);
+  box-sizing: border-box;
+}
+
+
+/* Logo como imagen */
+.logo-img {
+  display: block;
+  margin: 0 auto 1.5rem auto;
+  width: 150px; /* Ajusta el tamaño que necesites */
+  height: auto;
+}
+
+
+/* Formulario */
+.login-form h2 {
+  font-size: 1.5rem;
+  margin-bottom: 0.5rem;
+  text-align: center;
+}
+
+.subtitle {
+  text-align: center;
+  font-size: 0.9rem;
+  color: gray;
+  margin-bottom: 1.5rem;
+}
+
+form {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}
+
+label {
+  margin-bottom: 0.3rem;
+  font-weight: 500;
+}
+
+input {
+  padding: 0.8rem;
+  margin-bottom: 1.5rem;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  font-size: 1rem;
+  transition: all 0.3s ease;
+  background-color: #f9f9f9;
+}
+
+input:focus {
+  border-color: #00BF63;
+  background-color: white;
+  outline: none;
+  box-shadow: 0 0 5px rgba(0, 191, 99, 0.3);
+}
+
+.show-password {
+  margin-bottom: 1rem;
+  font-size: 0.85rem;
+  color: gray;
+}
+
+.show-password input {
+  margin-right: 0.5rem;
+}
+
+
+.forgot-password {
+  text-align: right;
+  margin-bottom: 1rem;
+}
+
+.forgot-password a {
+  font-size: 0.8rem;
+  text-decoration: none;
+  color: black;
+}
+
+.login-button {
+  background-color: #00BF63;
+  color: white;
+  padding: 0.8rem;
+  border: none;
+  border-radius: 15px;
+  font-weight: bold;
+  cursor: pointer;
+  margin-bottom: 1rem;
+  width: 100%; /* Asegura que el botón ocupe todo el ancho disponible */
+}
+
+.login-button:hover {
+  background-color: #00BF63;
+}
+
+.signup-text {
+  text-align: center;
+  font-size: 0.9rem;
+}
+
+.signup-text a {
+  text-decoration: none;
+  color: #00BF63;
+  font-weight: bold;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .login-container {
+    padding: 50px 20px;
+  }
+
+  .login-box {
+    margin: 1rem;
+    padding: 1.5rem;
+  }
+
+  .logo-img {
+    width: 120px; /* Ajusta el tamaño para pantallas más pequeñas */
+  }
+
+  .login-form h2 {
+    font-size: 1.3rem; /* Reduce el tamaño de los títulos */
+  }
+
+  .subtitle {
+    font-size: 0.8rem; /* Reduce el tamaño de subtítulos */
+  }
+
+  input {
+    font-size: 0.9rem; /* Reduce el tamaño de la fuente en los inputs */
+  }
+
+  .show-password {
+    font-size: 0.75rem;
+  }
+
+  .forgot-password a {
+    font-size: 0.75rem; /* Ajusta el tamaño del enlace */
+  }
+
+  .login-button {
+    padding: 0.7rem; /* Ajusta el padding del botón */
+  }
+
+  .signup-text a {
+    font-size: 0.85rem; /* Ajusta el tamaño de los enlaces */
+  }
+}
+
+@media (max-width: 500px) {
+  .login-box {
+    margin: 1rem;
+    padding: 1.5rem;
+  }
+
+  .logo-img {
+    width: 100px; /* Ajuste adicional para dispositivos muy pequeños */
+  }
+
+  .login-form h2 {
+    font-size: 1.2rem; /* Ajusta aún más el título */
+  }
+
+  .input {
+    font-size: 0.8rem; /* Ajusta el tamaño de la fuente */
+  }
+
+  .login-button {
+    padding: 0.6rem; /* Ajusta el padding del botón */
+  }
+}

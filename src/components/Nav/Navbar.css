@@ -6,9 +6,6 @@
     box-sizing: border-box;
 }
 
-body, .nav-item, .product-card {
-    font-family: 'Poppins', sans-serif;
-  }
 
 .navbar {
     display: flex;
@@ -140,15 +137,57 @@ body, .nav-item, .product-card {
 
 /* Quitar animación pulsante (eliminado el @keyframes y su aplicación) */
 
-/* Ajuste para pantallas pequeñas */
+/* Responsive: Ajustar opciones de navegación */
 @media (max-width: 768px) {
-    .navbar {
-        padding: 20px 2% 15px;
-        height: 80px;
-    }
-    
-    .nav-item:hover::before {
-        width: 40px;
-        height: 40px;
-    }
+  .navbar {
+    flex-direction: column;
+    height: auto;
+    padding: 10px 5%;
+  }
+
+  .logo-link {
+    position: static;
+    transform: none;
+    margin-bottom: 10px;
+  }
+
+  .location-container {
+    position: static;
+    transform: none;
+    margin-bottom: 10px;
+  }
+
+  .nav-options {
+    width: 100%;
+    justify-content: space-around;
+    margin-left: 0;
+  }
+
+  .nav-item {
+    font-size: 10px;
+    gap: 2px;
+    padding: 5px 0;
+  }
+
+  .nav-item svg {
+    font-size: 20px;
+  }
+
+  .cart-badge {
+    width: 14px;
+    height: 14px;
+    font-size: 8px;
+  }
+}
+
+/* Extra pequeño (celulares MUY chicos) */
+@media (max-width: 480px) {
+  .nav-options {
+    flex-wrap: wrap;
+    gap: 20px;
+  }
+
+  .nav-item {
+    font-size: 9px;
+  }
 }

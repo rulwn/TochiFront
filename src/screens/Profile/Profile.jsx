@@ -1,6 +1,6 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import './Profile.css';
+import './Profile.css'
 
 import { 
   FiUser, 
@@ -29,7 +29,7 @@ function Profile() {
       <div className="profile-header">
         <img 
           src="https://lh3.googleusercontent.com/a-/ALV-UjUN_oQTSuBnJiaR98U0JzFFBMSr29mgrzQNNryHqDEqkP48xnQ=s80-p-k-rw-no" 
-          alt="Profile" 
+          
           className="profile-img"
         />
         <div className="profile-info">
@@ -49,7 +49,7 @@ function Profile() {
           <FiChevronRight className="arrow-icon" />
         </div>
         
-        <div className="option-item" onClick={() => handleNavigation('/my-details')}>
+        <div className="option-item" onClick={() => handleNavigation('/userdetails')}>
           <div className="option-content">
             <FiUser className="option-icon" />
             <span>My Details</span>
@@ -57,7 +57,7 @@ function Profile() {
           <FiChevronRight className="arrow-icon" />
         </div>
         
-        <div className="option-item" onClick={() => handleNavigation('/delivery-address')}>
+        <div className="option-item" onClick={() => handleNavigation('/deliveryaddress')}>
           <div className="option-content">
             <FiHome className="option-icon" />
             <span>Delivery Address</span>
@@ -65,7 +65,7 @@ function Profile() {
           <FiChevronRight className="arrow-icon" />
         </div>
         
-        <div className="option-item" onClick={() => handleNavigation('/payment-methods')}>
+        <div className="option-item" onClick={() => handleNavigation('/payment')}>
           <div className="option-content">
             <FiCreditCard className="option-icon" />
             <span>Payment Methods</span>
@@ -82,9 +82,9 @@ function Profile() {
         </div>
       </div>
 
-      <button className="logout-button" onClick={handleLogout}>
+      <button className="logout-button" onClick={() => handleNavigation('/login')}>
         <FiLogOut className="logout-icon" />
-        <span>Logout</span>
+        <span>Logout</span> 
       </button>
     </div>
   );
