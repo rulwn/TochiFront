@@ -44,7 +44,7 @@ function App() {
         <Route path="/account" element={<Profile />} />
         <Route path="/termsAndConditions" element={<TermsAndConditions />} />
       </Routes>
-      <Footer />
+      <Footer/>
       
     </>
   );
