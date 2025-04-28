@@ -1,4 +1,4 @@
-## Sobre Nosotros
+## Integrantes
 
 - **Raul Eduardo Ochoa Marroquin.**
 - **Luis Jose Escobar Romero.**
