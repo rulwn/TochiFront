@@ -69,7 +69,6 @@ function App() {
         <Route path="/putcode" element={<PutCode />} />
         <Route path="/newpassword" element={<NewPassword />} />
       </Routes>
-
       <Footer />
       
     </>
