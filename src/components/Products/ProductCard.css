@@ -252,3 +252,8 @@
     opacity: 1;
   }
 }
+
+.product-clickable-area {
+  flex-grow: 1;
+  cursor: pointer;
+}

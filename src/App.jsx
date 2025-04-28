@@ -1,4 +1,4 @@
-import { Routes, Route, useLocation} from 'react-router-dom';
+import { Routes, Route, useLocation } from 'react-router-dom';
 import { useState } from 'react';
 import Home from './screens/Home/Home';
 import Cart from './screens/Cart/Cart';
@@ -18,6 +18,7 @@ import PutEmail from './screens/Forgot password/PutEmail';
 import PutCode from './screens/Forgot password/PutCode';
 import NewPassword from './screens/Forgot password/NewPassword';
 import Checkout from './screens/Checkout/Checkout';
+import DetailProduct from './screens/Details/DetailProduct';
 
 function App() {
   const [cartItems, setCartItems] = useState([]);
@@ -70,9 +71,13 @@ function App() {
         <Route path="/putcode" element={<PutCode />} />
         <Route path="/newpassword" element={<NewPassword />} />
         <Route path="/checkout" element={<Checkout />} />
+        <Route
+          path="/product/:id"
+          element={<DetailProduct onAddToCart={handleUpdateCart} />}
+        />
       </Routes>
       <Footer />
-      
+
     </>
   );
 }
