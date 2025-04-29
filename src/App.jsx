@@ -11,7 +11,7 @@ import Profile from './screens/Profile/Profile';
 import TermsAndConditions from './screens/TermsConditions/TermsAndConditions';
 import Orders from './screens/Orders/Orders';
 import UserDetails from './screens/Userdetails/Userdetails';
-import DeliveryAddress from './screens/Deliveryaddress/Deliveryaddress';
+import Deliveryaddress from './screens/Deliveryaddress/Deliveryaddress';
 import PaymentMethods from './screens/Payment/Payment';
 import Login from './screens/Login/Login';
 import Registro from './screens/Registro/Registro';
@@ -77,7 +77,7 @@ function App() {
         <Route path="/termsAndConditions" element={<TermsAndConditions />} />
         <Route path="/orders" element={<Orders />} />
         <Route path="/userdetails" element={<UserDetails />} />
-        <Route path="/deliveryaddress" element={<DeliveryAddress />} />
+        <Route path="/deliveryaddress" element={<Deliveryaddress />} />
         <Route path="/payment" element={<PaymentMethods />} />
         <Route path="/login" element={<Login />} />
         <Route path="/registro" element={<Registro />} />
