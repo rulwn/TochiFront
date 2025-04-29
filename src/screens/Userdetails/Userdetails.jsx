@@ -1,6 +1,6 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import './UserDetails.css';
+import './Userdetails.css';
 import { FiChevronLeft, FiEdit, FiUser, FiMail, FiPhone, FiMapPin } from 'react-icons/fi';
 
 function UserDetails() {
