@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import './DeliveryAddress.css';
+import './Deliveryaddress.css'; // Asegúrate de tener este archivo CSS para estilos
 import { FiChevronLeft, FiMapPin, FiPlus, FiEdit, FiTrash2 } from 'react-icons/fi';
 
 function DeliveryAddress() {
