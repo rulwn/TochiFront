@@ -1,7 +1,7 @@
 import React, { useState, useRef } from 'react'; 
 import { Link, useLocation, useNavigate } from 'react-router-dom'; 
 import Lottie from 'react-lottie'; // animaciones gratis, porque por qué no
-import successAnimation from '../../assets/Animation2.json'; // el super archivo de la victoria
+import successAnimation from '../../../assets/Animation2.json'; // el super archivo de la victoria
 import './Checkout.css';
 
 function Checkout() {

@@ -1,0 +1,137 @@
+/* NavAdmin.css - Estilos específicos para el panel de administración */
+
+.navbar-admin {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background-color: #181725; /* Fondo oscuro */
+  padding: 25px 2% 20px;
+  position: relative;
+  height: 85px;
+  width: 100%;
+  font-family: 'Poppins', sans-serif;
+}
+
+.logo-link {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.logo-link img {
+  height: 50px;
+  width: auto;
+  object-fit: contain;
+}
+
+/* Eliminado el location-container ya que no se usa en admin */
+
+.admin-nav-options {
+  display: flex;
+  align-items: center;
+  gap: 30px;
+  margin-left: auto;
+  height: 100%;
+}
+
+.admin-nav-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-decoration: none;
+  color: white;
+  font-size: 14px;
+  gap: 5px;
+  height: 100%;
+  padding: 5px 0;
+  transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  position: relative;
+  overflow: visible;
+  z-index: 1;
+}
+
+.admin-nav-item svg {
+  color: white;
+  flex-shrink: 0;
+  position: relative;
+  z-index: 2;
+  transition: all 0.3s ease;
+}
+
+/* Círculo de fondo animado */
+.admin-nav-item::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 0;
+  height: 0;
+  background: rgba(0, 191, 99, 0.2);
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+  transition: all 0.4s cubic-bezier(0.68, -0.55, 0.27, 1.55);
+  z-index: 1;
+}
+
+.admin-nav-item:hover::before {
+  width: 50px;
+  height: 50px;
+  opacity: 0.3;
+}
+
+/* Efectos hover */
+.admin-nav-item:hover svg,
+.admin-nav-item:hover {
+  color: #00BF63;
+  transform: translateY(-2px) scale(1.05);
+}
+
+/* Estilo active */
+.admin-nav-item.active svg,
+.admin-nav-item.active {
+  color: #00BF63;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .navbar-admin {
+      flex-direction: column;
+      height: auto;
+      padding: 10px 5%;
+  }
+
+  .logo-link {
+      position: static;
+      transform: none;
+      margin-bottom: 10px;
+  }
+
+  .admin-nav-options {
+      width: 100%;
+      justify-content: space-around;
+      margin-left: 0;
+  }
+
+  .admin-nav-item {
+      font-size: 10px;
+      gap: 2px;
+      padding: 5px 0;
+  }
+
+  .admin-nav-item svg {
+      font-size: 20px;
+  }
+}
+
+@media (max-width: 480px) {
+  .admin-nav-options {
+      flex-wrap: wrap;
+      gap: 20px;
+  }
+
+  .admin-nav-item {
+      font-size: 9px;
+  }
+}

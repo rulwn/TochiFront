@@ -2,8 +2,8 @@ import React from 'react';
 import './PutEmail.css';
 import { FaArrowLeft } from 'react-icons/fa';
 import { Link, useNavigate } from 'react-router-dom'; 
-import logo from '../../assets/Logo.png';
-import rightImage from '../../assets/pass1.png'; 
+import logo from '../../../assets/Logo.png';
+import rightImage from '../../../assets/pass1.png'; 
 
 function PutEmail() {
   const navigate = useNavigate();

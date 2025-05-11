@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
 import './NewPassword.css';
-import logo from '../../assets/Logo.png';
+import logo from '../../../assets/Logo.png';
 import { useNavigate } from 'react-router-dom';
 import { FaArrowLeft, FaEye, FaEyeSlash } from 'react-icons/fa';
-import rightImage from '../../assets/pass3.png';
+import rightImage from '../../../assets/pass3.png';
 
 function NewPassword() {
   const navigate = useNavigate();

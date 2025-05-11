@@ -2,8 +2,8 @@ import React, { useRef } from 'react';
 import './PutCode.css';
 import { FaArrowLeft } from 'react-icons/fa';
 import { Link, useNavigate } from 'react-router-dom';
-import logo from '../../assets/Logo.png';
-import rightImage from '../../assets/pass2.png';
+import logo from '../../../assets/Logo.png';
+import rightImage from '../../../assets/pass2.png';
 
 function PutCode() {
     const inputRefs = useRef([]);

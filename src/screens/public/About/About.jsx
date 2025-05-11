@@ -1,7 +1,7 @@
 import React from 'react';
 import './About.css';
-import AboutIcon from '../../assets/Abouticon.png';
-import NewsIcon from '../../assets/Newsicon.png';
+import AboutIcon from '../../../assets/Abouticon.png';
+import NewsIcon from '../../../assets/Newsicon.png';
 import { FaBullseye, FaEye, FaAppleAlt, FaHeart } from 'react-icons/fa';
 
 function About() {

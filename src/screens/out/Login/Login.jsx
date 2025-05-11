@@ -1,8 +1,24 @@
 import React, { useState } from 'react'
 import './Login.css'
-import logo from '../../assets/Logo.png'
-import Registro from '../Registro/Registro';
+import logo from '../../../assets/Logo.png';
 import { Link, useNavigate } from 'react-router-dom';
+
+// Mock user database
+const mockUsers = [
+  {
+    email: 'admin@tochi.com',
+    password: 'admin123',
+    type: 'admin',
+    name: 'Administrator'
+  },
+  {
+    email: 'client@tochi.com',
+    password: 'client123',
+    type: 'client',
+    name: 'Regular Client'
+  },
+  // Add more mock users as needed
+];
 
 function Login() {
   const navigate = useNavigate();
@@ -10,14 +26,36 @@ function Login() {
   const [showPassword, setShowPassword] = useState(false);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [error, setError] = useState('');
 
-  const handleHome = (e) => {
-    e.preventDefault(); // Evita que el form se recargue
+  const handleLogin = (e) => {
+    e.preventDefault();
+    setError('');
+
+    // Basic validation
     if (email.trim() === '' || password.trim() === '') {
-      alert('Please fill in both fields.');
-      return; // No lo deja avanzar
+      setError('Please fill in both fields.');
+      return;
     }
-    navigate("/"); // Si sí llenó los campos, lo manda al home
+
+    // Check against mock users
+    const user = mockUsers.find(
+      user => user.email === email && user.password === password
+    );
+
+    if (user) {
+      // Successful login - navigate based on user type
+      if (user.type === 'admin') {
+        navigate("/admin-dashboard"); // Change this to your admin route
+      } else {
+        navigate("/"); // Regular client goes to home/store
+      }
+      
+      // In a real app, you would store the user data in context/state/store
+      console.log(`Logged in as ${user.name} (${user.type})`);
+    } else {
+      setError('Invalid email or password.');
+    }
   };
 
   return (
@@ -27,7 +65,10 @@ function Login() {
         <div className="login-form">
           <h2>Login</h2>
           <p className="subtitle">Enter your email and password</p>
-          <form onSubmit={handleHome}>
+          
+          {error && <div className="error-message">{error}</div>}
+          
+          <form onSubmit={handleLogin}>
             <label>Email</label>
             <input 
               type="email" 
@@ -61,13 +102,19 @@ function Login() {
           </form>
 
           <p className="signup-text">
-            Don’t have an account? <Link to="/registro">Signup</Link>
+            Don't have an account? <Link to="/registro">Signup</Link>
           </p>
 
+          {/* For testing purposes - remove in production */}
+          <div className="test-credentials">
+            <p><strong>Test credentials:</strong></p>
+            <p>Admin: admin@tochi.com / admin123</p>
+            <p>Client: client@tochi.com / client123</p>
+          </div>
         </div>
       </div>
     </div>
   )
 }
 
-export default Login
+export default Login;

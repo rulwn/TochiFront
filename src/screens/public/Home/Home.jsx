@@ -1,12 +1,12 @@
 // Importación de bibliotecas y componentes necesarios
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import ProductCard from '../../components/Products/ProductCard';
-import CategoriesCard from '../../components/Products/CategoriesCard';
-import SearchBar from '../../components/Search Bar/Search'; 
-import Carousel from '../../components/Carousel/Carousel';
+import ProductCard from '../../../components/Products/ProductCard';
+import CategoriesCard from '../../../components/Products/CategoriesCard';
+import SearchBar from '../../../components/Search Bar/Search'; 
+import Carousel from '../../../components/Carousel/Carousel';
 import './Home.css';
-import { featuredProducts, categories } from '../../assets/mockProps/mocks';
+import { featuredProducts, categories } from '../../../assets/mockProps/mocks';
 
 // Componente principal Home que recibe props para manejar el carrito
 function Home({ onAddToCart, cartItems }) {

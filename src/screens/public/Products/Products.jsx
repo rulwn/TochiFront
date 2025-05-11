@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import './Products.css';
-import ProductCard from '../../components/Products/ProductCard';
-import SearchBar from '../../components/Search Bar/Search';
-import Combobox from '../../components/Search Bar/Combobox';
+import ProductCard from '../../../components/Products/ProductCard';
+import SearchBar from '../../../components/Search Bar/Search';
+import Combobox from '../../../components/Search Bar/Combobox';
 
 function Products({onAddToCart, cartItems}) {
 

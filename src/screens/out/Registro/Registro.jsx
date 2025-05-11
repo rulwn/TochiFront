@@ -1,6 +1,6 @@
 import React from 'react';
 import './Registro.css';
-import logo from '../../assets/Logo.png';
+import logo from '../../../assets/Logo.png';
 import { Link } from 'react-router-dom';
 
 function Registro() {
