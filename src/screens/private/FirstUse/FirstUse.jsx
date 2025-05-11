@@ -1,14 +1,14 @@
 import React from 'react';
-import './Registro.css';
-import logo from '../../../assets/Logo.png';
+import './FirstUse.css';    
+import logo from '../../../assets/LogoBlanco.png';
 import { Link } from 'react-router-dom';
 
-function Registro() {
+function FirstUse() {
   return (
-    <div className="registro-container">
-      <div className="form-card">
-        <img src={logo} alt="Tochi Logo" className="logo" />
-        <h2>Sign Up</h2>
+    <div className="firstuse-container">
+      <div className="firstuse-card">
+        <img src={logo} alt="Tochi Logo" className="firstuse-logo" />
+        <h2>First Use sign in</h2>
         <p>Enter your credentials to continue</p>
         <form>
           <label>Username</label>
@@ -26,18 +26,17 @@ function Registro() {
           <label>Password</label>
           <input type="password" placeholder="********" />
           
-          <div className="terms">
+          <div className="firstuse-terms">
             By continuing you agree to our{' '}
             <Link to="/termsAndConditions">Terms of Service</Link> and{' '}
             <Link to="/termsAndConditions">Privacy Policy</Link>.
           </div>
 
-          {/* Botón que lleva a login */}
-          <Link to="/login" className="btn-link">
+          <Link to="/login" className="firstuse-btn-link">
             <button type="button">Sign Up</button>
           </Link>
 
-          <p className="signin-link">
+          <p className="firstuse-signin-link">
             Already have an account? <Link to="/login">Log in</Link>
           </p>
         </form>
@@ -46,4 +45,4 @@ function Registro() {
   );
 }
 
-export default Registro;
+export default FirstUse;

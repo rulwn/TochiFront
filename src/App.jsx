@@ -25,6 +25,7 @@ import AccountAdmin from './screens/private/AdminAccount/AdminAccount';
 import AdminUsers from './screens/private/AdminUsers/AdminUsers';
 import AdminProducts from './screens/private/AdminProducts/AdminProducts';
 import AdminOrders from './screens/private/AdminOrders/AdminOrders';
+import FirstUser from './screens/private/FirstUse/FirstUse';
 
 // Importación de componentes comunes
 import Navbar from './components/Nav/Navbar';
@@ -61,7 +62,7 @@ function App() {
   };
 
   // Rutas en las cuales no se debe mostrar el Navbar
-  const hideNavbarRoutes = ['/login', '/registro', '/putemail', '/putcode', '/newpassword'];
+  const hideNavbarRoutes = ['/login', '/registro', '/putemail', '/putcode', '/newpassword', '/firstuse'];
   
   // Rutas de administrador
   // En tu App.js, actualiza el array de adminRoutes:
@@ -70,7 +71,8 @@ const adminRoutes = [
   '/admin-account',
   '/admin-orders',
   '/admin-products',
-  '/admin-users'
+  '/admin-users',
+  '/firstuse'
 ];// Puedes agregar más rutas de admin aquí
 
   // Determinar si estamos en una ruta de admin
@@ -113,6 +115,7 @@ const adminRoutes = [
         <Route path="/admin-orders" element={<AdminOrders />} />
         <Route path="/admin-products" element={<AdminProducts />} />
         <Route path="/admin-users" element={<AdminUsers />} />
+        <Route path="/firstuse" element={<FirstUser />} />
         
         {/* Puedes agregar más rutas de admin aquí */}
         {/* <Route path="/admin/products" element={<AdminProducts />} /> */}
