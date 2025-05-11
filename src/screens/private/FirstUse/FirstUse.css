@@ -1,0 +1,168 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap');
+
+.firstuse-container {
+  padding: 70px;
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+}
+
+.firstuse-card {
+  background: #181725;
+  border-radius: 12px;
+  padding: 50px 40px;
+  width: 400px;
+  max-width: 100%;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+  text-align: center;
+  box-sizing: border-box;
+}
+
+.firstuse-logo {
+  width: 130px;
+  margin-bottom: 20px;
+  height: auto;
+}
+
+.firstuse-card h2 {
+  margin-bottom: 8px;
+  font-weight: 600;
+  font-size: 24px;
+  color: white;
+}
+
+.firstuse-card p {
+  color: white;
+  font-size: 14px;
+  margin-bottom: 25px;
+}
+
+.firstuse-card form {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.firstuse-card form label {
+  text-align: left;
+  font-size: 14px;
+  margin-bottom: 4px;
+  color: white;
+  font-weight: 500;
+}
+
+.firstuse-card form input {
+  padding: 12px 15px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  font-size: 14px;
+  background-color: #181725;
+  transition: all 0.3s ease;
+  outline: none;
+  width: 100%;
+  box-sizing: border-box;
+  font-family: 'Poppins', sans-serif;
+}
+
+.firstuse-card form input:focus {
+  border-color: #00BF63;
+  background-color: #181725;
+  box-shadow: 0 0 0 3px rgba(0, 191, 99, 0.1);
+}
+
+.firstuse-terms {
+  font-size: 12px;
+  color: white;
+  margin-top: 10px;
+  line-height: 1.4;
+}
+
+.firstuse-terms a {
+  color: #00BF63;
+  text-decoration: none;
+  font-weight: 500;
+}
+
+.firstuse-btn-link {
+  text-decoration: none;
+  display: block;
+}
+
+.firstuse-card button {
+  background-color: #00BF63;
+  color: white;
+  border: none;
+  padding: 14px;
+  border-radius: 8px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  margin-top: 10px;
+  transition: background-color 0.3s ease;
+  width: 100%;
+  font-family: 'Poppins', sans-serif;
+}
+
+.firstuse-card button:hover {
+  background-color: #00a653;
+}
+
+.firstuse-signin-link {
+  font-size: 13px;
+  margin-top: 20px;
+  color: white;
+}
+
+.firstuse-signin-link a {
+  color: #00BF63;
+  text-decoration: none;
+  font-weight: 500;
+}
+
+/* Responsive */
+@media (max-width: 480px) {
+  .firstuse-container {
+    padding: 40px 20px;
+  }
+
+  .firstuse-card {
+    width: 100%;
+    padding: 30px 20px;
+  }
+
+  .firstuse-logo {
+    width: 100px;
+  }
+
+  .firstuse-card h2 {
+    font-size: 20px;
+  }
+
+  .firstuse-card p {
+    font-size: 13px;
+  }
+
+  .firstuse-card form input {
+    font-size: 13px;
+    padding: 10px 12px;
+  }
+
+  .firstuse-card button {
+    font-size: 15px;
+    padding: 12px;
+  }
+}
+/* 
+  .firstuse-card .signin-link {
+    font-size: 13px;
+    margin-top: 20px;
+    color: #777;
+  }
+
+  .firstuse-card .signin-link a {
+    color: #00BF63;
+    text-decoration: none;
+    font-weight: 500;
+  } */
