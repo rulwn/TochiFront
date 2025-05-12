@@ -58,25 +58,27 @@ function AdminOrders() {
   );
 
   return (
-    <div className="admin-orders-container">
+    <div className="orders-admin-container">
       {/* Barra superior con controles */}
-      <div className="admin-controls">
-        <div className="search-container">
-          <FiSearch className="search-icon" />
+      <div className="orders-admin-controls">
+        <div className="orders-search-container">
+          <FiSearch className="orders-search-icon" />
           <input
             type="text"
             placeholder="Buscar órdenes por ID o cliente..."
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
+            className="orders-search-input"
           />
         </div>
         
-        <div className="controls-right">
-          <div className="filter-dropdown">
-            <FiFilter />
+        <div className="orders-controls-right">
+          <div className="orders-filter-dropdown">
+            <FiFilter className="orders-filter-icon" />
             <select 
               value={selectedFilter} 
               onChange={(e) => setSelectedFilter(e.target.value)}
+              className="orders-filter-select"
             >
               <option>Todas</option>
               <option>Activo</option>
@@ -84,62 +86,62 @@ function AdminOrders() {
               <option>Completado</option>
               <option>Cancelado</option>
             </select>
-            <FiChevronDown className="dropdown-arrow" />
+            <FiChevronDown className="orders-dropdown-arrow" />
           </div>
           
-          <button className="add-button">
-            <FiPlus /> Agregar
+          <button className="orders-add-button">
+            <FiPlus className="orders-add-icon" /> Agregar
           </button>
         </div>
       </div>
 
       {/* Listado de órdenes */}
-      <div className="orders-grid">
+      <div className="orders-list-grid">
         {filteredOrders.map(order => (
-          <div key={order.id} className={`order-card ${order.status.toLowerCase().replace(' ', '-')}`}>
-            <div className="order-header">
-              <h3>Orden #{order.id}</h3>
-              <span className={`status-badge ${order.status.toLowerCase().replace(' ', '-')}`}>
+          <div key={order.id} className={`orders-card orders-status-${order.status.toLowerCase().replace(' ', '-')}`}>
+            <div className="orders-card-header">
+              <h3 className="orders-card-title">Orden #{order.id}</h3>
+              <span className={`orders-status-badge orders-status-${order.status.toLowerCase().replace(' ', '-')}`}>
                 {order.status}
               </span>
             </div>
             
-            <div className="order-details">
-              <div className="detail-row">
-                <FiUser />
-                <span>{order.customer}</span>
+            <div className="orders-card-details">
+              <div className="orders-detail-row">
+                <FiUser className="orders-detail-icon" />
+                <span className="orders-detail-text">{order.customer}</span>
               </div>
               
-              <div className="detail-row">
-                <FiClock />
-                <span>{order.date}</span>
+              <div className="orders-detail-row">
+                <FiClock className="orders-detail-icon" />
+                <span className="orders-detail-text">{order.date}</span>
               </div>
               
-              <div className="detail-row">
-                <FiMapPin />
-                <span>{order.address}</span>
+              <div className="orders-detail-row">
+                <FiMapPin className="orders-detail-icon" />
+                <span className="orders-detail-text">{order.address}</span>
               </div>
               
-              <div className="metrics-row">
-                <div className="metric">
-                  <FiBox />
-                  <span>{order.items} items</span>
+              <div className="orders-metrics-row">
+                <div className="orders-metric">
+                  <FiBox className="orders-metric-icon" />
+                  <span className="orders-metric-text">{order.items} items</span>
                 </div>
                 
-                <div className="metric">
-                  <FiDollarSign />
-                  <span>${order.total.toFixed(2)}</span>
+                <div className="orders-metric">
+                  <FiDollarSign className="orders-metric-icon" />
+                  <span className="orders-metric-text">${order.total.toFixed(2)}</span>
                 </div>
                 
-                <div className="metric">
-                  <span className="delivery-tag">{order.deliveryType}</span>
+                <div className="orders-metric">
+                  <span className="orders-delivery-tag">{order.deliveryType}</span>
                 </div>
               </div>
             </div>
             
-            <div className="order-actions">
-              <button className="action-btn view-details">Ver detalles</button>
-              <button className="action-btn quick-action">
+            <div className="orders-card-actions">
+              <button className="orders-action-btn orders-view-details">Ver detalles</button>
+              <button className="orders-action-btn orders-quick-action">
                 {order.status === 'Activo' ? 'Procesar' : 
                  order.status === 'En proceso' ? 'Completar' : 'Reabrir'}
               </button>
