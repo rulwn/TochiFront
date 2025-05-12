@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { LuSearch, LuPlus, LuFilter, LuSquare, LuCheck, LuX, LuPencil, LuTrash2 } from 'react-icons/lu';
 import './AdminProducts.css';
-import AddProductModal from './AddProductModal'; // Importaremos este componente
+import AddProductModal from './AddProductModal';
 import EditProductModal from './EditProductModal';
 
 const AdminProductCard = ({
@@ -153,12 +153,9 @@ function AdminProducts() {
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
 
   const handleEditProduct = (product) => {
-    if (!selectionMode) {
-      setEditingProduct(product);
-      setIsEditModalOpen(true);
-    }
+    setEditingProduct(product);
+    setIsEditModalOpen(true);
   };
-
   const toggleSelectionMode = () => {
     setSelectionMode(!selectionMode);
     if (selectionMode) {
@@ -247,7 +244,8 @@ function AdminProducts() {
               onClick={() => {
                 if (selectedProducts.length === 1) {
                   const productToEdit = products.find(p => p.id === selectedProducts[0]);
-                  handleEditProduct(productToEdit);
+                  setEditingProduct(productToEdit);
+                  setIsEditModalOpen(true);
                 }
               }}
               disabled={selectedProducts.length !== 1}
