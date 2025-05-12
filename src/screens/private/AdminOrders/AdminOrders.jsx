@@ -1,10 +1,11 @@
 import React, { useState } from 'react';
 import './AdminOrders.css';
-import { FiSearch, FiPlus, FiFilter, FiChevronDown, FiBox, FiClock, FiUser, FiMapPin, FiDollarSign } from 'react-icons/fi';
+import { FiSearch, FiPlus, FiFilter, FiChevronDown, FiBox, FiClock, FiUser, FiMapPin, FiDollarSign, FiCheck } from 'react-icons/fi';
 
-function AdminOrders() {
+function AdminOrdersImproved() {
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedFilter, setSelectedFilter] = useState('Todas');
+  const [selectedOrders, setSelectedOrders] = useState([]);
   
   // Datos de ejemplo para órdenes
   const orders = [
@@ -57,12 +58,28 @@ function AdminOrders() {
     selectedFilter === 'Todas' || order.status === selectedFilter
   );
 
+  const toggleOrderSelection = (orderId) => {
+    setSelectedOrders(prev => 
+      prev.includes(orderId) 
+        ? prev.filter(id => id !== orderId) 
+        : [...prev, orderId]
+    );
+  };
+
+  const handleSelectAll = () => {
+    if (selectedOrders.length === filteredOrders.length) {
+      setSelectedOrders([]);
+    } else {
+      setSelectedOrders(filteredOrders.map(order => order.id));
+    }
+  };
+
   return (
-    <div className="admin-orders-container">
+    <div className="admin-orders-improved">
       {/* Barra superior con controles */}
-      <div className="admin-controls">
-        <div className="search-container">
-          <FiSearch className="search-icon" />
+      <div className="admin-orders-controls">
+        <div className="admin-orders-search">
+          <FiSearch className="admin-orders-search-icon" />
           <input
             type="text"
             placeholder="Buscar órdenes por ID o cliente..."
@@ -71,8 +88,8 @@ function AdminOrders() {
           />
         </div>
         
-        <div className="controls-right">
-          <div className="filter-dropdown">
+        <div className="admin-orders-filters">
+          <div className="admin-orders-filter">
             <FiFilter />
             <select 
               value={selectedFilter} 
@@ -84,62 +101,82 @@ function AdminOrders() {
               <option>Completado</option>
               <option>Cancelado</option>
             </select>
-            <FiChevronDown className="dropdown-arrow" />
+            <FiChevronDown className="admin-orders-dropdown-arrow" />
           </div>
           
-          <button className="add-button">
-            <FiPlus /> Agregar
-          </button>
+          <div className="admin-orders-buttons">
+            <button 
+              className="admin-orders-select-btn"
+              onClick={handleSelectAll}
+            >
+              {selectedOrders.length === filteredOrders.length ? 'Deseleccionar' : 'Seleccionar'}
+            </button>
+            <button className="admin-orders-add-btn">
+              <FiPlus /> Agregar
+            </button>
+          </div>
         </div>
       </div>
 
       {/* Listado de órdenes */}
-      <div className="orders-grid">
+      <div className="admin-orders-grid">
         {filteredOrders.map(order => (
-          <div key={order.id} className={`order-card ${order.status.toLowerCase().replace(' ', '-')}`}>
-            <div className="order-header">
+          <div 
+            key={order.id} 
+            className={`admin-orders-card ${order.status.toLowerCase().replace(' ', '-')} ${
+              selectedOrders.includes(order.id) ? 'selected' : ''
+            }`}
+            onClick={() => toggleOrderSelection(order.id)}
+          >
+            {selectedOrders.includes(order.id) && (
+              <div className="admin-orders-checkmark">
+                <FiCheck />
+              </div>
+            )}
+            
+            <div className="admin-orders-header">
               <h3>Orden #{order.id}</h3>
-              <span className={`status-badge ${order.status.toLowerCase().replace(' ', '-')}`}>
+              <span className={`admin-orders-status ${order.status.toLowerCase().replace(' ', '-')}`}>
                 {order.status}
               </span>
             </div>
             
-            <div className="order-details">
-              <div className="detail-row">
+            <div className="admin-orders-details">
+              <div className="admin-orders-detail">
                 <FiUser />
                 <span>{order.customer}</span>
               </div>
               
-              <div className="detail-row">
+              <div className="admin-orders-detail">
                 <FiClock />
                 <span>{order.date}</span>
               </div>
               
-              <div className="detail-row">
+              <div className="admin-orders-detail">
                 <FiMapPin />
                 <span>{order.address}</span>
               </div>
               
-              <div className="metrics-row">
-                <div className="metric">
+              <div className="admin-orders-metrics">
+                <div className="admin-orders-metric">
                   <FiBox />
                   <span>{order.items} items</span>
                 </div>
                 
-                <div className="metric">
+                <div className="admin-orders-metric">
                   <FiDollarSign />
                   <span>${order.total.toFixed(2)}</span>
                 </div>
                 
-                <div className="metric">
-                  <span className="delivery-tag">{order.deliveryType}</span>
+                <div className="admin-orders-metric">
+                  <span className="admin-orders-delivery">{order.deliveryType}</span>
                 </div>
               </div>
             </div>
             
-            <div className="order-actions">
-              <button className="action-btn view-details">Ver detalles</button>
-              <button className="action-btn quick-action">
+            <div className="admin-orders-actions">
+              <button className="admin-orders-view-btn">Ver detalles</button>
+              <button className="admin-orders-action-btn">
                 {order.status === 'Activo' ? 'Procesar' : 
                  order.status === 'En proceso' ? 'Completar' : 'Reabrir'}
               </button>
@@ -151,4 +188,4 @@ function AdminOrders() {
   );
 }
 
-export default AdminOrders;
+export default AdminOrdersImproved;

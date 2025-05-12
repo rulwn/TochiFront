@@ -1,18 +1,17 @@
+/* AdminOrdersImproved.css */
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
 
-:root {
+.admin-orders-improved {
   --bg-color: #181725;
   --card-bg: #252836;
   --text-primary: #FFFFFF;
   --text-secondary: #B7B9D2;
-  --accent-color: #6C5ECF;
+  --accent-color: #2e7d32;
   --active-color: #38E25D;
   --process-color: #FFA500;
-  --completed-color: #6C5ECF;
+  --completed-color: #2e7d32;
   --canceled-color: #FF4D4D;
-}
 
-.admin-orders-container {
   background-color: var(--bg-color);
   min-height: 100vh;
   padding: 2rem;
@@ -20,7 +19,7 @@
   color: var(--text-primary);
 }
 
-.admin-controls {
+.admin-orders-controls {
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -28,13 +27,13 @@
   gap: 1rem;
 }
 
-.search-container {
+.admin-orders-search {
   position: relative;
   flex-grow: 1;
   max-width: 500px;
 }
 
-.search-container input {
+.admin-orders-search input {
   width: 100%;
   padding: 0.75rem 2.5rem;
   background-color: var(--card-bg);
@@ -42,9 +41,10 @@
   border-radius: 12px;
   color: var(--text-primary);
   font-size: 0.95rem;
+  font-family: 'Poppins', sans-serif;
 }
 
-.search-icon {
+.admin-orders-search-icon {
   position: absolute;
   left: 1rem;
   top: 50%;
@@ -52,13 +52,13 @@
   color: var(--text-secondary);
 }
 
-.controls-right {
+.admin-orders-filters {
   display: flex;
   align-items: center;
   gap: 1rem;
 }
 
-.filter-dropdown {
+.admin-orders-filter {
   position: relative;
   display: flex;
   align-items: center;
@@ -67,23 +67,45 @@
   padding: 0.5rem 1rem;
 }
 
-.filter-dropdown select {
+.admin-orders-filter select {
   appearance: none;
   background: transparent;
   border: none;
   color: var(--text-primary);
   padding-right: 1.5rem;
   cursor: pointer;
+  font-family: 'Poppins', sans-serif;
 }
 
-.dropdown-arrow {
+.admin-orders-dropdown-arrow {
   position: absolute;
   right: 0.75rem;
   pointer-events: none;
   color: var(--text-secondary);
 }
 
-.add-button {
+.admin-orders-buttons {
+  display: flex;
+  gap: 1rem;
+}
+
+.admin-orders-select-btn {
+  background-color: transparent;
+  color: var(--accent-color);
+  border: 1px solid var(--accent-color);
+  border-radius: 12px;
+  padding: 0.75rem 1.5rem;
+  cursor: pointer;
+  font-weight: 500;
+  transition: all 0.3s ease;
+  font-family: 'Poppins', sans-serif;
+}
+
+.admin-orders-select-btn:hover {
+  background-color: rgba(46, 125, 50, 0.1);
+}
+
+.admin-orders-add-btn {
   background-color: var(--accent-color);
   color: white;
   border: none;
@@ -95,79 +117,104 @@
   cursor: pointer;
   font-weight: 500;
   transition: all 0.3s ease;
+  font-family: 'Poppins', sans-serif;
 }
 
-.add-button:hover {
-  background-color: #5a4bbf;
+.admin-orders-add-btn:hover {
+  background-color: #1b5e20;
   transform: translateY(-2px);
 }
 
-.orders-grid {
+.admin-orders-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
   gap: 1.5rem;
 }
 
-.order-card {
+.admin-orders-card {
   background-color: var(--card-bg);
   border-radius: 16px;
   padding: 1.5rem;
   transition: all 0.3s ease;
+  position: relative;
+  cursor: pointer;
 }
 
-.order-card:hover {
+.admin-orders-card:hover {
   transform: translateY(-5px);
   box-shadow: 0 10px 20px rgba(0,0,0,0.2);
 }
 
-.order-header {
+.admin-orders-card.selected {
+  border: 2px solid var(--accent-color);
+  background-color: rgba(46, 125, 50, 0.05);
+}
+
+.admin-orders-checkmark {
+  position: absolute;
+  top: -10px;
+  right: -10px;
+  width: 24px;
+  height: 24px;
+  background-color: var(--accent-color);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-size: 0.8rem;
+  z-index: 1;
+}
+
+.admin-orders-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
   margin-bottom: 1.25rem;
 }
 
-.order-header h3 {
+.admin-orders-header h3 {
   margin: 0;
   font-size: 1.1rem;
   font-weight: 600;
+  color: var(--text-primary);
 }
 
-.status-badge {
+.admin-orders-status {
   padding: 0.35rem 0.75rem;
   border-radius: 20px;
   font-size: 0.75rem;
   font-weight: 500;
 }
 
-.status-badge.active {
+.admin-orders-status.active {
   background-color: rgba(56, 226, 93, 0.15);
   color: var(--active-color);
 }
 
-.status-badge.en-proceso {
+.admin-orders-status.en-proceso {
   background-color: rgba(255, 165, 0, 0.15);
   color: var(--process-color);
 }
 
-.status-badge.completado {
-  background-color: rgba(108, 94, 207, 0.15);
+.admin-orders-status.completado {
+  background-color: rgba(46, 125, 50, 0.15);
   color: var(--completed-color);
 }
 
-.status-badge.cancelado {
+.admin-orders-status.cancelado {
   background-color: rgba(255, 77, 77, 0.15);
   color: var(--canceled-color);
 }
 
-.order-details {
+.admin-orders-details {
   display: flex;
   flex-direction: column;
   gap: 0.75rem;
   margin-bottom: 1.5rem;
 }
 
-.detail-row {
+.admin-orders-detail {
   display: flex;
   align-items: flex-start;
   gap: 0.75rem;
@@ -175,18 +222,18 @@
   font-size: 0.9rem;
 }
 
-.detail-row svg {
+.admin-orders-detail svg {
   flex-shrink: 0;
   margin-top: 0.15rem;
 }
 
-.metrics-row {
+.admin-orders-metrics {
   display: flex;
   gap: 1rem;
   margin-top: 1rem;
 }
 
-.metric {
+.admin-orders-metric {
   display: flex;
   align-items: center;
   gap: 0.35rem;
@@ -194,68 +241,73 @@
   color: var(--text-secondary);
 }
 
-.metric svg {
+.admin-orders-metric svg {
   color: var(--accent-color);
 }
 
-.delivery-tag {
-  background-color: rgba(108, 94, 207, 0.2);
+.admin-orders-delivery {
+  background-color: rgba(46, 125, 50, 0.2);
   color: var(--accent-color);
   padding: 0.25rem 0.75rem;
   border-radius: 12px;
   font-size: 0.8rem;
 }
 
-.order-actions {
+.admin-orders-actions {
   display: flex;
   gap: 0.75rem;
 }
 
-.action-btn {
+.admin-orders-view-btn {
   flex: 1;
   padding: 0.5rem;
   border-radius: 8px;
   font-size: 0.85rem;
   cursor: pointer;
   transition: all 0.2s ease;
-}
-
-.view-details {
   background: transparent;
   border: 1px solid var(--accent-color);
   color: var(--accent-color);
+  font-family: 'Poppins', sans-serif;
 }
 
-.view-details:hover {
-  background: rgba(108, 94, 207, 0.1);
+.admin-orders-view-btn:hover {
+  background: rgba(46, 125, 50, 0.1);
 }
 
-.quick-action {
+.admin-orders-action-btn {
+  flex: 1;
+  padding: 0.5rem;
+  border-radius: 8px;
+  font-size: 0.85rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
   background-color: var(--accent-color);
   color: white;
   border: none;
+  font-family: 'Poppins', sans-serif;
 }
 
-.quick-action:hover {
-  background-color: #5a4bbf;
+.admin-orders-action-btn:hover {
+  background-color: #1b5e20;
 }
 
 @media (max-width: 768px) {
-  .admin-controls {
+  .admin-orders-controls {
     flex-direction: column;
   }
   
-  .search-container {
+  .admin-orders-search {
     width: 100%;
     max-width: none;
   }
   
-  .controls-right {
+  .admin-orders-filters {
     width: 100%;
     justify-content: space-between;
   }
   
-  .orders-grid {
+  .admin-orders-grid {
     grid-template-columns: 1fr;
   }
 }
