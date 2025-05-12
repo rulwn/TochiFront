@@ -140,7 +140,7 @@ const AddUserModal = ({ onClose, onSave }) => {
             </div>
           
             <div className="form-row">
-              <div className="form-group">
+              <div className="form-group-user">
                 <label htmlFor="email">Email*</label>
                 <input
                   type="email"
@@ -154,7 +154,7 @@ const AddUserModal = ({ onClose, onSave }) => {
                 {errors.email && <span className="error-message">{errors.email}</span>}
               </div>
               
-              <div className="form-group">
+              <div className="form-group-user">
                 <label htmlFor="password">Contraseña*</label>
                 <input
                   type="password"
@@ -170,7 +170,7 @@ const AddUserModal = ({ onClose, onSave }) => {
             </div>
           
             <div className="form-row">
-              <div className="form-group">
+              <div className="form-group-user">
                 <label htmlFor="phone">Teléfono*</label>
                 <input
                   type="tel"
@@ -184,7 +184,7 @@ const AddUserModal = ({ onClose, onSave }) => {
                 {errors.phone && <span className="error-message">{errors.phone}</span>}
               </div>
               
-              <div className="form-group">
+              <div className="form-group-user">
                 <label htmlFor="address">Dirección</label>
                 <input
                   type="text"
@@ -196,7 +196,7 @@ const AddUserModal = ({ onClose, onSave }) => {
               </div>
             </div>
           
-            <div className="form-group">
+            <div className="form-group-user">
               <label htmlFor="imageFile">Foto de Perfil</label>
               <div className="file-upload-container">
                 <button 

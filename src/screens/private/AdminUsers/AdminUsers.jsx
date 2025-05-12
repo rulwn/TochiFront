@@ -222,12 +222,12 @@ function AdminUsers() {
           </div>
 
           <div className="search-filter-container">
-            <div className="search-container">
-              <LuSearch className="search-icon" size={20} />
+            <div className="search-container-user">
+              <LuSearch className="search-icon-user" size={20} />
               <input
                 type="text"
                 placeholder="Buscar usuarios..."
-                className="search-input"
+                className="search-input-user"
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
               />

@@ -75,7 +75,7 @@
   flex-wrap: wrap;
 }
 
-.search-container {
+.search-container-user {
   position: relative;
   display: flex;
   align-items: center;
@@ -83,13 +83,13 @@
   min-width: 250px;
 }
 
-.search-icon {
+.search-icon-user {
   position: absolute;
   left: 12px;
   color: #a0a0a0;
 }
 
-.search-input {
+.search-input-user {
   padding: 10px 15px 10px 40px;
   border-radius: 8px;
   border: 1px solid #2d2d3a;
@@ -101,11 +101,11 @@
   color: #ffffff;
 }
 
-.search-input::placeholder {
+.search-input-user::placeholder {
   color: #a0a0a0;
 }
 
-.search-input:focus {
+.search-input-user:focus {
   outline: none;
   border-color: #00bf63;
 }
@@ -552,20 +552,20 @@
   gap: 15px;
 }
 
-.form-group {
+.form-group-user {
   display: flex;
   flex-direction: column;
   gap: 8px;
 }
 
-.form-group label {
+.form-group-user label {
   font-size: 14px;
   color: #a0a0a0;
 }
 
-.form-group input,
-.form-group textarea,
-.form-group select {
+.form-group-user input,
+.form-group-user textarea,
+.form-group-user select {
   padding: 10px 12px;
   border-radius: 6px;
   border: 1px solid #3d3d4a;
@@ -575,9 +575,14 @@
   transition: border-color 0.3s ease;
 }
 
-.form-group input:focus,
-.form-group textarea:focus,
-.form-group select:focus {
+.form-group-user input:focus,
+.form-group-user textarea:focus,
+.form-group-user select:focus {
+  outline: none;
+  border-color: #00bf63;
+}
+.form-group-user textarea:focus,
+.form-group-user select:focus {
   outline: none;
   border-color: #00bf63;
 }
@@ -587,7 +592,7 @@
   gap: 15px;
 }
 
-.form-row .form-group {
+.form-row .form-group-user {
   flex: 1;
 }
 
