@@ -20,7 +20,7 @@ function AdminAccount() {
         />
         <div className="admin-account-info">
           <h1>Wilfredo Granados</h1>
-          <p className="admin-account-email">ing_wilfredo@gmail.com</p>
+          <p className="admin-account-email"><trim>ing_wilfredo@gmail.com</trim></p>
         </div>
       </div>
 

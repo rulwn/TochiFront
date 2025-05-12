@@ -1,10 +1,11 @@
 import React, { useState } from 'react';
 import './AdminOrders.css';
-import { FiSearch, FiPlus, FiFilter, FiChevronDown, FiBox, FiClock, FiUser, FiMapPin, FiDollarSign } from 'react-icons/fi';
+import { FiSearch, FiPlus, FiFilter, FiChevronDown, FiBox, FiClock, FiUser, FiMapPin, FiDollarSign, FiCheck } from 'react-icons/fi';
 
-function AdminOrders() {
+function AdminOrdersImproved() {
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedFilter, setSelectedFilter] = useState('Todas');
+  const [selectedOrders, setSelectedOrders] = useState([]);
   
   // Datos de ejemplo para órdenes
   const orders = [
@@ -57,12 +58,36 @@ function AdminOrders() {
     selectedFilter === 'Todas' || order.status === selectedFilter
   );
 
+  const toggleOrderSelection = (orderId) => {
+    setSelectedOrders(prev => 
+      prev.includes(orderId) 
+        ? prev.filter(id => id !== orderId) 
+        : [...prev, orderId]
+    );
+  };
+
+  const handleSelectAll = () => {
+    if (selectedOrders.length === filteredOrders.length) {
+      setSelectedOrders([]);
+    } else {
+      setSelectedOrders(filteredOrders.map(order => order.id));
+    }
+  };
+
   return (
+<<<<<<< HEAD
     <div className="orders-admin-container">
       {/* Barra superior con controles */}
       <div className="orders-admin-controls">
         <div className="orders-search-container">
           <FiSearch className="orders-search-icon" />
+=======
+    <div className="admin-orders-improved">
+      {/* Barra superior con controles */}
+      <div className="admin-orders-controls">
+        <div className="admin-orders-search">
+          <FiSearch className="admin-orders-search-icon" />
+>>>>>>> c419aba4032c26061ea18233558bf125dfe370c5
           <input
             type="text"
             placeholder="Buscar órdenes por ID o cliente..."
@@ -72,9 +97,15 @@ function AdminOrders() {
           />
         </div>
         
+<<<<<<< HEAD
         <div className="orders-controls-right">
           <div className="orders-filter-dropdown">
             <FiFilter className="orders-filter-icon" />
+=======
+        <div className="admin-orders-filters">
+          <div className="admin-orders-filter">
+            <FiFilter />
+>>>>>>> c419aba4032c26061ea18233558bf125dfe370c5
             <select 
               value={selectedFilter} 
               onChange={(e) => setSelectedFilter(e.target.value)}
@@ -86,26 +117,65 @@ function AdminOrders() {
               <option>Completado</option>
               <option>Cancelado</option>
             </select>
+<<<<<<< HEAD
             <FiChevronDown className="orders-dropdown-arrow" />
           </div>
           
           <button className="orders-add-button">
             <FiPlus className="orders-add-icon" /> Agregar
           </button>
+=======
+            <FiChevronDown className="admin-orders-dropdown-arrow" />
+          </div>
+          
+          <div className="admin-orders-buttons">
+            <button 
+              className="admin-orders-select-btn"
+              onClick={handleSelectAll}
+            >
+              {selectedOrders.length === filteredOrders.length ? 'Deseleccionar' : 'Seleccionar'}
+            </button>
+            <button className="admin-orders-add-btn">
+              <FiPlus /> Agregar
+            </button>
+          </div>
+>>>>>>> c419aba4032c26061ea18233558bf125dfe370c5
         </div>
       </div>
 
       {/* Listado de órdenes */}
+<<<<<<< HEAD
       <div className="orders-list-grid">
         {filteredOrders.map(order => (
           <div key={order.id} className={`orders-card orders-status-${order.status.toLowerCase().replace(' ', '-')}`}>
             <div className="orders-card-header">
               <h3 className="orders-card-title">Orden #{order.id}</h3>
               <span className={`orders-status-badge orders-status-${order.status.toLowerCase().replace(' ', '-')}`}>
+=======
+      <div className="admin-orders-grid">
+        {filteredOrders.map(order => (
+          <div 
+            key={order.id} 
+            className={`admin-orders-card ${order.status.toLowerCase().replace(' ', '-')} ${
+              selectedOrders.includes(order.id) ? 'selected' : ''
+            }`}
+            onClick={() => toggleOrderSelection(order.id)}
+          >
+            {selectedOrders.includes(order.id) && (
+              <div className="admin-orders-checkmark">
+                <FiCheck />
+              </div>
+            )}
+            
+            <div className="admin-orders-header">
+              <h3>Orden #{order.id}</h3>
+              <span className={`admin-orders-status ${order.status.toLowerCase().replace(' ', '-')}`}>
+>>>>>>> c419aba4032c26061ea18233558bf125dfe370c5
                 {order.status}
               </span>
             </div>
             
+<<<<<<< HEAD
             <div className="orders-card-details">
               <div className="orders-detail-row">
                 <FiUser className="orders-detail-icon" />
@@ -135,13 +205,50 @@ function AdminOrders() {
                 
                 <div className="orders-metric">
                   <span className="orders-delivery-tag">{order.deliveryType}</span>
+=======
+            <div className="admin-orders-details">
+              <div className="admin-orders-detail">
+                <FiUser />
+                <span>{order.customer}</span>
+              </div>
+              
+              <div className="admin-orders-detail">
+                <FiClock />
+                <span>{order.date}</span>
+              </div>
+              
+              <div className="admin-orders-detail">
+                <FiMapPin />
+                <span>{order.address}</span>
+              </div>
+              
+              <div className="admin-orders-metrics">
+                <div className="admin-orders-metric">
+                  <FiBox />
+                  <span>{order.items} items</span>
+                </div>
+                
+                <div className="admin-orders-metric">
+                  <FiDollarSign />
+                  <span>${order.total.toFixed(2)}</span>
+                </div>
+                
+                <div className="admin-orders-metric">
+                  <span className="admin-orders-delivery">{order.deliveryType}</span>
+>>>>>>> c419aba4032c26061ea18233558bf125dfe370c5
                 </div>
               </div>
             </div>
             
+<<<<<<< HEAD
             <div className="orders-card-actions">
               <button className="orders-action-btn orders-view-details">Ver detalles</button>
               <button className="orders-action-btn orders-quick-action">
+=======
+            <div className="admin-orders-actions">
+              <button className="admin-orders-view-btn">Ver detalles</button>
+              <button className="admin-orders-action-btn">
+>>>>>>> c419aba4032c26061ea18233558bf125dfe370c5
                 {order.status === 'Activo' ? 'Procesar' : 
                  order.status === 'En proceso' ? 'Completar' : 'Reabrir'}
               </button>
@@ -153,4 +260,4 @@ function AdminOrders() {
   );
 }
 
-export default AdminOrders;
+export default AdminOrdersImproved;

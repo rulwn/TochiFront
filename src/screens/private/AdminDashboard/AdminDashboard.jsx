@@ -1,142 +1,231 @@
-import React from 'react';
-import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, PieChart, Pie, Cell } from 'recharts';
+import React, { useState } from 'react';
 import './AdminDashboard.css';
+import { FiSearch, FiPlus, FiFilter, FiChevronDown, FiBox, FiClock, FiUser, FiMapPin, FiDollarSign, FiCheck } from 'react-icons/fi';
 
-const AdminDashboard = () => {
-  // Datos de prueba para los gráficos
-  const salesData = [
-    { name: 'Ene', ventas: 4000 },
-    { name: 'Feb', ventas: 3000 },
-    { name: 'Mar', ventas: 2000 },
-    { name: 'Abr', ventas: 2780 },
-    { name: 'May', ventas: 1890 },
-    { name: 'Jun', ventas: 2390 },
+function AdminDashboardComplete() {
+  const [searchTerm, setSearchTerm] = useState('');
+  const [selectedFilter, setSelectedFilter] = useState('Todas');
+  const [selectedOrders, setSelectedOrders] = useState([]);
+  
+  // Datos de ejemplo
+  const stats = [
+    { title: 'Ventas Totales', value: '$12,345', change: '+12%', trend: 'up' },
+    { title: 'Órdenes', value: '189', change: '+5%', trend: 'up' },
+    { title: 'Clientes', value: '342', change: '+8%', trend: 'up' },
+    { title: 'Productos', value: '56', change: '-2%', trend: 'down' }
   ];
 
-  const productData = [
-    { name: 'Producto A', value: 400 },
-    { name: 'Producto B', value: 300 },
-    { name: 'Producto C', value: 300 },
-    { name: 'Producto D', value: 200 },
+  const orders = [
+    {
+      id: 'ORD-2023-0015',
+      customer: 'Raúl Ochoa',
+      date: '27/11/2024',
+      status: 'Activo',
+      address: 'Av. Roosevelt, Calle La Escalón 97',
+      items: 3,
+      total: 45.50,
+      deliveryType: 'Express'
+    },
+    {
+      id: 'ORD-2023-0014',
+      customer: 'María Fernández',
+      date: '26/11/2024',
+      status: 'Completado',
+      address: 'Colonia San Benito, Calle 5 #123',
+      items: 5,
+      total: 78.20,
+      deliveryType: 'Estándar'
+    },
+    {
+      id: 'ORD-2023-0013',
+      customer: 'Carlos Martínez',
+      date: '25/11/2024',
+      status: 'Cancelado',
+      address: 'Residencial Las Magnolias, Bloque C',
+      items: 2,
+      total: 32.75,
+      deliveryType: 'Recoger'
+    }
   ];
 
-  const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042'];
+  const recentOrders = [
+    { id: 'ORD-001', customer: 'Juan Pérez', date: '2023-11-28', amount: '$120.00', status: 'Completado' },
+    { id: 'ORD-002', customer: 'María López', date: '2023-11-27', amount: '$85.50', status: 'Pendiente' },
+    { id: 'ORD-003', customer: 'Carlos Gómez', date: '2023-11-26', amount: '$210.00', status: 'Enviado' },
+    { id: 'ORD-004', customer: 'Ana Rodríguez', date: '2023-11-25', amount: '$65.75', status: 'Completado' }
+  ];
+
+  const toggleOrderSelection = (orderId) => {
+    setSelectedOrders(prev => 
+      prev.includes(orderId) 
+        ? prev.filter(id => id !== orderId) 
+        : [...prev, orderId]
+    );
+  };
 
   return (
-    <div className="admin-dashboard">
+    <div className="admin-dashboard-complete">
+      {/* Sección de Estadísticas */}
       <h1 className="dashboard-title">Panel de Administración</h1>
       
-      <div className="stats-container">
-        <div className="stat-card">
-          <h3>Ventas Totales</h3>
-          <p>$24,780</p>
-          <span>+12% vs mes anterior</span>
-        </div>
-        
-        <div className="stat-card">
-          <h3>Órdenes</h3>
-          <p>189</p>
-          <span>+8% vs mes anterior</span>
-        </div>
-        
-        <div className="stat-card">
-          <h3>Usuarios</h3>
-          <p>1,243</p>
-          <span>+5% vs mes anterior</span>
-        </div>
-        
-        <div className="stat-card">
-          <h3>Productos</h3>
-          <p>56</p>
-          <span>+3 nuevos este mes</span>
-        </div>
+      <div className="stats-grid">
+        {stats.map((stat, index) => (
+          <div key={index} className="stat-card">
+            <h3>{stat.title}</h3>
+            <p>{stat.value}</p>
+            <span className={`trend-${stat.trend}`}>{stat.change}</span>
+          </div>
+        ))}
       </div>
-      
-      <div className="charts-row">
-        <div className="chart-container">
-          <h3>Ventas Mensuales</h3>
-          <ResponsiveContainer width="100%" height={300}>
-            <BarChart data={salesData}>
-              <CartesianGrid strokeDasharray="3 3" />
-              <XAxis dataKey="name" />
-              <YAxis />
-              <Tooltip />
-              <Legend />
-              <Bar dataKey="ventas" fill="#00BF63" />
-            </BarChart>
-          </ResponsiveContainer>
+
+      {/* Sección de Gráficos y Órdenes Recientes */}
+      <div className="dashboard-main-content">
+        <div className="charts-section">
+          <div className="chart-container">
+            <h3>Ventas Mensuales</h3>
+            <div className="chart-placeholder">
+              [Gráfico de Ventas Mensuales]
+            </div>
+          </div>
+          
+          <div className="chart-container">
+            <h3>Productos Más Vendidos</h3>
+            <div className="chart-placeholder">
+              [Gráfico de Productos]
+            </div>
+          </div>
         </div>
-        
-        <div className="chart-container">
-          <h3>Productos Más Vendidos</h3>
-          <ResponsiveContainer width="100%" height={300}>
-            <PieChart>
-              <Pie
-                data={productData}
-                cx="50%"
-                cy="50%"
-                labelLine={false}
-                outerRadius={80}
-                fill="#8884d8"
-                dataKey="value"
-                label={({ name, percent }) => `${name}: ${(percent * 100).toFixed(0)}%`}
-              >
-                {productData.map((entry, index) => (
-                  <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+
+        <div className="recent-orders-section">
+          <div className="recent-orders">
+            <h3>Órdenes Recientes</h3>
+            <table>
+              <thead>
+                <tr>
+                  <th>ID</th>
+                  <th>Cliente</th>
+                  <th>Fecha</th>
+                  <th>Monto</th>
+                  <th>Estado</th>
+                </tr>
+              </thead>
+              <tbody>
+                {recentOrders.map((order) => (
+                  <tr key={order.id}>
+                    <td>{order.id}</td>
+                    <td>{order.customer}</td>
+                    <td>{order.date}</td>
+                    <td>{order.amount}</td>
+                    <td className={`status-${order.status.toLowerCase()}`}>
+                      {order.status}
+                    </td>
+                  </tr>
                 ))}
-              </Pie>
-              <Tooltip />
-            </PieChart>
-          </ResponsiveContainer>
+              </tbody>
+            </table>
+          </div>
         </div>
       </div>
-      
-      <div className="recent-orders">
-        <h3>Órdenes Recientes</h3>
-        <table>
-          <thead>
-            <tr>
-              <th>ID</th>
-              <th>Cliente</th>
-              <th>Fecha</th>
-              <th>Total</th>
-              <th>Estado</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td>#1001</td>
-              <td>Juan Pérez</td>
-              <td>2023-06-15</td>
-              <td>$120.50</td>
-              <td className="status-completed">Completado</td>
-            </tr>
-            <tr>
-              <td>#1002</td>
-              <td>María Gómez</td>
-              <td>2023-06-14</td>
-              <td>$85.20</td>
-              <td className="status-pending">Pendiente</td>
-            </tr>
-            <tr>
-              <td>#1003</td>
-              <td>Carlos López</td>
-              <td>2023-06-14</td>
-              <td>$210.00</td>
-              <td className="status-shipped">Enviado</td>
-            </tr>
-            <tr>
-              <td>#1004</td>
-              <td>Ana Martínez</td>
-              <td>2023-06-13</td>
-              <td>$65.75</td>
-              <td className="status-completed">Completado</td>
-            </tr>
-          </tbody>
-        </table>
+
+      {/* Sección de Gestión de Órdenes */}
+      <div className="orders-management">
+        <h2 className="section-title">Gestión de Órdenes</h2>
+        
+        <div className="orders-controls">
+          <div className="search-container">
+            <FiSearch className="search-icon" />
+            <input
+              type="text"
+              placeholder="Buscar órdenes..."
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+            />
+          </div>
+          
+          <div className="filters-container">
+            <div className="filter-dropdown">
+              <FiFilter />
+              <select 
+                value={selectedFilter} 
+                onChange={(e) => setSelectedFilter(e.target.value)}
+              >
+                <option>Todas</option>
+                <option>Activo</option>
+                <option>Completado</option>
+                <option>Cancelado</option>
+              </select>
+              <FiChevronDown className="dropdown-arrow" />
+            </div>
+            
+            <button className="add-button">
+              <FiPlus /> Nueva Orden
+            </button>
+          </div>
+        </div>
+
+        <div className="orders-grid">
+          {orders.map(order => (
+            <div 
+              key={order.id} 
+              className={`order-card ${order.status.toLowerCase()} ${
+                selectedOrders.includes(order.id) ? 'selected' : ''
+              }`}
+              onClick={() => toggleOrderSelection(order.id)}
+            >
+              {selectedOrders.includes(order.id) && (
+                <div className="order-checkmark">
+                  <FiCheck />
+                </div>
+              )}
+              
+              <div className="order-header">
+                <h3>#{order.id}</h3>
+                <span className={`status-badge ${order.status.toLowerCase()}`}>
+                  {order.status}
+                </span>
+              </div>
+              
+              <div className="order-details">
+                <div className="detail-row">
+                  <FiUser />
+                  <span>{order.customer}</span>
+                </div>
+                
+                <div className="detail-row">
+                  <FiClock />
+                  <span>{order.date}</span>
+                </div>
+                
+                <div className="detail-row">
+                  <FiMapPin />
+                  <span>{order.address}</span>
+                </div>
+                
+                <div className="metrics-row">
+                  <div className="metric">
+                    <FiBox />
+                    <span>{order.items} items</span>
+                  </div>
+                  
+                  <div className="metric">
+                    <FiDollarSign />
+                    <span>${order.total.toFixed(2)}</span>
+                  </div>
+                </div>
+              </div>
+              
+              <div className="order-actions">
+                <button className="view-btn">Ver</button>
+                <button className="action-btn">
+                  {order.status === 'Activo' ? 'Procesar' : 'Detalles'}
+                </button>
+              </div>
+            </div>
+          ))}
+        </div>
       </div>
     </div>
   );
-};
+}
 
-export default AdminDashboard;
+export default AdminDashboardComplete;

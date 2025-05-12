@@ -105,7 +105,7 @@ const AddUserModal = ({ onClose, onSave }) => {
         <div className="modal-body1">
           <form onSubmit={handleSubmit} className="user-form" noValidate>
             <div className="form-row">
-              <div className="form-group">
+              <div className="form-group-user">
                 <label htmlFor="name">Nombre Completo*</label>
                 <input
                   type="text"
@@ -119,7 +119,7 @@ const AddUserModal = ({ onClose, onSave }) => {
                 {errors.name && <span className="error-message">{errors.name}</span>}
               </div>
               
-              <div className="form-group">
+              <div className="form-group-user">
                 <label htmlFor="role">Rol*</label>
                 <select
                   id="role"
