@@ -26,6 +26,8 @@ import AdminUsers from './screens/private/AdminUsers/AdminUsers';
 import AdminProducts from './screens/private/AdminProducts/AdminProducts';
 import AdminOrders from './screens/private/AdminOrders/AdminOrders';
 import FirstUser from './screens/private/FirstUse/FirstUse';
+import DetailsAdmin from './screens/private/AdminDetails/AdminDetails';
+import TermsAndConditionsAdmin from './screens/private/TermsConditionsAdmin/TermsConditionsAdmin';
 
 // Importación de componentes comunes
 import Navbar from './components/Nav/Navbar';
@@ -72,7 +74,9 @@ const adminRoutes = [
   '/admin-orders',
   '/admin-products',
   '/admin-users',
-  '/firstuse'
+  '/firstuse',
+  '/detailsAdmin',
+  '/termsAndConditionsAdmin',
 ];// Puedes agregar más rutas de admin aquí
 
   // Determinar si estamos en una ruta de admin
@@ -116,6 +120,8 @@ const adminRoutes = [
         <Route path="/admin-products" element={<AdminProducts />} />
         <Route path="/admin-users" element={<AdminUsers />} />
         <Route path="/firstuse" element={<FirstUser />} />
+        <Route path="/detailsAdmin" element={<DetailsAdmin />} />
+        <Route path="/termsAndConditionsAdmin" element={<TermsAndConditionsAdmin />} />
         
         {/* Puedes agregar más rutas de admin aquí */}
         {/* <Route path="/admin/products" element={<AdminProducts />} /> */}

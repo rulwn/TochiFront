@@ -1,0 +1,150 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap');
+
+
+.terms-conditions-admin {
+  height: 100%;
+  padding: 20px;
+  background-color: #181725;
+}
+
+.admin-terms-container {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 1.5rem;
+  font-family: 'Poppins', sans-serif;
+  color: gray;
+  line-height: 1.6;
+  box-sizing: border-box;
+  position: relative;
+  background-color: #181725;
+}
+
+/* Botón de volver mejorado */
+.admin-back-button {
+  background: none;
+  border: none;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 1rem;
+  color: #00BF63;
+  cursor: pointer;
+  position: absolute;
+  left: 1.5rem;
+  top: 1.5rem;
+  z-index: 10;
+  padding: 0.5rem;
+  border-radius: 50%;
+  transition: all 0.3s ease;
+}
+
+.admin-back-button:hover {
+  background-color: rgba(0, 191, 99, 0.1);
+  transform: translateX(-3px);
+}
+
+/* Header con espacio para el botón */
+.admin-terms-header {
+  text-align: center;
+  margin-bottom: 2rem;
+  border-bottom: 2px solid #4CAF50;
+  padding-bottom: 1.5rem;
+  padding-top: 2.5rem; /* Espacio para el botón */
+}
+
+.admin-terms-header h1 {
+  color: #2E7D32;
+  margin-bottom: 0.5rem;
+  font-size: 1.8rem;
+}
+
+.admin-terms-header h2 {
+  color: white;
+  font-weight: normal;
+  font-size: 1.1rem;
+}
+
+/* Contenido de términos */
+.admin-terms-section {
+  margin-bottom: 1.5rem;
+}
+
+.admin-terms-section h3 {
+  color: #2E7D32;
+  margin-bottom: 0.8rem;
+  border-left: 4px solid #4CAF50;
+  padding-left: 0.8rem;
+  font-size: 1.2rem;
+}
+
+.admin-terms-section p, 
+.admin-terms-section li {
+  margin-bottom: 0.8rem;
+  font-size: 0.95rem;
+}
+
+.admin-terms-section ul {
+  padding-left: 1.2rem;
+}
+
+.admin-terms-footer {
+  margin-top: 2.5rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid #ddd;
+  text-align: center;
+  font-size: 0.9rem;
+  color: #777;
+}
+
+/* Media Queries para responsive */
+@media (max-width: 768px) {
+  .admin-terms-container {
+    padding: 1rem 0.8rem;
+  }
+  
+  .admin-back-button {
+    left: 0.8rem;
+    top: 1rem;
+    font-size: 0.9rem;
+  }
+  
+  .admin-terms-header {
+    padding-top: 2.2rem;
+  }
+  
+  .admin-terms-header h1 {
+    font-size: 1.5rem;
+  }
+  
+  .admin-terms-header h2 {
+    font-size: 1rem;
+  }
+  
+  .admin-terms-section h3 {
+    font-size: 1.1rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .admin-terms-header {
+    padding-top: 2rem;
+  }
+  
+  .admin-back-button {
+    left: 0.5rem;
+    padding: 0.3rem;
+  }
+  
+  .admin-terms-header h1 {
+    font-size: 1.3rem;
+  }
+  
+  .admin-terms-section h3 {
+    font-size: 1rem;
+  }
+  
+  .admin-terms-section p, 
+  .admin-terms-section li {
+    font-size: 0.9rem;
+  }
+}
