@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import { LuSearch, LuPlus, LuFilter, LuSquare, LuCheck, LuX, LuPencil, LuTrash2 } from 'react-icons/lu';
 import './AdminUsers.css';
+import AddUserModal from './AddUserModal';
+import EditUserModal from './EditUserModal';
 
 const UserCard = ({
   user,
@@ -38,8 +40,14 @@ const UserCard = ({
           </span>
         </div>
         <div className="admin-user-details">
-          <span className="admin-user-email">{user.email}</span>
-          {user.address && <span className="admin-user-address">{user.address}</span>}
+          <div className="admin-user-email-container">
+            <span className="admin-user-email">{user.email}</span>
+          </div>
+          {user.address && (
+            <div className="admin-user-address-container">
+              <span className="admin-user-address">{user.address}</span>
+            </div>
+          )}
         </div>
       </div>
 
@@ -77,7 +85,10 @@ function AdminUsers() {
   const [selectedRole, setSelectedRole] = useState('all');
   const [selectionMode, setSelectionMode] = useState(false);
   const [selectedUsers, setSelectedUsers] = useState([]);
-  const [activeTab, setActiveTab] = useState('all'); // 'all', 'empleados', 'clientes'
+  const [activeTab, setActiveTab] = useState('all');
+  const [isAddModalOpen, setIsAddModalOpen] = useState(false);
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+  const [editingUser, setEditingUser] = useState(null);
 
   // Datos de ejemplo
   const [users, setUsers] = useState([
@@ -130,8 +141,8 @@ function AdminUsers() {
   ];
 
   const filteredUsers = users.filter(user => {
-    const matchesSearch = user.name.toLowerCase().includes(searchTerm.toLowerCase()) || 
-                         user.email.toLowerCase().includes(searchTerm.toLowerCase());
+    const matchesSearch = user.name?.toLowerCase().includes(searchTerm.toLowerCase()) || 
+                         user.email?.toLowerCase().includes(searchTerm.toLowerCase());
     const matchesRole = selectedRole === 'all' || user.role === selectedRole;
     const matchesTab = activeTab === 'all' || 
                       (activeTab === 'empleados' && user.role === 'Empleado') || 
@@ -157,13 +168,23 @@ function AdminUsers() {
     setIsAddModalOpen(true);
   };
 
-  const [isAddModalOpen, setIsAddModalOpen] = useState(false);
-  const [editingUser, setEditingUser] = useState(null);
-  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+  const handleSaveUser = (newUser) => {
+    const tempId = Math.random().toString(36).substr(2, 9);
+    setUsers(prev => [...prev, { ...newUser, _id: tempId }]);
+    setIsAddModalOpen(false);
+  };
 
   const handleEditUser = (user) => {
     setEditingUser(user);
     setIsEditModalOpen(true);
+  };
+
+  const handleUpdateUser = (updatedUser) => {
+    setUsers(prev => 
+      prev.map(u => u._id === updatedUser._id ? updatedUser : u)
+    );
+    setIsEditModalOpen(false);
+    setSelectedUsers([]);
   };
 
   const toggleSelectionMode = () => {
@@ -174,75 +195,64 @@ function AdminUsers() {
   };
 
   return (
-    <div className="admin-products-container">
+    <div className="admin-users-container">
       <div className="admin-toolbar">
         <h1 className="admin-title">Gestión de Usuarios</h1>
 
-        <div className="tab-bar">
-          <button 
-            className={`tab-btn ${activeTab === 'all' ? 'active' : ''}`}
-            onClick={() => setActiveTab('all')}
-          >
-            Todos
-          </button>
-          <button 
-            className={`tab-btn ${activeTab === 'empleados' ? 'active' : ''}`}
-            onClick={() => setActiveTab('empleados')}
-          >
-            Empleados
-          </button>
-          <button 
-            className={`tab-btn ${activeTab === 'clientes' ? 'active' : ''}`}
-            onClick={() => setActiveTab('clientes')}
-          >
-            Clientes
-          </button>
+        <div className="tab-controls">
+          <div className="tab-bar">
+            <button 
+              className={`tab-btn ${activeTab === 'all' ? 'active' : ''}`}
+              onClick={() => setActiveTab('all')}
+            >
+              Todos
+            </button>
+            <button 
+              className={`tab-btn ${activeTab === 'empleados' ? 'active' : ''}`}
+              onClick={() => setActiveTab('empleados')}
+            >
+              Empleados
+            </button>
+            <button 
+              className={`tab-btn ${activeTab === 'clientes' ? 'active' : ''}`}
+              onClick={() => setActiveTab('clientes')}
+            >
+              Clientes
+            </button>
+          </div>
+
+          <div className="search-filter-container">
+            <div className="search-container">
+              <LuSearch className="search-icon" size={20} />
+              <input
+                type="text"
+                placeholder="Buscar usuarios..."
+                className="search-input"
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+              />
+            </div>
+
+            <button
+              className="add-user-btn"
+              onClick={handleAddUser}
+            >
+              <LuPlus size={18} />
+              <span>Agregar</span>
+            </button>
+
+            <button
+              className={`select-users-btn ${selectionMode ? 'active' : ''}`}
+              onClick={toggleSelectionMode}
+            >
+              <LuSquare size={18} />
+              <span>{selectionMode ? 'Cancelar' : 'Seleccionar'}</span>
+            </button>
+          </div>
         </div>
-
-        <div className="search-container">
-          <LuSearch className="search-icon" size={20} />
-          <input
-            type="text"
-            placeholder="Buscar usuarios..."
-            className="search-input"
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-          />
-        </div>
-
-        <div className="filter-container">
-          <LuFilter className="filter-icon" size={20} />
-          <select
-            className="category-filter"
-            value={selectedRole}
-            onChange={(e) => setSelectedRole(e.target.value)}
-          >
-            {roles.map(role => (
-              <option key={role.value} value={role.value}>
-                {role.label}
-              </option>
-            ))}
-          </select>
-        </div>
-
-        <button
-          className="add-product-btn"
-          onClick={handleAddUser}
-        >
-          <LuPlus size={18} />
-          <span>Agregar</span>
-        </button>
-
-        <button
-          className={`select-products-btn ${selectionMode ? 'active' : ''}`}
-          onClick={toggleSelectionMode}
-        >
-          <LuSquare size={18} />
-          <span>{selectionMode ? 'Cancelar' : 'Seleccionar'}</span>
-        </button>
       </div>
 
-      <div className="products-grid">
+      <div className="users-grid">
         {filteredUsers.length > 0 ? (
           filteredUsers.map(user => (
             <UserCard
@@ -256,7 +266,7 @@ function AdminUsers() {
             />
           ))
         ) : (
-          <div className="no-products-message">
+          <div className="no-users-message">
             No se encontraron usuarios que coincidan con los filtros.
           </div>
         )}
@@ -273,8 +283,7 @@ function AdminUsers() {
               onClick={() => {
                 if (selectedUsers.length === 1) {
                   const userToEdit = users.find(u => u._id === selectedUsers[0]);
-                  setEditingUser(userToEdit);
-                  setIsEditModalOpen(true);
+                  handleEditUser(userToEdit);
                 }
               }}
               disabled={selectedUsers.length !== 1}
@@ -303,9 +312,20 @@ function AdminUsers() {
         </div>
       )}
 
-      {/* Aquí irían los modales para agregar/editar usuarios */}
-      {/* {isAddModalOpen && <AddUserModal ... />} */}
-      {/* {isEditModalOpen && <EditUserModal ... />} */}
+      {isAddModalOpen && (
+        <AddUserModal
+          onClose={() => setIsAddModalOpen(false)}
+          onSave={handleSaveUser}
+        />
+      )}
+
+      {isEditModalOpen && (
+        <EditUserModal
+          user={editingUser}
+          onClose={() => setIsEditModalOpen(false)}
+          onSave={handleUpdateUser}
+        />
+      )}
     </div>
   );
 }

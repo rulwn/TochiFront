@@ -106,7 +106,7 @@ const AddProductModal = ({ onClose, onSave }) => {
         
         <div className="modal-body">
           <form onSubmit={handleSubmit} className="product-form" noValidate>
-            <div className="form-group">
+            <div className="form-group-product">
               <label htmlFor="name">Nombre del Producto*</label>
               <input
                 type="text"
@@ -120,7 +120,7 @@ const AddProductModal = ({ onClose, onSave }) => {
               {errors.name && <span className="error-message">{errors.name}</span>}
             </div>
           
-            <div className="form-group">
+            <div className="form-group-product">
               <label htmlFor="description">Descripción*</label>
               <textarea
                 id="description"
@@ -135,7 +135,7 @@ const AddProductModal = ({ onClose, onSave }) => {
             </div>
           
             <div className="form-row">
-              <div className="form-group">
+              <div className="form-group-product">
                 <label htmlFor="price">Precio ($)*</label>
                 <input
                   type="number"
@@ -151,7 +151,7 @@ const AddProductModal = ({ onClose, onSave }) => {
                 {errors.price && <span className="error-message">{errors.price}</span>}
               </div>
               
-              <div className="form-group">
+              <div className="form-group-product">
                 <label htmlFor="stock">Stock*</label>
                 <input
                   type="number"
@@ -167,7 +167,7 @@ const AddProductModal = ({ onClose, onSave }) => {
               </div>
             </div>
           
-            <div className="form-group">
+            <div className="form-group-product">
               <label htmlFor="idCategory">Categoría*</label>
               <select
                 id="idCategory"
@@ -187,7 +187,7 @@ const AddProductModal = ({ onClose, onSave }) => {
               {errors.idCategory && <span className="error-message">{errors.idCategory}</span>}
             </div>
           
-            <div className="form-group">
+            <div className="form-group-product">
               <label htmlFor="imageFile">Imagen del Producto*</label>
               <div className="file-upload-container">
                 <button 

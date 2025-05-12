@@ -14,7 +14,7 @@
 }
 
 /* Barra de herramientas */
-.admin-toolbar {
+.admin-toolbar1 {
   display: flex;
   align-items: center;
   flex-wrap: wrap;
@@ -25,26 +25,26 @@
   width: 95%;
 }
 
-.admin-title {
+.admin-title1 {
   font-size: 24px;
   font-weight: 600;
   color: #ffffff;
   margin-right: auto;
 }
 
-.search-container {
+.search-container-products {
   position: relative;
   display: flex;
   align-items: center;
 }
 
-.search-icon {
+.search-icon-products {
   position: absolute;
   left: 12px;
   color: #a0a0a0;
 }
 
-.search-input {
+.search-input-products {
   padding: 10px 15px 10px 40px;
   border-radius: 8px;
   border: 1px solid #2d2d3a;
@@ -56,11 +56,11 @@
   color: #ffffff;
 }
 
-.search-input::placeholder {
+.search-input-products::placeholder {
   color: #a0a0a0;
 }
 
-.search-input:focus {
+.search-input-products:focus {
   outline: none;
   border-color: #00bf63;
 }
@@ -388,7 +388,7 @@
     align-items: stretch;
   }
 
-  .search-input,
+  .search-input-products,
   .category-filter {
     width: 100%;
   }
@@ -489,20 +489,20 @@
   gap: 15px;
 }
 
-.form-group {
+.form-group-product {
   display: flex;
   flex-direction: column;
   gap: 8px;
 }
 
-.form-group label {
+.form-group-product label {
   font-size: 14px;
   color: #a0a0a0;
 }
 
-.form-group input,
-.form-group textarea,
-.form-group select {
+.form-group-product input,
+.form-group-product textarea,
+.form-group-product select {
   padding: 10px 12px;
   border-radius: 6px;
   border: 1px solid #3d3d4a;
@@ -512,9 +512,14 @@
   transition: border-color 0.3s ease;
 }
 
-.form-group input:focus,
-.form-group textarea:focus,
-.form-group select:focus {
+.form-group-product input:focus,
+.form-group-product textarea:focus,
+.form-group-product select:focus {
+  outline: none;
+  border-color: #00bf63;
+}
+.form-group-product textarea:focus,
+.form-group-product select:focus {
   outline: none;
   border-color: #00bf63;
 }

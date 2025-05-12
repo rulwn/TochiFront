@@ -380,7 +380,7 @@
     transition: all 0.3s ease;
 }
 
-.cancel-btn {
+.cancel-btn-dialog {
     background: white;
     border: 1px solid #ddd;
     color: #333;

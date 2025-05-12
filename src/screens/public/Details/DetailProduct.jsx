@@ -290,7 +290,7 @@ function DetailProduct({ onAddToCart }) {
                         {/* Dialog action buttons */}
                         <div className="dialog-buttons">
                             <button
-                                className="dialog-btn cancel-btn"
+                                className="dialog-btn cancel-btn-dialog"
                                 onClick={() => setShowDialog(false)}
                             >
                                 Cancel

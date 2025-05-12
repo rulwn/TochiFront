@@ -167,15 +167,15 @@ function AdminProducts() {
 
   return (
     <div className="admin-products-container">
-      <div className="admin-toolbar">
-        <h1 className="admin-title">Gestión de Productos</h1>
+      <div className="admin-toolbar1">
+        <h1 className="admin-title1">Gestión de Productos</h1>
 
-        <div className="search-container">
-          <LuSearch className="search-icon" size={20} />
+        <div className="search-container-products">
+          <LuSearch className="search-icon-products" size={20} />
           <input
             type="text"
             placeholder="Buscar productos..."
-            className="search-input"
+            className="search-input-products"
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
           />
