@@ -1,12 +1,15 @@
 import React, { useState } from 'react';
+import { LuSearch, LuFilter, LuSquare, LuCheck, LuX, LuChevronDown, LuBox, LuClock, LuUser, LuMapPin, LuDollarSign } from 'react-icons/lu';
 import './AdminOrders.css';
-import { FiSearch, FiPlus, FiFilter, FiChevronDown, FiBox, FiClock, FiUser, FiMapPin, FiDollarSign, FiCheck } from 'react-icons/fi';
 
-function AdminOrdersImproved() {
+function AdminOrders() {
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedFilter, setSelectedFilter] = useState('Todas');
+  const [selectionMode, setSelectionMode] = useState(false);
   const [selectedOrders, setSelectedOrders] = useState([]);
-  
+  const [showStatusModal, setShowStatusModal] = useState(false);
+  const [newStatus, setNewStatus] = useState('');
+
   // Datos de ejemplo para órdenes
   const orders = [
     {
@@ -51,213 +54,223 @@ function AdminOrdersImproved() {
     }
   ];
 
-  const filteredOrders = orders.filter(order => 
-    order.id.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    order.customer.toLowerCase().includes(searchTerm.toLowerCase())
-  ).filter(order => 
-    selectedFilter === 'Todas' || order.status === selectedFilter
+  const filteredOrders = orders.filter(order =>
+    (order.id.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    order.customer.toLowerCase().includes(searchTerm.toLowerCase())) &&
+    (selectedFilter === 'Todas' || order.status === selectedFilter)
   );
 
   const toggleOrderSelection = (orderId) => {
-    setSelectedOrders(prev => 
-      prev.includes(orderId) 
-        ? prev.filter(id => id !== orderId) 
+    setSelectedOrders(prev =>
+      prev.includes(orderId)
+        ? prev.filter(id => id !== orderId)
         : [...prev, orderId]
     );
   };
 
-  const handleSelectAll = () => {
-    if (selectedOrders.length === filteredOrders.length) {
+  const toggleSelectionMode = () => {
+    setSelectionMode(!selectionMode);
+    if (selectionMode) {
       setSelectedOrders([]);
-    } else {
-      setSelectedOrders(filteredOrders.map(order => order.id));
     }
   };
 
+  const handleStatusChange = () => {
+    // Aquí iría la lógica para actualizar el estado de las órdenes seleccionadas
+    console.log("Cambiando estado a:", newStatus, "para órdenes:", selectedOrders);
+    setShowStatusModal(false);
+    setSelectionMode(false);
+    setSelectedOrders([]);
+  };
+
   return (
-<<<<<<< HEAD
-    <div className="orders-admin-container">
-      {/* Barra superior con controles */}
-      <div className="orders-admin-controls">
-        <div className="orders-search-container">
-          <FiSearch className="orders-search-icon" />
-=======
-    <div className="admin-orders-improved">
-      {/* Barra superior con controles */}
-      <div className="admin-orders-controls">
-        <div className="admin-orders-search">
-          <FiSearch className="admin-orders-search-icon" />
->>>>>>> c419aba4032c26061ea18233558bf125dfe370c5
+    <div className="admin-products-container">
+      <div className="admin-toolbar1">
+        <h1 className="admin-title1">Gestión de Órdenes</h1>
+
+        <div className="search-container-products">
+          <LuSearch className="search-icon-products" size={20} />
           <input
             type="text"
             placeholder="Buscar órdenes por ID o cliente..."
+            className="search-input-products"
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
-            className="orders-search-input"
           />
         </div>
-        
-<<<<<<< HEAD
-        <div className="orders-controls-right">
-          <div className="orders-filter-dropdown">
-            <FiFilter className="orders-filter-icon" />
-=======
-        <div className="admin-orders-filters">
-          <div className="admin-orders-filter">
-            <FiFilter />
->>>>>>> c419aba4032c26061ea18233558bf125dfe370c5
-            <select 
-              value={selectedFilter} 
-              onChange={(e) => setSelectedFilter(e.target.value)}
-              className="orders-filter-select"
-            >
-              <option>Todas</option>
-              <option>Activo</option>
-              <option>En proceso</option>
-              <option>Completado</option>
-              <option>Cancelado</option>
-            </select>
-<<<<<<< HEAD
-            <FiChevronDown className="orders-dropdown-arrow" />
-          </div>
-          
-          <button className="orders-add-button">
-            <FiPlus className="orders-add-icon" /> Agregar
-          </button>
-=======
-            <FiChevronDown className="admin-orders-dropdown-arrow" />
-          </div>
-          
-          <div className="admin-orders-buttons">
-            <button 
-              className="admin-orders-select-btn"
-              onClick={handleSelectAll}
-            >
-              {selectedOrders.length === filteredOrders.length ? 'Deseleccionar' : 'Seleccionar'}
-            </button>
-            <button className="admin-orders-add-btn">
-              <FiPlus /> Agregar
-            </button>
-          </div>
->>>>>>> c419aba4032c26061ea18233558bf125dfe370c5
+
+        <div className="filter-container">
+          <LuFilter className="filter-icon" size={20} />
+          <select
+            className="category-filter"
+            value={selectedFilter}
+            onChange={(e) => setSelectedFilter(e.target.value)}
+          >
+            <option>Todas</option>
+            <option>Activo</option>
+            <option>En proceso</option>
+            <option>Completado</option>
+            <option>Cancelado</option>
+          </select>
+          <LuChevronDown className="orders-dropdown-arrow" />
         </div>
+
+        <button
+          className={`select-products-btn ${selectionMode ? 'active' : ''}`}
+          onClick={toggleSelectionMode}
+        >
+          <LuSquare size={18} />
+          <span>{selectionMode ? 'Cancelar' : 'Seleccionar'}</span>
+        </button>
       </div>
 
-      {/* Listado de órdenes */}
-<<<<<<< HEAD
       <div className="orders-list-grid">
-        {filteredOrders.map(order => (
-          <div key={order.id} className={`orders-card orders-status-${order.status.toLowerCase().replace(' ', '-')}`}>
-            <div className="orders-card-header">
-              <h3 className="orders-card-title">Orden #{order.id}</h3>
-              <span className={`orders-status-badge orders-status-${order.status.toLowerCase().replace(' ', '-')}`}>
-=======
-      <div className="admin-orders-grid">
-        {filteredOrders.map(order => (
-          <div 
-            key={order.id} 
-            className={`admin-orders-card ${order.status.toLowerCase().replace(' ', '-')} ${
-              selectedOrders.includes(order.id) ? 'selected' : ''
-            }`}
-            onClick={() => toggleOrderSelection(order.id)}
-          >
-            {selectedOrders.includes(order.id) && (
-              <div className="admin-orders-checkmark">
-                <FiCheck />
-              </div>
-            )}
-            
-            <div className="admin-orders-header">
-              <h3>Orden #{order.id}</h3>
-              <span className={`admin-orders-status ${order.status.toLowerCase().replace(' ', '-')}`}>
->>>>>>> c419aba4032c26061ea18233558bf125dfe370c5
-                {order.status}
-              </span>
-            </div>
-            
-<<<<<<< HEAD
-            <div className="orders-card-details">
-              <div className="orders-detail-row">
-                <FiUser className="orders-detail-icon" />
-                <span className="orders-detail-text">{order.customer}</span>
-              </div>
-              
-              <div className="orders-detail-row">
-                <FiClock className="orders-detail-icon" />
-                <span className="orders-detail-text">{order.date}</span>
-              </div>
-              
-              <div className="orders-detail-row">
-                <FiMapPin className="orders-detail-icon" />
-                <span className="orders-detail-text">{order.address}</span>
-              </div>
-              
-              <div className="orders-metrics-row">
-                <div className="orders-metric">
-                  <FiBox className="orders-metric-icon" />
-                  <span className="orders-metric-text">{order.items} items</span>
+        {filteredOrders.length > 0 ? (
+          filteredOrders.map(order => (
+            <div
+              key={order.id}
+              className={`orders-card orders-status-${order.status.toLowerCase().replace(' ', '-')} ${selectionMode ? 'selection-mode' : ''} ${selectedOrders.includes(order.id) ? 'selected' : ''}`}
+              onClick={() => selectionMode && toggleOrderSelection(order.id)}
+            >
+              {selectedOrders.includes(order.id) && (
+                <div className="selection-checkmark">
+                  <LuCheck size={16} />
                 </div>
-                
-                <div className="orders-metric">
-                  <FiDollarSign className="orders-metric-icon" />
-                  <span className="orders-metric-text">${order.total.toFixed(2)}</span>
-                </div>
-                
-                <div className="orders-metric">
-                  <span className="orders-delivery-tag">{order.deliveryType}</span>
-=======
-            <div className="admin-orders-details">
-              <div className="admin-orders-detail">
-                <FiUser />
-                <span>{order.customer}</span>
-              </div>
+              )}
               
-              <div className="admin-orders-detail">
-                <FiClock />
-                <span>{order.date}</span>
+              <div className="orders-card-header">
+                <h3 className="orders-card-title">Orden #{order.id}</h3>
+                <span className={`orders-status-badge orders-status-${order.status.toLowerCase().replace(' ', '-')}`}>
+                  {order.status}
+                </span>
               </div>
-              
-              <div className="admin-orders-detail">
-                <FiMapPin />
-                <span>{order.address}</span>
+
+              <div className="orders-card-details">
+                <div className="orders-detail-row">
+                  <LuUser className="orders-detail-icon" />
+                  <span className="orders-detail-text">{order.customer}</span>
+                </div>
+
+                <div className="orders-detail-row">
+                  <LuClock className="orders-detail-icon" />
+                  <span className="orders-detail-text">{order.date}</span>
+                </div>
+
+                <div className="orders-detail-row">
+                  <LuMapPin className="orders-detail-icon" />
+                  <span className="orders-detail-text">{order.address}</span>
+                </div>
+
+                <div className="orders-metrics-row">
+                  <div className="orders-metric">
+                    <LuBox className="orders-metric-icon" />
+                    <span className="orders-metric-text">{order.items} items</span>
+                  </div>
+
+                  <div className="orders-metric">
+                    <LuDollarSign className="orders-metric-icon" />
+                    <span className="orders-metric-text">${order.total.toFixed(2)}</span>
+                  </div>
+
+                  <div className="orders-metric">
+                    <span className="orders-delivery-tag">{order.deliveryType}</span>
+                  </div>
+                </div>
               </div>
-              
-              <div className="admin-orders-metrics">
-                <div className="admin-orders-metric">
-                  <FiBox />
-                  <span>{order.items} items</span>
-                </div>
-                
-                <div className="admin-orders-metric">
-                  <FiDollarSign />
-                  <span>${order.total.toFixed(2)}</span>
-                </div>
-                
-                <div className="admin-orders-metric">
-                  <span className="admin-orders-delivery">{order.deliveryType}</span>
->>>>>>> c419aba4032c26061ea18233558bf125dfe370c5
-                </div>
+
+              <div className="orders-card-actions">
+                <button className="orders-action-btn orders-view-details">Ver detalles</button>
+                {!selectionMode && (
+                  <button 
+                    className="orders-action-btn orders-quick-action"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      setSelectedOrders([order.id]);
+                      setShowStatusModal(true);
+                    }}
+                  >
+                    {order.status === 'Activo' ? 'Procesar' :
+                      order.status === 'En proceso' ? 'Completar' : 'Reabrir'}
+                  </button>
+                )}
               </div>
             </div>
+          ))
+        ) : (
+          <div className="no-products-message">
+            No se encontraron órdenes que coincidan con los filtros.
+          </div>
+        )}
+      </div>
+
+      {selectionMode && selectedOrders.length > 0 && (
+        <div className="selection-actions-bar">
+          <div className="selected-count">
+            {selectedOrders.length} seleccionados
+          </div>
+          <div className="selection-actions">
+            <button
+              className="selection-action-btn"
+              onClick={() => setShowStatusModal(true)}
+            >
+              <LuCheck size={16} />
+              <span>Cambiar estado</span>
+            </button>
+            <button
+              className="selection-action-btn cancel"
+              onClick={() => setSelectedOrders([])}
+            >
+              <LuX size={16} />
+              <span>Deseleccionar</span>
+            </button>
+          </div>
+        </div>
+      )}
+
+      {/* Modal para cambiar estado */}
+      {showStatusModal && (
+        <div className="modal-overlay">
+          <div className="status-modal-content">
+            <h3 className="modal-title">Cambiar estado de órdenes</h3>
             
-<<<<<<< HEAD
-            <div className="orders-card-actions">
-              <button className="orders-action-btn orders-view-details">Ver detalles</button>
-              <button className="orders-action-btn orders-quick-action">
-=======
-            <div className="admin-orders-actions">
-              <button className="admin-orders-view-btn">Ver detalles</button>
-              <button className="admin-orders-action-btn">
->>>>>>> c419aba4032c26061ea18233558bf125dfe370c5
-                {order.status === 'Activo' ? 'Procesar' : 
-                 order.status === 'En proceso' ? 'Completar' : 'Reabrir'}
+            <div className="form-group">
+              <label>Nuevo estado:</label>
+              <select
+                value={newStatus}
+                onChange={(e) => setNewStatus(e.target.value)}
+                className="status-select"
+              >
+                <option value="">Seleccionar estado</option>
+                <option value="Activo">Activo</option>
+                <option value="En proceso">En proceso</option>
+                <option value="Completado">Completado</option>
+                <option value="Cancelado">Cancelado</option>
+              </select>
+            </div>
+            
+            <div className="modal-actions">
+              <button
+                className="modal-btn cancel-btn"
+                onClick={() => {
+                  setShowStatusModal(false);
+                  setNewStatus('');
+                }}
+              >
+                Cancelar
+              </button>
+              <button
+                className="modal-btn confirm-btn"
+                onClick={handleStatusChange}
+                disabled={!newStatus}
+              >
+                Confirmar
               </button>
             </div>
           </div>
-        ))}
-      </div>
+        </div>
+      )}
     </div>
   );
 }
 
-export default AdminOrdersImproved;
+export default AdminOrders;
