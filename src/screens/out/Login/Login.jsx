@@ -3,23 +3,6 @@ import './Login.css'
 import logo from '../../../assets/Logo.png';
 import { Link, useNavigate } from 'react-router-dom';
 
-// Mock user database
-const mockUsers = [
-  {
-    email: 'admin@tochi.com',
-    password: 'admin123',
-    type: 'admin',
-    name: 'Administrator'
-  },
-  {
-    email: 'client@tochi.com',
-    password: 'client123',
-    type: 'client',
-    name: 'Regular Client'
-  },
-  // Add more mock users as needed
-];
-
 function Login() {
   const navigate = useNavigate();
 
@@ -27,8 +10,9 @@ function Login() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
 
-  const handleLogin = (e) => {
+  const handleLogin = async (e) => {
     e.preventDefault();
     setError('');
 
@@ -38,23 +22,44 @@ function Login() {
       return;
     }
 
-    // Check against mock users
-    const user = mockUsers.find(
-      user => user.email === email && user.password === password
-    );
+    setIsLoading(true);
+    
+    try {
+      const response = await fetch('http://localhost:4000/api/login', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ email, password }),
+        credentials: 'include' // Para manejar las cookies
+      });
 
-    if (user) {
-      // Successful login - navigate based on user type
-      if (user.type === 'admin') {
-        navigate("/admin-dashboard"); // Change this to your admin route
-      } else {
-        navigate("/"); // Regular client goes to home/store
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.message || 'Login failed');
       }
+
+      // Si el login es exitoso
+      console.log('Login successful', data);
       
-      // In a real app, you would store the user data in context/state/store
-      console.log(`Logged in as ${user.name} (${user.type})`);
-    } else {
-      setError('Invalid email or password.');
+      // Guardar el token en localStorage (opcional)
+      if (data.token) {
+        localStorage.setItem('authToken', data.token);
+      }
+
+      // Verificar el rol del usuario para redirigir
+      if (data.role === 'admin') {
+        navigate("/admin-dashboard");
+      } else {
+        navigate("/");
+      }
+
+    } catch (error) {
+      console.error('Login error:', error);
+      setError(error.message || 'Invalid email or password.');
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -98,19 +103,18 @@ function Login() {
               <p><Link to={'/putemail'}>Forgot Password?</Link></p>
             </div>
 
-            <button type="submit" className="login-button">Log In</button>
+            <button 
+              type="submit" 
+              className="login-button"
+              disabled={isLoading}
+            >
+              {isLoading ? 'Logging in...' : 'Log In'}
+            </button>
           </form>
 
           <p className="signup-text">
             Don't have an account? <Link to="/registro">Signup</Link>
           </p>
-
-          {/* For testing purposes - remove in production */}
-          <div className="test-credentials">
-            <p><strong>Test credentials:</strong></p>
-            <p>Admin: admin@tochi.com / admin123</p>
-            <p>Client: client@tochi.com / client123</p>
-          </div>
         </div>
       </div>
     </div>
