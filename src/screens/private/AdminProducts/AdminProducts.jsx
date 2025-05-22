@@ -4,7 +4,7 @@ import toast from 'react-hot-toast';
 import './AdminProducts.css';
 import AddProductModal from './AddProductModal';
 import EditProductModal from './EditProductModal';
-import useProductData from './hook/useProductData'; // Importa el hook
+import useProductData from './hook/useProductData';
 
 const AdminProductCard = ({
   product,
@@ -17,7 +17,7 @@ const AdminProductCard = ({
   return (
     <div
       className={`admin-product-card ${selectionMode ? 'selection-mode' : ''} ${isSelected ? 'selected' : ''}`}
-      onClick={() => selectionMode && onSelect(product._id || product.id)}
+      onClick={() => selectionMode && onSelect(product._id)}
     >
       {isSelected && (
         <div className="selection-checkmark">
@@ -27,7 +27,7 @@ const AdminProductCard = ({
 
       <div className="admin-product-image-container">
         <img
-          src={product.imageUrl || product.imgUrl} // Usar imageUrl de la API de MongoDB
+          src={product.imageUrl || product.imgUrl}
           alt={product.name}
           className="admin-product-image"
         />
@@ -66,7 +66,7 @@ const AdminProductCard = ({
           className="delete-btn"
           onClick={(e) => {
             e.stopPropagation();
-            onDelete(product._id || product.id);
+            onDelete(product._id);
           }}
           aria-label="Eliminar producto"
         >
@@ -78,9 +78,8 @@ const AdminProductCard = ({
 };
 
 function AdminProducts() {
-  // Usar el hook personalizado
   const { products, setProducts, fetchProducts } = useProductData();
-  
+
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('all');
   const [selectionMode, setSelectionMode] = useState(false);
@@ -98,7 +97,7 @@ function AdminProducts() {
   ];
 
   const filteredProducts = products.filter(product => {
-    const matchesSearch = product.name.toLowerCase().includes(searchTerm.toLowerCase());
+const matchesSearch = product.name?.toLowerCase().includes(searchTerm.toLowerCase()) || false;
     const matchesCategory = selectedCategory === 'all' || product.idCategory === selectedCategory;
     return matchesSearch && matchesCategory;
   });
@@ -121,13 +120,10 @@ function AdminProducts() {
         throw new Error('Error al eliminar el producto');
       }
 
-      // Actualizar la lista local
-      setProducts(prev => prev.filter(p => p.id !== productId));
+      setProducts(prev => prev.filter(p => p._id !== productId));
       setSelectedProducts(prev => prev.filter(id => id !== productId));
-      
-      // Opcionalmente, volver a cargar desde el servidor
       fetchProducts();
-      
+
       toast.success('Producto eliminado con éxito');
     } catch (error) {
       console.error('Error deleting product:', error);
@@ -153,23 +149,19 @@ function AdminProducts() {
 
   const handleBulkDelete = async () => {
     try {
-      // Eliminar productos seleccionados
-      const deletePromises = selectedProducts.map(id => 
+      const deletePromises = selectedProducts.map(id =>
         fetch(`http://localhost:4000/api/products/${id}`, {
           method: 'DELETE',
         })
       );
 
       await Promise.all(deletePromises);
-      
-      // Actualizar estado local
-      setProducts(prev => prev.filter(p => !selectedProducts.includes(p.id)));
+
+      setProducts(prev => prev.filter(p => !selectedProducts.includes(p._id)));
       setSelectedProducts([]);
       setSelectionMode(false);
-      
-      // Recargar productos
       fetchProducts();
-      
+
       toast.success('Productos eliminados con éxito');
     } catch (error) {
       console.error('Error deleting products:', error);
@@ -229,12 +221,12 @@ function AdminProducts() {
         {filteredProducts.length > 0 ? (
           filteredProducts.map((product, index) => (
             <AdminProductCard
-              key={product._id || product.id || `product-${index}`}
+              key={product._id || `product-${index}`}
               product={product}
-              isSelected={selectedProducts.includes(product._id || product.id)}
-              onSelect={(productId) => toggleProductSelection(product._id || product.id)}
+              isSelected={selectedProducts.includes(product._id)}
+              onSelect={toggleProductSelection}
               onEdit={handleEditProduct}
-              onDelete={(productId) => handleDeleteProduct(product._id || product.id)}
+              onDelete={handleDeleteProduct}
               selectionMode={selectionMode}
             />
           ))
@@ -255,7 +247,7 @@ function AdminProducts() {
               className={`selection-action-btn ${selectedProducts.length !== 1 ? 'disabled' : ''}`}
               onClick={() => {
                 if (selectedProducts.length === 1) {
-                  const productToEdit = products.find(p => (p._id || p.id) === selectedProducts[0]);
+                  const productToEdit = products.find(p => p._id === selectedProducts[0]);
                   setEditingProduct(productToEdit);
                   setIsEditModalOpen(true);
                 }
@@ -287,21 +279,24 @@ function AdminProducts() {
         <AddProductModal
           onClose={() => setIsAddModalOpen(false)}
           onSave={(newProduct) => {
-            // Después de guardar, recargar los productos
-            fetchProducts();
             setIsAddModalOpen(false);
+            fetchProducts();
           }}
         />
       )}
-      
-      {isEditModalOpen && (
+
+      {isEditModalOpen && editingProduct && (
         <EditProductModal
           product={editingProduct}
-          onClose={() => setIsEditModalOpen(false)}
-          onUpdate={(updatedProduct) => {
-            // Después de actualizar, recargar los productos
-            fetchProducts();
+          onClose={() => {
             setIsEditModalOpen(false);
+            setEditingProduct(null);
+          }}
+          onSave={(updatedProduct) => {
+            setProducts(prev => prev.map(p => (p._id === updatedProduct._id ? updatedProduct : p)));
+            setIsEditModalOpen(false);
+            setEditingProduct(null);
+            fetchProducts();
           }}
         />
       )}

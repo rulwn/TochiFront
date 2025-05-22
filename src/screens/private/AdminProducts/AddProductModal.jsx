@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { LuX, LuUpload } from 'react-icons/lu';
 
 const AddProductModal = ({ onClose, onSave }) => {
@@ -8,32 +8,38 @@ const AddProductModal = ({ onClose, onSave }) => {
     price: '',
     stock: '',
     idCategory: '',
-    imageFile: null
+    imageUrl: null
   });
 
   const [errors, setErrors] = useState({});
   const fileInputRef = useRef(null);
   const [previewImage, setPreviewImage] = useState(null);
 
-  const categories = [
-    { value: 'lacteos', label: 'Lácteos' },
-    { value: 'carnes', label: 'Carnes' },
-    { value: 'frutas', label: 'Frutas' },
-    { value: 'verduras', label: 'Verduras' }
-  ];
+  const [categories, setCategories] = useState([]);
+
+  useEffect(() => {
+    fetch('http://localhost:4000/api/categories')
+      .then(res => res.json())
+      .then(data => {
+        setCategories(data);
+      })
+      .catch(err => {
+        console.error('Error cargando categorías:', err);
+      });
+  }, []);
 
   const validateForm = () => {
     const newErrors = {};
-    
+
     if (!formData.name.trim()) newErrors.name = 'El nombre es requerido';
     if (!formData.description.trim()) newErrors.description = 'La descripción es requerida';
-    if (!formData.price || isNaN(formData.price) || parseFloat(formData.price) <= 0) 
+    if (!formData.price || isNaN(formData.price) || parseFloat(formData.price) <= 0)
       newErrors.price = 'Precio inválido';
-    if (!formData.stock || isNaN(formData.stock) || parseInt(formData.stock) < 0) 
+    if (!formData.stock || isNaN(formData.stock) || parseInt(formData.stock) < 0)
       newErrors.stock = 'Stock inválido';
     if (!formData.idCategory) newErrors.idCategory = 'Seleccione una categoría';
-    if (!formData.imageFile) newErrors.imageFile = 'La imagen es requerida';
-    
+    if (!formData.imageUrl) newErrors.imageUrl = 'La imagen es requerida';
+
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
@@ -44,7 +50,6 @@ const AddProductModal = ({ onClose, onSave }) => {
       ...prev,
       [name]: value
     }));
-    // Limpiar error al cambiar
     if (errors[name]) {
       setErrors(prev => ({ ...prev, [name]: '' }));
     }
@@ -53,45 +58,71 @@ const AddProductModal = ({ onClose, onSave }) => {
   const handleFileChange = (e) => {
     const file = e.target.files[0];
     if (file) {
-      // Validar tipo de archivo
       if (!file.type.match('image.*')) {
-        setErrors(prev => ({ ...prev, imageFile: 'Solo se permiten imágenes' }));
+        setErrors(prev => ({ ...prev, imageUrl: 'Solo se permiten imágenes' }));
         return;
       }
-      
-      // Validar tamaño (ejemplo: máximo 2MB)
       if (file.size > 2 * 1024 * 1024) {
-        setErrors(prev => ({ ...prev, imageFile: 'La imagen debe ser menor a 2MB' }));
+        setErrors(prev => ({ ...prev, imageUrl: 'La imagen debe ser menor a 2MB' }));
         return;
       }
 
       setFormData(prev => ({
         ...prev,
-        imageFile: file
+        imageUrl: file
       }));
-      
-      // Crear vista previa
+
       const reader = new FileReader();
       reader.onloadend = () => {
         setPreviewImage(reader.result);
       };
       reader.readAsDataURL(file);
-      
-      // Limpiar error si existe
-      if (errors.imageFile) {
-        setErrors(prev => ({ ...prev, imageFile: '' }));
+
+      if (errors.imageUrl) {
+        setErrors(prev => ({ ...prev, imageUrl: '' }));
       }
     }
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     if (validateForm()) {
-      onSave({
-        ...formData,
-        price: parseFloat(formData.price),
-        stock: parseInt(formData.stock)
-      });
+      try {
+        const data = new FormData();
+        data.append('name', formData.name);
+        data.append('description', formData.description);
+        data.append('price', formData.price);
+        data.append('stock', formData.stock);
+        data.append('idCategory', formData.idCategory);
+        if (formData.imageUrl) {
+          data.append('imageUrl', formData.imageUrl);
+        }
+
+        const res = await fetch('http://localhost:4000/api/products', {
+          method: 'POST',
+          body: data,
+        });
+
+        const text = await res.text();
+
+        try {
+          const result = JSON.parse(text);
+          if (res.ok) {
+            alert('Producto creado con éxito');
+            onSave();
+            onClose();
+          } else {
+            alert(result.message || 'Error creando producto');
+          }
+        } catch {
+          console.error('Respuesta inesperada:', text);
+          alert('Error inesperado del servidor');
+        }
+      }
+      catch (error) {
+        console.error('Error en la solicitud:', error);
+        alert('Error al enviar el producto');
+      }
     }
   };
 
@@ -101,9 +132,9 @@ const AddProductModal = ({ onClose, onSave }) => {
         <button className="modal-close-btn" onClick={onClose}>
           <LuX size={20} />
         </button>
-        
+
         <h2 className="modal-title">Agregar Nuevo Producto</h2>
-        
+
         <div className="modal-body">
           <form onSubmit={handleSubmit} className="product-form" noValidate>
             <div className="form-group-product">
@@ -119,7 +150,7 @@ const AddProductModal = ({ onClose, onSave }) => {
               />
               {errors.name && <span className="error-message">{errors.name}</span>}
             </div>
-          
+
             <div className="form-group-product">
               <label htmlFor="description">Descripción*</label>
               <textarea
@@ -133,7 +164,7 @@ const AddProductModal = ({ onClose, onSave }) => {
               />
               {errors.description && <span className="error-message">{errors.description}</span>}
             </div>
-          
+
             <div className="form-row">
               <div className="form-group-product">
                 <label htmlFor="price">Precio ($)*</label>
@@ -150,7 +181,7 @@ const AddProductModal = ({ onClose, onSave }) => {
                 />
                 {errors.price && <span className="error-message">{errors.price}</span>}
               </div>
-              
+
               <div className="form-group-product">
                 <label htmlFor="stock">Stock*</label>
                 <input
@@ -166,7 +197,7 @@ const AddProductModal = ({ onClose, onSave }) => {
                 {errors.stock && <span className="error-message">{errors.stock}</span>}
               </div>
             </div>
-          
+
             <div className="form-group-product">
               <label htmlFor="idCategory">Categoría*</label>
               <select
@@ -179,20 +210,20 @@ const AddProductModal = ({ onClose, onSave }) => {
               >
                 <option value="">Seleccione una categoría</option>
                 {categories.map(category => (
-                  <option key={category.value} value={category.value}>
-                    {category.label}
+                  <option key={category._id} value={category._id}>
+                    {category.name}
                   </option>
                 ))}
               </select>
               {errors.idCategory && <span className="error-message">{errors.idCategory}</span>}
             </div>
-          
+
             <div className="form-group-product">
-              <label htmlFor="imageFile">Imagen del Producto*</label>
+              <label htmlFor="imageUrl">Imagen del Producto*</label>
               <div className="file-upload-container">
-                <button 
-                  type="button" 
-                  className={`file-upload-btn ${errors.imageFile ? 'error' : ''}`}
+                <button
+                  type="button"
+                  className={`file-upload-btn ${errors.imageUrl ? 'error' : ''}`}
                   onClick={() => fileInputRef.current.click()}
                 >
                   <LuUpload size={18} />
@@ -200,7 +231,7 @@ const AddProductModal = ({ onClose, onSave }) => {
                 </button>
                 <input
                   type="file"
-                  id="imageFile"
+                  id="imageUrl"
                   ref={fileInputRef}
                   onChange={handleFileChange}
                   accept="image/*"
@@ -212,24 +243,25 @@ const AddProductModal = ({ onClose, onSave }) => {
                     <img src={previewImage} alt="Vista previa" />
                   </div>
                 )}
-                {formData.imageFile && (
-                  <div className="file-name">{formData.imageFile.name}</div>
+                {formData.imageUrl && (
+                  <div className="file-name">{formData.imageUrl.name}</div>
                 )}
-                {errors.imageFile && <span className="error-message">{errors.imageFile}</span>}
+                {errors.imageUrl && <span className="error-message">{errors.imageUrl}</span>}
               </div>
             </div>
+
+            <div className="modal-footer">
+              <div className="form-actions">
+                <button type="button" className="cancel-btn" onClick={onClose}>
+                  Cancelar
+                </button>
+                <button type="submit" className="save-btn">
+                  Guardar Producto
+                </button>
+              </div>
+            </div>
+
           </form>
-        </div>
-        
-        <div className="modal-footer">
-          <div className="form-actions">
-            <button type="button" className="cancel-btn" onClick={onClose}>
-              Cancelar
-            </button>
-            <button type="submit" className="save-btn" onClick={handleSubmit}>
-              Guardar Producto
-            </button>
-          </div>
         </div>
       </div>
     </div>

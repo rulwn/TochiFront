@@ -47,41 +47,35 @@ const useProductData = () => {
         e.preventDefault();
 
         try {
-
-            const newProduct = {
-                name,
-                description,
-                price,
-                stock,
-                idCategory,
-                imgUrl
-            };
-
-            console.log('Nuevo producto: ', newProduct)
+            const formData = new FormData();
+            formData.append('name', name);
+            formData.append('description', description);
+            formData.append('price', price);
+            formData.append('stock', stock);
+            formData.append('idCategory', idCategory);
+            formData.append('imageUrl', imgUrl); 
 
             const response = await fetch(apiProducto, {
                 method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify(newProduct),
+                body: formData,
             });
 
             if (!response.ok) {
                 throw new Error('Error al crear el producto');
             }
 
-            const data = await response.json()
-
-            toast.success('Producto creado con éxito')
-            setProducts(data)
+            toast.success('Producto creado con éxito');
             cleanData();
-            fetchProduct();
+            fetchProducts(); // Corrige el typo que tenías antes
+
         } catch (error) {
             console.error('Error creating product:', error);
             toast.error('Error al crear el producto');
         }
-    }
+    };
+
+    
+
 
     return {
         activeTab,
