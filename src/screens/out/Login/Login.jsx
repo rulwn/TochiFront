@@ -5,7 +5,6 @@ import { Link, useNavigate } from 'react-router-dom';
 
 function Login() {
   const navigate = useNavigate();
-
   const [showPassword, setShowPassword] = useState(false);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -16,9 +15,9 @@ function Login() {
     e.preventDefault();
     setError('');
 
-    // Basic validation
-    if (email.trim() === '' || password.trim() === '') {
-      setError('Please fill in both fields.');
+    // Validación básica
+    if (!email || !password) {
+      setError('Por favor completa todos los campos');
       return;
     }
 
@@ -31,33 +30,32 @@ function Login() {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({ email, password }),
-        credentials: 'include' // Para manejar las cookies
+        credentials: 'include'
       });
 
       const data = await response.json();
 
       if (!response.ok) {
-        throw new Error(data.message || 'Login failed');
+        throw new Error(data.message || 'Error en el login');
       }
 
-      // Si el login es exitoso
-      console.log('Login successful', data);
-      
-      // Guardar el token en localStorage (opcional)
-      if (data.token) {
-        localStorage.setItem('authToken', data.token);
-      }
+      // Decodificar el token para obtener el rol
+      const tokenPayload = JSON.parse(atob(data.token.split('.')[1]));
+      const userRole = tokenPayload.role;
 
-      // Verificar el rol del usuario para redirigir
-      if (data.role === 'admin') {
-        navigate("/admin-dashboard");
+      // Redirigir según el rol
+      if (userRole.toLowerCase() === 'administrador') {
+        navigate('/admin-dashboard');
       } else {
-        navigate("/");
+        navigate('/');
       }
+
+      // Opcional: Guardar datos de usuario en el estado global o localStorage
+      localStorage.setItem('userRole', userRole);
 
     } catch (error) {
       console.error('Login error:', error);
-      setError(error.message || 'Invalid email or password.');
+      setError(error.message || 'Credenciales incorrectas');
     } finally {
       setIsLoading(false);
     }
@@ -69,7 +67,7 @@ function Login() {
         <img src={logo} alt="Tochi Logo" className="logo-img" />
         <div className="login-form">
           <h2>Login</h2>
-          <p className="subtitle">Enter your email and password</p>
+          <p className="subtitle">Ingresa tu email y contraseña</p>
           
           {error && <div className="error-message">{error}</div>}
           
@@ -77,17 +75,19 @@ function Login() {
             <label>Email</label>
             <input 
               type="email" 
-              placeholder="Enter your email" 
+              placeholder="Ingresa tu email" 
               value={email}
               onChange={(e) => setEmail(e.target.value)}
+              required
             />
 
-            <label>Password</label>
+            <label>Contraseña</label>
             <input
               type={showPassword ? "text" : "password"}
-              placeholder="Enter your password"
+              placeholder="Ingresa tu contraseña"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
+              required
             />
 
             <div className="show-password">
@@ -96,11 +96,11 @@ function Login() {
                 id="showPassword"
                 onChange={() => setShowPassword(!showPassword)}
               />
-              <label htmlFor="showPassword"> Show password</label>
+              <label htmlFor="showPassword"> Mostrar contraseña</label>
             </div>
 
             <div className="forgot-password">
-              <p><Link to={'/putemail'}>Forgot Password?</Link></p>
+              <p><Link to={'/putemail'}>¿Olvidaste tu contraseña?</Link></p>
             </div>
 
             <button 
@@ -108,12 +108,12 @@ function Login() {
               className="login-button"
               disabled={isLoading}
             >
-              {isLoading ? 'Logging in...' : 'Log In'}
+              {isLoading ? 'Iniciando sesión...' : 'Iniciar sesión'}
             </button>
           </form>
 
           <p className="signup-text">
-            Don't have an account? <Link to="/registro">Signup</Link>
+            ¿No tienes cuenta? <Link to="/registro">Regístrate</Link>
           </p>
         </div>
       </div>
