@@ -1,7 +1,17 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { LuX, LuUpload } from 'react-icons/lu';
+import useProductData from './hook/useProductData';
 
-const EditProductModal = ({ product, onClose, onUpdate }) => {
+const EditProductModal = ({ product, onClose, onSave }) => {
+  // Usar el hook personalizado
+  const { 
+    categories, 
+    updateProduct, 
+    isLoading,
+    getCategoryNameById,
+    getCategoryIdByName 
+  } = useProductData();
+
   const [formData, setFormData] = useState({
     name: '',
     description: '',
@@ -15,29 +25,22 @@ const EditProductModal = ({ product, onClose, onUpdate }) => {
   const fileInputRef = useRef(null);
   const [previewImage, setPreviewImage] = useState(null);
 
-  const categories = [
-    { value: 'lacteos', label: 'Lácteos' },
-    { value: 'carnes', label: 'Carnes' },
-    { value: 'frutas', label: 'Frutas' },
-    { value: 'verduras', label: 'Verduras' }
-  ];
-  // Cargar datos del producto al montar el componente
   useEffect(() => {
-    if (product) {
+    if (product && categories.length > 0) {
       setFormData({
         name: product.name || '',
         description: product.description || '',
         price: product.price?.toString() || '',
         stock: product.stock?.toString() || '',
         idCategory: product.idCategory || '',
-        imageFile: null // No cargamos el archivo directamente, usamos la URL existente
+        imageFile: null
       });
       
       if (product.imageUrl) {
         setPreviewImage(product.imageUrl);
       }
     }
-  }, [product]);
+  }, [product, categories]);
 
   const validateForm = () => {
     const newErrors = {};
@@ -60,7 +63,6 @@ const EditProductModal = ({ product, onClose, onUpdate }) => {
       ...prev,
       [name]: value
     }));
-    // Limpiar error al cambiar
     if (errors[name]) {
       setErrors(prev => ({ ...prev, [name]: '' }));
     }
@@ -69,13 +71,11 @@ const EditProductModal = ({ product, onClose, onUpdate }) => {
   const handleFileChange = (e) => {
     const file = e.target.files[0];
     if (file) {
-      // Validar tipo de archivo
       if (!file.type.match('image.*')) {
         setErrors(prev => ({ ...prev, imageFile: 'Solo se permiten imágenes' }));
         return;
       }
       
-      // Validar tamaño (ejemplo: máximo 2MB)
       if (file.size > 2 * 1024 * 1024) {
         setErrors(prev => ({ ...prev, imageFile: 'La imagen debe ser menor a 2MB' }));
         return;
@@ -86,43 +86,45 @@ const EditProductModal = ({ product, onClose, onUpdate }) => {
         imageFile: file
       }));
       
-      // Crear vista previa
       const reader = new FileReader();
       reader.onloadend = () => {
         setPreviewImage(reader.result);
       };
       reader.readAsDataURL(file);
       
-      // Limpiar error si existe
       if (errors.imageFile) {
         setErrors(prev => ({ ...prev, imageFile: '' }));
       }
     }
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     if (validateForm()) {
-      onUpdate({
-        ...formData,
-        id: product.id, // Mantenemos el mismo ID
+      const productData = {
+        name: formData.name,
+        description: formData.description,
         price: parseFloat(formData.price),
         stock: parseInt(formData.stock),
-        // Si no se subió nueva imagen, mantenemos la existente
-        imageUrl: formData.imageFile ? null : product.imageUrl
-      });
+        idCategory: formData.idCategory,
+        imageFile: formData.imageFile 
+      };
+    
+      const success = await updateProduct(product._id, productData);
+      if (success) {
+        onSave(); 
+      }
     }
   };
 
   return (
     <div className="modal-overlay">
       <div className="modal-content">
-        <button className="modal-close-btn" onClick={onClose}>
+        <button className="modal-close-btn" onClick={onClose} disabled={isLoading}>
           <LuX size={20} />
         </button>
         
         <h2 className="modal-title">Editar Producto</h2>
-        
         <div className="modal-body">
           <form onSubmit={handleSubmit} className="product-form" noValidate>
             <div className="form-group">
@@ -135,6 +137,7 @@ const EditProductModal = ({ product, onClose, onUpdate }) => {
                 onChange={handleChange}
                 className={errors.name ? 'error' : ''}
                 required
+                disabled={isLoading}
               />
               {errors.name && <span className="error-message">{errors.name}</span>}
             </div>
@@ -149,6 +152,7 @@ const EditProductModal = ({ product, onClose, onUpdate }) => {
                 className={errors.description ? 'error' : ''}
                 required
                 rows="3"
+                disabled={isLoading}
               />
               {errors.description && <span className="error-message">{errors.description}</span>}
             </div>
@@ -166,6 +170,7 @@ const EditProductModal = ({ product, onClose, onUpdate }) => {
                   step="0.01"
                   className={errors.price ? 'error' : ''}
                   required
+                  disabled={isLoading}
                 />
                 {errors.price && <span className="error-message">{errors.price}</span>}
               </div>
@@ -181,6 +186,7 @@ const EditProductModal = ({ product, onClose, onUpdate }) => {
                   min="0"
                   className={errors.stock ? 'error' : ''}
                   required
+                  disabled={isLoading}
                 />
                 {errors.stock && <span className="error-message">{errors.stock}</span>}
               </div>
@@ -195,11 +201,12 @@ const EditProductModal = ({ product, onClose, onUpdate }) => {
                 onChange={handleChange}
                 className={errors.idCategory ? 'error' : ''}
                 required
+                disabled={isLoading}
               >
                 <option value="">Seleccione una categoría</option>
                 {categories.map(category => (
-                  <option key={category.value} value={category.value}>
-                    {category.label}
+                  <option key={category._id} value={category._id}>
+                    {category.name}
                   </option>
                 ))}
               </select>
@@ -213,6 +220,7 @@ const EditProductModal = ({ product, onClose, onUpdate }) => {
                   type="button" 
                   className={`file-upload-btn ${errors.imageFile ? 'error' : ''}`}
                   onClick={() => fileInputRef.current.click()}
+                  disabled={isLoading}
                 >
                   <LuUpload size={18} />
                   <span>Cambiar imagen</span>
@@ -241,11 +249,21 @@ const EditProductModal = ({ product, onClose, onUpdate }) => {
         
         <div className="modal-footer">
           <div className="form-actions">
-            <button type="button" className="cancel-btn" onClick={onClose}>
+            <button 
+              type="button" 
+              className="cancel-btn" 
+              onClick={onClose}
+              disabled={isLoading}
+            >
               Cancelar
             </button>
-            <button type="submit" className="save-btn" onClick={handleSubmit}>
-              Actualizar Producto
+            <button 
+              type="submit" 
+              className="save-btn" 
+              onClick={handleSubmit}
+              disabled={isLoading}
+            >
+              {isLoading ? 'Actualizando...' : 'Actualizar Producto'}
             </button>
           </div>
         </div>

@@ -78,7 +78,11 @@ const AdminProductCard = ({
 };
 
 function AdminProducts() {
-  const { products, setProducts, fetchProducts } = useProductData();
+  const { 
+    products, 
+    fetchProducts, 
+    deleteProduct 
+  } = useProductData();
 
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('all');
@@ -97,7 +101,7 @@ function AdminProducts() {
   ];
 
   const filteredProducts = products.filter(product => {
-const matchesSearch = product.name?.toLowerCase().includes(searchTerm.toLowerCase()) || false;
+    const matchesSearch = product.name?.toLowerCase().includes(searchTerm.toLowerCase()) || false;
     const matchesCategory = selectedCategory === 'all' || product.idCategory === selectedCategory;
     return matchesSearch && matchesCategory;
   });
@@ -111,20 +115,17 @@ const matchesSearch = product.name?.toLowerCase().includes(searchTerm.toLowerCas
   };
 
   const handleDeleteProduct = async (productId) => {
+    const confirmDelete = window.confirm('¿Estás seguro de que deseas eliminar este producto?');
+    if (!confirmDelete) return;
+
     try {
-      const response = await fetch(`http://localhost:4000/api/products/${productId}`, {
-        method: 'DELETE',
-      });
-
-      if (!response.ok) {
-        throw new Error('Error al eliminar el producto');
+      const success = await deleteProduct(productId);
+      
+      if (success) {
+        // Limpiar selección si el producto eliminado estaba seleccionado
+        setSelectedProducts(prev => prev.filter(id => id !== productId));
+        toast.success('Producto eliminado con éxito');
       }
-
-      setProducts(prev => prev.filter(p => p._id !== productId));
-      setSelectedProducts(prev => prev.filter(id => id !== productId));
-      fetchProducts();
-
-      toast.success('Producto eliminado con éxito');
     } catch (error) {
       console.error('Error deleting product:', error);
       toast.error('Error al eliminar el producto');
@@ -148,20 +149,18 @@ const matchesSearch = product.name?.toLowerCase().includes(searchTerm.toLowerCas
   };
 
   const handleBulkDelete = async () => {
-    try {
-      const deletePromises = selectedProducts.map(id =>
-        fetch(`http://localhost:4000/api/products/${id}`, {
-          method: 'DELETE',
-        })
-      );
+    const confirmDelete = window.confirm(
+      `¿Estás seguro de que deseas eliminar ${selectedProducts.length} producto(s)?`
+    );
+    if (!confirmDelete) return;
 
+    try {
+      const deletePromises = selectedProducts.map(id => deleteProduct(id));
       await Promise.all(deletePromises);
 
-      setProducts(prev => prev.filter(p => !selectedProducts.includes(p._id)));
       setSelectedProducts([]);
       setSelectionMode(false);
-      fetchProducts();
-
+      
       toast.success('Productos eliminados con éxito');
     } catch (error) {
       console.error('Error deleting products:', error);
@@ -248,8 +247,7 @@ const matchesSearch = product.name?.toLowerCase().includes(searchTerm.toLowerCas
               onClick={() => {
                 if (selectedProducts.length === 1) {
                   const productToEdit = products.find(p => p._id === selectedProducts[0]);
-                  setEditingProduct(productToEdit);
-                  setIsEditModalOpen(true);
+                  handleEditProduct(productToEdit);
                 }
               }}
               disabled={selectedProducts.length !== 1}
@@ -278,7 +276,7 @@ const matchesSearch = product.name?.toLowerCase().includes(searchTerm.toLowerCas
       {isAddModalOpen && (
         <AddProductModal
           onClose={() => setIsAddModalOpen(false)}
-          onSave={(newProduct) => {
+          onSave={() => {
             setIsAddModalOpen(false);
             fetchProducts();
           }}
@@ -286,20 +284,19 @@ const matchesSearch = product.name?.toLowerCase().includes(searchTerm.toLowerCas
       )}
 
       {isEditModalOpen && editingProduct && (
-        <EditProductModal
-          product={editingProduct}
-          onClose={() => {
-            setIsEditModalOpen(false);
-            setEditingProduct(null);
-          }}
-          onSave={(updatedProduct) => {
-            setProducts(prev => prev.map(p => (p._id === updatedProduct._id ? updatedProduct : p)));
-            setIsEditModalOpen(false);
-            setEditingProduct(null);
-            fetchProducts();
-          }}
-        />
-      )}
+  <EditProductModal
+    product={editingProduct}
+    onClose={() => {
+      setIsEditModalOpen(false);
+      setEditingProduct(null);
+    }}
+    onSave={() => {  // ← Mantén 'onSave'
+      setIsEditModalOpen(false);
+      setEditingProduct(null);
+      fetchProducts();
+    }}
+  />
+)}
     </div>
   );
 }
