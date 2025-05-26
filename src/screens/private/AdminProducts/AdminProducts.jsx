@@ -1,16 +1,18 @@
 import React, { useState } from 'react';
 import { LuSearch, LuPlus, LuFilter, LuSquare, LuCheck, LuX, LuPencil, LuTrash2, LuFolder, LuBox } from 'react-icons/lu';
+import toast from 'react-hot-toast';
 import './AdminProducts.css';
 import AddProductModal from './AddProductModal';
 import EditProductModal from './EditProductModal';
 import AddCategoryModal from './AddCategoryModal';
+import useProductData from './hook/useProductData';
 
-// Componente de tarjeta de producto (existente)
+// Componente de tarjeta de producto
 const AdminProductCard = ({ product, isSelected, onSelect, onEdit, onDelete, selectionMode }) => {
   return (
     <div
       className={`admin-product-card ${selectionMode ? 'selection-mode' : ''} ${isSelected ? 'selected' : ''}`}
-      onClick={() => selectionMode && onSelect(product.id)}
+      onClick={() => selectionMode && onSelect(product._id)}
     >
       {isSelected && (
         <div className="selection-checkmark">
@@ -20,7 +22,7 @@ const AdminProductCard = ({ product, isSelected, onSelect, onEdit, onDelete, sel
 
       <div className="admin-product-image-container">
         <img
-          src={product.imageUrl}
+          src={product.imageUrl || product.imgUrl}
           alt={product.name}
           className="admin-product-image"
         />
@@ -59,7 +61,7 @@ const AdminProductCard = ({ product, isSelected, onSelect, onEdit, onDelete, sel
           className="delete-btn"
           onClick={(e) => {
             e.stopPropagation();
-            onDelete(product.id);
+            onDelete(product._id);
           }}
           aria-label="Eliminar producto"
         >
@@ -70,7 +72,7 @@ const AdminProductCard = ({ product, isSelected, onSelect, onEdit, onDelete, sel
   );
 };
 
-// Nuevo componente de tarjeta de categoría
+// Componente de tarjeta de categoría
 const AdminCategoryCard = ({ category, isSelected, onSelect, onEdit, onDelete, selectionMode }) => {
   return (
     <div
@@ -99,15 +101,10 @@ const AdminCategoryCard = ({ category, isSelected, onSelect, onEdit, onDelete, s
       <div className="admin-category-actions">
         <button
           className="edit-btn"
-          onClick={() => {
-            if (activeTab === 'products' && selectedProducts.length === 1) {
-              const productToEdit = products.find(p => p.id === selectedProducts[0]);
-              setEditingProduct(productToEdit);
-              setIsEditProductModalOpen(true);
-            } else if (activeTab === 'categories' && selectedCategories.length === 1) {
-              const categoryToEdit = categoriesData.find(c => c.id === selectedCategories[0]);
-              setEditingCategory(categoryToEdit);
-              setIsEditCategoryModalOpen(true);
+          onClick={(e) => {
+            e.stopPropagation();
+            if (!selectionMode) {
+              onEdit(category);
             }
           }}
           aria-label="Editar categoría"
@@ -132,49 +129,23 @@ const AdminCategoryCard = ({ category, isSelected, onSelect, onEdit, onDelete, s
 
 function AdminProducts() {
   const [activeTab, setActiveTab] = useState('products');
+  const { 
+    products, 
+    fetchProducts, 
+    deleteProduct 
+  } = useProductData();
+
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('all');
   const [selectionMode, setSelectionMode] = useState(false);
   const [selectedProducts, setSelectedProducts] = useState([]);
   const [selectedCategories, setSelectedCategories] = useState([]);
+  const [isAddProductModalOpen, setIsAddProductModalOpen] = useState(false);
   const [isAddCategoryModalOpen, setIsAddCategoryModalOpen] = useState(false);
+  const [editingProduct, setEditingProduct] = useState(null);
   const [editingCategory, setEditingCategory] = useState(null);
+  const [isEditProductModalOpen, setIsEditProductModalOpen] = useState(false);
   const [isEditCategoryModalOpen, setIsEditCategoryModalOpen] = useState(false);
-
-  const [products, setProducts] = useState([
-    {
-      id: 1,
-      name: 'Producto Ejemplo 1',
-      price: 19.99,
-      stock: 15,
-      category: 'carnes',
-      imageUrl: 'https://www.dole.com/sites/default/files/styles/1024w768h-80/public/media/2025-01/dragonfruit.png?itok=ZIXGYSn5-7PakMm6A'
-    },
-    {
-      id: 2,
-      name: 'Producto Ejemplo 2',
-      price: 29.99,
-      stock: 8,
-      category: 'verduras',
-      imageUrl: 'https://www.dole.com/sites/default/files/styles/1024w768h-80/public/media/2025-01/dragonfruit.png?itok=ZIXGYSn5-7PakMm6A'
-    },
-    {
-      id: 3,
-      name: 'Producto Ejemplo 3',
-      price: 9.99,
-      stock: 0,
-      category: 'frutas',
-      imageUrl: 'https://www.dole.com/sites/default/files/styles/1024w768h-80/public/media/2025-01/dragonfruit.png?itok=ZIXGYSn5-7PakMm6A'
-    },
-    {
-      id: 4,
-      name: 'Producto Ejemplo 4',
-      price: 49.99,
-      stock: 22,
-      category: 'lacteos',
-      imageUrl: 'https://www.dole.com/sites/default/files/styles/1024w768h-80/public/media/2025-01/dragonfruit.png?itok=ZIXGYSn5-7PakMm6A'
-    },
-  ]);
 
   const [categoriesData, setCategoriesData] = useState([
     { id: 1, name: 'Lácteos', value: 'lacteos', productCount: 1 },
@@ -189,8 +160,8 @@ function AdminProducts() {
   ];
 
   const filteredProducts = products.filter(product => {
-    const matchesSearch = product.name.toLowerCase().includes(searchTerm.toLowerCase());
-    const matchesCategory = selectedCategory === 'all' || product.category === selectedCategory;
+    const matchesSearch = product.name?.toLowerCase().includes(searchTerm.toLowerCase()) || false;
+    const matchesCategory = selectedCategory === 'all' || product.idCategory === selectedCategory;
     return matchesSearch && matchesCategory;
   });
 
@@ -214,9 +185,21 @@ function AdminProducts() {
     );
   };
 
-  const handleDeleteProduct = (productId) => {
-    setProducts(prev => prev.filter(p => p.id !== productId));
-    setSelectedProducts(prev => prev.filter(id => id !== productId));
+  const handleDeleteProduct = async (productId) => {
+    const confirmDelete = window.confirm('¿Estás seguro de que deseas eliminar este producto?');
+    if (!confirmDelete) return;
+
+    try {
+      const success = await deleteProduct(productId);
+      
+      if (success) {
+        setSelectedProducts(prev => prev.filter(id => id !== productId));
+        toast.success('Producto eliminado con éxito');
+      }
+    } catch (error) {
+      console.error('Error deleting product:', error);
+      toast.error('Error al eliminar el producto');
+    }
   };
 
   const handleDeleteCategory = (categoryId) => {
@@ -228,12 +211,6 @@ function AdminProducts() {
     }
   };
 
-  // Estados para modales
-  const [isAddProductModalOpen, setIsAddProductModalOpen] = useState(false);
-  const [isEditProductModalOpen, setIsEditProductModalOpen] = useState(false);
-  const [editingProduct, setEditingProduct] = useState(null);
-
-  // Lógica para agregar/editar productos
   const handleAddProduct = () => {
     setIsAddProductModalOpen(true);
   };
@@ -277,6 +254,33 @@ function AdminProducts() {
       } else {
         setSelectedCategories([]);
       }
+    }
+  };
+
+  const handleBulkDelete = async () => {
+    if (activeTab === 'products') {
+      const confirmDelete = window.confirm(
+        `¿Estás seguro de que deseas eliminar ${selectedProducts.length} producto(s)?`
+      );
+      if (!confirmDelete) return;
+
+      try {
+        const deletePromises = selectedProducts.map(id => deleteProduct(id));
+        await Promise.all(deletePromises);
+
+        setSelectedProducts([]);
+        setSelectionMode(false);
+        
+        toast.success('Productos eliminados con éxito');
+      } catch (error) {
+        console.error('Error deleting products:', error);
+        toast.error('Error al eliminar los productos');
+      }
+    } else {
+      // Lógica para eliminar categorías en masa
+      selectedCategories.forEach(id => handleDeleteCategory(id));
+      setSelectedCategories([]);
+      setSelectionMode(false);
     }
   };
 
@@ -351,15 +355,14 @@ function AdminProducts() {
         </button>
       </div>
 
-      {/* Contenido de las pestañas */}
-      {activeTab === 'products' ? (
-        <div className="products-grid">
-          {filteredProducts.length > 0 ? (
-            filteredProducts.map(product => (
+      <div className="products-grid">
+        {activeTab === 'products' ? (
+          filteredProducts.length > 0 ? (
+            filteredProducts.map((product, index) => (
               <AdminProductCard
-                key={product.id}
+                key={product._id || `product-${index}`}
                 product={product}
-                isSelected={selectedProducts.includes(product.id)}
+                isSelected={selectedProducts.includes(product._id)}
                 onSelect={toggleProductSelection}
                 onEdit={handleEditProduct}
                 onDelete={handleDeleteProduct}
@@ -370,125 +373,111 @@ function AdminProducts() {
             <div className="no-products-message">
               No se encontraron productos que coincidan con los filtros.
             </div>
-          )}
-        </div>
-      ) : (
-        <div className="categories-grid">
-          {filteredCategories.length > 0 ? (
+          )
+        ) : (
+          filteredCategories.length > 0 ? (
             filteredCategories.map(category => (
               <AdminCategoryCard
                 key={category.id}
                 category={category}
                 isSelected={selectedCategories.includes(category.id)}
                 onSelect={toggleCategorySelection}
-                onEdit={(category) => {/* Lógica para editar categoría */ }}
+                onEdit={handleEditCategory}
                 onDelete={handleDeleteCategory}
                 selectionMode={selectionMode}
               />
             ))
           ) : (
-            <div className="no-categories-message">
-              No se encontraron categorías que coincidan con la búsqueda.
+            <div className="no-products-message">
+              No se encontraron categorías que coincidan con los filtros.
             </div>
-          )}
+          )
+        )}
+      </div>
+
+      {selectionMode && (
+        (activeTab === 'products' && selectedProducts.length > 0) || 
+        (activeTab === 'categories' && selectedCategories.length > 0)
+      ) && (
+        <div className="selection-actions-bar">
+          <div className="selected-count">
+            {activeTab === 'products' 
+              ? `${selectedProducts.length} productos seleccionados` 
+              : `${selectedCategories.length} categorías seleccionadas`}
+          </div>
+          <div className="selection-actions">
+            <button
+              className={`selection-action-btn ${
+                (activeTab === 'products' && selectedProducts.length !== 1) ||
+                (activeTab === 'categories' && selectedCategories.length !== 1) 
+                  ? 'disabled' : ''
+              }`}
+              onClick={() => {
+                if (activeTab === 'products' && selectedProducts.length === 1) {
+                  const productToEdit = products.find(p => p._id === selectedProducts[0]);
+                  handleEditProduct(productToEdit);
+                } else if (activeTab === 'categories' && selectedCategories.length === 1) {
+                  const categoryToEdit = categoriesData.find(c => c.id === selectedCategories[0]);
+                  handleEditCategory(categoryToEdit);
+                }
+              }}
+              disabled={
+                (activeTab === 'products' && selectedProducts.length !== 1) ||
+                (activeTab === 'categories' && selectedCategories.length !== 1)
+              }
+            >
+              <LuPencil size={16} />
+              <span>Editar</span>
+            </button>
+            <button
+              className="selection-action-btn delete"
+              onClick={handleBulkDelete}
+            >
+              <LuTrash2 size={16} />
+              <span>Eliminar</span>
+            </button>
+            <button
+              className="selection-action-btn cancel"
+              onClick={() => {
+                if (activeTab === 'products') {
+                  setSelectedProducts([]);
+                } else {
+                  setSelectedCategories([]);
+                }
+              }}
+            >
+              <LuX size={16} />
+              <span>Deseleccionar</span>
+            </button>
+          </div>
         </div>
       )}
 
-      {/* Barra de acciones de selección */}
-      {selectionMode && (
-        (activeTab === 'products' && selectedProducts.length > 0) ||
-        (activeTab === 'categories' && selectedCategories.length > 0)
-      ) && (
-          <div className="selection-actions-bar">
-            <div className="selected-count">
-              {activeTab === 'products'
-                ? `${selectedProducts.length} productos seleccionados`
-                : `${selectedCategories.length} categorías seleccionadas`}
-            </div>
-            <div className="selection-actions">
-              <button
-                className={`selection-action-btn ${(activeTab === 'products' && selectedProducts.length !== 1) ||
-                  (activeTab === 'categories' && selectedCategories.length !== 1) ? 'disabled' : ''}`}
-                onClick={() => {
-                  if (activeTab === 'products' && selectedProducts.length === 1) {
-                    const productToEdit = products.find(p => p.id === selectedProducts[0]);
-                    setEditingProduct(productToEdit);
-                    setIsEditProductModalOpen(true);
-                  } else if (activeTab === 'categories' && selectedCategories.length === 1) {
-                    // Lógica para editar categoría
-                  }
-                }}
-                disabled={(activeTab === 'products' && selectedProducts.length !== 1) ||
-                  (activeTab === 'categories' && selectedCategories.length !== 1)}
-              >
-                <LuPencil size={16} />
-                <span>Editar</span>
-              </button>
-              <button
-                className="selection-action-btn delete"
-                onClick={() => {
-                  if (activeTab === 'products') {
-                    selectedProducts.forEach(id => handleDeleteProduct(id));
-                  } else {
-                    selectedCategories.forEach(id => handleDeleteCategory(id));
-                  }
-                  setSelectionMode(false);
-                }}
-              >
-                <LuTrash2 size={16} />
-                <span>Eliminar</span>
-              </button>
-              <button
-                className="selection-action-btn cancel"
-                onClick={() => {
-                  if (activeTab === 'products') {
-                    setSelectedProducts([]);
-                  } else {
-                    setSelectedCategories([]);
-                  }
-                }}
-              >
-                <LuX size={16} />
-                <span>Deseleccionar</span>
-              </button>
-            </div>
-          </div>
-        )}
-      {isEditCategoryModalOpen && editingCategory && (
-        <AddCategoryModal
-          initialName={editingCategory.name}
-          onClose={() => setIsEditCategoryModalOpen(false)}
-          onSave={(updatedCategory) => {
-            setCategoriesData(prev => prev.map(c =>
-              c.id === editingCategory.id ? {
-                ...c,
-                name: updatedCategory.name,
-                value: updatedCategory.name.toLowerCase().replace(/\s+/g, '-')
-              } : c
-            ));
-            setIsEditCategoryModalOpen(false);
-          }}
-        />
-      )}
-
-      {/* Modal para añadir producto */}
       {isAddProductModalOpen && (
         <AddProductModal
           onClose={() => setIsAddProductModalOpen(false)}
-          onSave={(newProduct) => {
-            const newId = Math.max(...products.map(p => p.id), 0) + 1;
-            const categoryLabel = categories.find(c => c.value === newProduct.idCategory)?.label || '';
-            setProducts(prev => [...prev, {
-              ...newProduct,
-              id: newId,
-              category: newProduct.idCategory
-            }]);
+          onSave={() => {
             setIsAddProductModalOpen(false);
+            fetchProducts();
           }}
         />
       )}
 
-      {/* Modal para añadir categoría */}
+      {isEditProductModalOpen && editingProduct && (
+        <EditProductModal
+          product={editingProduct}
+          onClose={() => {
+            setIsEditProductModalOpen(false);
+            setEditingProduct(null);
+          }}
+          onSave={() => {
+            setIsEditProductModalOpen(false);
+            setEditingProduct(null);
+            fetchProducts();
+          }}
+        />
+      )}
+
       {isAddCategoryModalOpen && (
         <AddCategoryModal
           onClose={() => setIsAddCategoryModalOpen(false)}
@@ -496,21 +485,19 @@ function AdminProducts() {
         />
       )}
 
-      {/* Modal para editar producto */}
-      {isEditProductModalOpen && editingProduct && (
+      {isEditCategoryModalOpen && editingCategory && (
         <EditProductModal
-          product={editingProduct}
-          onClose={() => setIsEditProductModalOpen(false)}
-          onUpdate={(updatedProduct) => {
-            const categoryLabel = categories.find(c => c.value === updatedProduct.idCategory)?.label || '';
-            setProducts(prev => prev.map(p =>
-              p.id === updatedProduct.id ? {
-                ...p,
-                ...updatedProduct,
-                category: updatedProduct.idCategory
-              } : p
+          product={editingCategory}
+          onClose={() => {
+            setIsEditCategoryModalOpen(false);
+            setEditingCategory(null);
+          }}
+          onSave={(updatedCategory) => {
+            setCategoriesData(prev => prev.map(c =>
+              c.id === updatedCategory.id ? updatedCategory : c
             ));
-            setIsEditProductModalOpen(false);
+            setIsEditCategoryModalOpen(false);
+            setEditingCategory(null);
           }}
         />
       )}

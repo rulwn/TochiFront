@@ -1,8 +1,9 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { LuSearch, LuPlus, LuFilter, LuSquare, LuCheck, LuX, LuPencil, LuTrash2 } from 'react-icons/lu';
 import './AdminUsers.css';
 import AddUserModal from './AddUserModal';
 import EditUserModal from './EditUserModal';
+import useUserData from './hook/useUserData';
 
 const UserCard = ({
   user,
@@ -90,49 +91,22 @@ function AdminUsers() {
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [editingUser, setEditingUser] = useState(null);
 
-  // Datos de ejemplo
-  const [users, setUsers] = useState([
-    {
-      _id: '67abc19398090d8e0548dc06',
-      name: 'Daniel Brizuela',
-      email: 'brizuela@gmail.com',
-      password: 'brizuela',
-      phone: '+503 4324-5242',
-      role: 'Cliente',
-      address: 'Santa Tecla',
-      imgUrl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/1/12/User_icon_2.svg/800px-User_icon_2.svg.png'
-    },
-    {
-      _id: '67abc19398090d8e0548dc07',
-      name: 'Ana Martínez',
-      email: 'ana.martinez@empresa.com',
-      password: 'admin123',
-      phone: '+503 7890-1234',
-      role: 'Empleado',
-      address: 'San Salvador',
-      imgUrl: 'https://randomuser.me/api/portraits/women/44.jpg'
-    },
-    {
-      _id: '67abc19398090d8e0548dc08',
-      name: 'Carlos López',
-      email: 'carlos.lopez@empresa.com',
-      password: 'admin456',
-      phone: '+503 6543-2109',
-      role: 'Empleado',
-      address: 'Soyapango',
-      imgUrl: 'https://randomuser.me/api/portraits/men/32.jpg'
-    },
-    {
-      _id: '67abc19398090d8e0548dc09',
-      name: 'María Rodríguez',
-      email: 'maria@gmail.com',
-      password: 'maria123',
-      phone: '+503 2345-6789',
-      role: 'Cliente',
-      address: 'Antiguo Cuscatlán',
-      imgUrl: 'https://randomuser.me/api/portraits/women/65.jpg'
-    }
-  ]);
+  // Usar el hook personalizado para manejar usuarios
+  const {
+    users,
+    isLoading,
+    fetchUsers,
+    createUser,
+    updateUser,
+    deleteUser
+  } = useUserData();
+
+  // Cargar usuarios al montar el componente
+  useEffect(() => {
+    fetchUsers().catch(err => {
+      console.error('Error al cargar usuarios:', err);
+    });
+  }, [fetchUsers]);
 
   const roles = [
     { value: 'all', label: 'Todos los roles' },
@@ -141,13 +115,13 @@ function AdminUsers() {
   ];
 
   const filteredUsers = users.filter(user => {
-    const matchesSearch = user.name?.toLowerCase().includes(searchTerm.toLowerCase()) || 
-                         user.email?.toLowerCase().includes(searchTerm.toLowerCase());
+    const matchesSearch = user.name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      user.email?.toLowerCase().includes(searchTerm.toLowerCase());
     const matchesRole = selectedRole === 'all' || user.role === selectedRole;
-    const matchesTab = activeTab === 'all' || 
-                      (activeTab === 'empleados' && user.role === 'Empleado') || 
-                      (activeTab === 'clientes' && user.role === 'Cliente');
-    
+    const matchesTab = activeTab === 'all' ||
+      (activeTab === 'empleados' && user.role === 'Empleado') ||
+      (activeTab === 'clientes' && user.role === 'Cliente');
+
     return matchesSearch && matchesRole && matchesTab;
   });
 
@@ -159,33 +133,68 @@ function AdminUsers() {
     );
   };
 
-  const handleDeleteUser = (userId) => {
-    setUsers(prev => prev.filter(u => u._id !== userId));
-    setSelectedUsers(prev => prev.filter(id => id !== userId));
+  const handleDeleteUser = async (userId) => {
+    try {
+      await deleteUser(userId);
+      setSelectedUsers(prev => prev.filter(id => id !== userId));
+    } catch (err) {
+      console.error('Error al eliminar usuario:', err);
+      // Aquí puedes mostrar un mensaje de error al usuario
+    }
+  };
+
+  const handleBulkDelete = async () => {
+    try {
+      // Eliminar múltiples usuarios
+      await Promise.all(selectedUsers.map(id => deleteUser(id)));
+      setSelectedUsers([]);
+      setSelectionMode(false);
+    } catch (err) {
+      console.error('Error al eliminar usuarios:', err);
+    }
   };
 
   const handleAddUser = () => {
     setIsAddModalOpen(true);
   };
 
-  const handleSaveUser = (newUser) => {
-    const tempId = Math.random().toString(36).substr(2, 9);
-    setUsers(prev => [...prev, { ...newUser, _id: tempId }]);
-    setIsAddModalOpen(false);
-  };
 
+
+  const handleSaveUser = async (userData) => {
+    console.log('Datos recibidos en handleSaveUser:', userData);
+
+    try {
+      const newUser = await createUser(userData);
+      console.log('Usuario creado exitosamente:', newUser);
+      await fetchUsers();
+    } catch (err) {
+      console.error('Error al crear usuario:', err);
+      throw err;
+    }
+  };
   const handleEditUser = (user) => {
     setEditingUser(user);
     setIsEditModalOpen(true);
   };
 
-  const handleUpdateUser = (updatedUser) => {
-    setUsers(prev => 
-      prev.map(u => u._id === updatedUser._id ? updatedUser : u)
-    );
-    setIsEditModalOpen(false);
+  const handleUpdateUser = async (updatedUserData) => {
+  try {
+    console.log('Actualizando usuario con datos:', updatedUserData);
+    
+    await updateUser(editingUser._id, updatedUserData);
+    
+    console.log('Usuario actualizado exitosamente');
+    
+    // Recargar la lista de usuarios después de una actualización exitosa
+    await fetchUsers();
+    
     setSelectedUsers([]);
-  };
+    
+  } catch (err) {
+    console.error('Error al actualizar usuario:', err);
+    throw new Error(err.message || 'Error al actualizar el usuario');
+  }
+};
 
   const toggleSelectionMode = () => {
     setSelectionMode(!selectionMode);
@@ -194,6 +203,7 @@ function AdminUsers() {
     }
   };
 
+
   return (
     <div className="admin-users-container">
       <div className="admin-toolbar">
@@ -201,19 +211,19 @@ function AdminUsers() {
 
         <div className="tab-controls">
           <div className="tab-bar">
-            <button 
+            <button
               className={`tab-btn ${activeTab === 'all' ? 'active' : ''}`}
               onClick={() => setActiveTab('all')}
             >
               Todos
             </button>
-            <button 
+            <button
               className={`tab-btn ${activeTab === 'empleados' ? 'active' : ''}`}
               onClick={() => setActiveTab('empleados')}
             >
               Empleados
             </button>
-            <button 
+            <button
               className={`tab-btn ${activeTab === 'clientes' ? 'active' : ''}`}
               onClick={() => setActiveTab('clientes')}
             >
@@ -236,6 +246,7 @@ function AdminUsers() {
             <button
               className="add-user-btn"
               onClick={handleAddUser}
+              disabled={isLoading}
             >
               <LuPlus size={18} />
               <span>Agregar</span>
@@ -244,6 +255,7 @@ function AdminUsers() {
             <button
               className={`select-users-btn ${selectionMode ? 'active' : ''}`}
               onClick={toggleSelectionMode}
+              disabled={isLoading}
             >
               <LuSquare size={18} />
               <span>{selectionMode ? 'Cancelar' : 'Seleccionar'}</span>
@@ -252,8 +264,16 @@ function AdminUsers() {
         </div>
       </div>
 
+
+      {/* Mostrar indicador de carga */}
+      {isLoading && (
+        <div className="loading-indicator">
+          Cargando usuarios...
+        </div>
+      )}
+
       <div className="users-grid">
-        {filteredUsers.length > 0 ? (
+        {!isLoading && filteredUsers.length > 0 ? (
           filteredUsers.map(user => (
             <UserCard
               key={user._id}
@@ -265,11 +285,11 @@ function AdminUsers() {
               selectionMode={selectionMode}
             />
           ))
-        ) : (
+        ) : !isLoading && filteredUsers.length === 0 ? (
           <div className="no-users-message">
             No se encontraron usuarios que coincidan con los filtros.
           </div>
-        )}
+        ) : null}
       </div>
 
       {selectionMode && selectedUsers.length > 0 && (
@@ -286,17 +306,15 @@ function AdminUsers() {
                   handleEditUser(userToEdit);
                 }
               }}
-              disabled={selectedUsers.length !== 1}
+              disabled={selectedUsers.length !== 1 || isLoading}
             >
               <LuPencil size={16} />
               <span>Editar</span>
             </button>
             <button
               className="selection-action-btn delete"
-              onClick={() => {
-                selectedUsers.forEach(id => handleDeleteUser(id));
-                setSelectionMode(false);
-              }}
+              onClick={handleBulkDelete}
+              disabled={isLoading}
             >
               <LuTrash2 size={16} />
               <span>Eliminar</span>
@@ -322,10 +340,15 @@ function AdminUsers() {
       {isEditModalOpen && (
         <EditUserModal
           user={editingUser}
-          onClose={() => setIsEditModalOpen(false)}
+          onClose={() => {
+            setIsEditModalOpen(false);
+            setEditingUser(null);
+          }}
           onSave={handleUpdateUser}
+          isLoading={isLoading}
         />
       )}
+
     </div>
   );
 }

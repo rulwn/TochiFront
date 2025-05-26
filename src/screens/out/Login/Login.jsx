@@ -3,58 +3,62 @@ import './Login.css'
 import logo from '../../../assets/Logo.png';
 import { Link, useNavigate } from 'react-router-dom';
 
-// Mock user database
-const mockUsers = [
-  {
-    email: 'admin@tochi.com',
-    password: 'admin123',
-    type: 'admin',
-    name: 'Administrator'
-  },
-  {
-    email: 'client@tochi.com',
-    password: 'client123',
-    type: 'client',
-    name: 'Regular Client'
-  },
-  // Add more mock users as needed
-];
-
 function Login() {
   const navigate = useNavigate();
-
   const [showPassword, setShowPassword] = useState(false);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
 
-  const handleLogin = (e) => {
+ const handleLogin = async (e) => {
     e.preventDefault();
     setError('');
 
-    // Basic validation
-    if (email.trim() === '' || password.trim() === '') {
-      setError('Please fill in both fields.');
+    if (!email || !password) {
+      setError('Por favor completa todos los campos');
       return;
     }
 
-    // Check against mock users
-    const user = mockUsers.find(
-      user => user.email === email && user.password === password
-    );
+    setIsLoading(true);
+    
+    try {
+      const response = await fetch('https://tochi-api.onrender.com/api/login', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ email, password }),
+        credentials: 'include'
+      });
 
-    if (user) {
-      // Successful login - navigate based on user type
-      if (user.type === 'admin') {
-        navigate("/admin-dashboard"); // Change this to your admin route
-      } else {
-        navigate("/"); // Regular client goes to home/store
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.message || 'Error en el login');
       }
-      
-      // In a real app, you would store the user data in context/state/store
-      console.log(`Logged in as ${user.name} (${user.type})`);
-    } else {
-      setError('Invalid email or password.');
+  localStorage.setItem('authToken', data.token);
+localStorage.setItem('userEmail', email);
+
+      // Decodificar el token para obtener el rol
+      const tokenPayload = JSON.parse(atob(data.token.split('.')[1]));
+      const userRole = tokenPayload.role;
+
+      // Redirigir según el rol
+      if (userRole.toLowerCase() === 'administrador') {
+        navigate('/admin-dashboard');
+      } else {
+        navigate('/');
+      }
+
+    } catch (error) {
+      console.error('Login error:', error);
+      setError(error.message || 'Credenciales incorrectas');
+      // Limpiar almacenamiento en caso de error
+      localStorage.removeItem('authToken');
+      localStorage.removeItem('userEmail');
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -64,7 +68,7 @@ function Login() {
         <img src={logo} alt="Tochi Logo" className="logo-img" />
         <div className="login-form">
           <h2>Login</h2>
-          <p className="subtitle">Enter your email and password</p>
+          <p className="subtitle">Ingresa tu email y contraseña</p>
           
           {error && <div className="error-message">{error}</div>}
           
@@ -72,17 +76,19 @@ function Login() {
             <label>Email</label>
             <input 
               type="email" 
-              placeholder="Enter your email" 
+              placeholder="Ingresa tu email" 
               value={email}
               onChange={(e) => setEmail(e.target.value)}
+              required
             />
 
-            <label>Password</label>
+            <label>Contraseña</label>
             <input
               type={showPassword ? "text" : "password"}
-              placeholder="Enter your password"
+              placeholder="Ingresa tu contraseña"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
+              required
             />
 
             <div className="show-password">
@@ -91,26 +97,25 @@ function Login() {
                 id="showPassword"
                 onChange={() => setShowPassword(!showPassword)}
               />
-              <label htmlFor="showPassword"> Show password</label>
+              <label htmlFor="showPassword"> Mostrar contraseña</label>
             </div>
 
             <div className="forgot-password">
-              <p><Link to={'/putemail'}>Forgot Password?</Link></p>
+              <p><Link to={'/putemail'}>¿Olvidaste tu contraseña?</Link></p>
             </div>
 
-            <button type="submit" className="login-button">Log In</button>
+            <button 
+              type="submit" 
+              className="login-button"
+              disabled={isLoading}
+            >
+              {isLoading ? 'Iniciando sesión...' : 'Iniciar sesión'}
+            </button>
           </form>
 
           <p className="signup-text">
-            Don't have an account? <Link to="/registro">Signup</Link>
+            ¿No tienes cuenta? <Link to="/registro">Regístrate</Link>
           </p>
-
-          {/* For testing purposes - remove in production */}
-          <div className="test-credentials">
-            <p><strong>Test credentials:</strong></p>
-            <p>Admin: admin@tochi.com / admin123</p>
-            <p>Client: client@tochi.com / client123</p>
-          </div>
         </div>
       </div>
     </div>

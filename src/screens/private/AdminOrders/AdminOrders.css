@@ -209,17 +209,17 @@
   font-weight: 500;
 }
 
-.orders-status-activo {
-  background-color: #1e3a8a;
-  color: #93c5fd;
-}
-
-.orders-status-en-proceso {
+.orders-status-pendiente {
   background-color: #854d0e;
   color: #fcd34d;
 }
 
-.orders-status-completado {
+.orders-status-en-proceso {
+  background-color: #1e3a8a;
+  color: #93c5fd;
+}
+
+.orders-status-entregado {
   background-color: #064e3b;
   color: #6ee7b7;
 }
@@ -298,6 +298,10 @@
   transition: background-color 0.3s;
   font-family: "Poppins", sans-serif;
   color: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
 }
 
 .orders-view-details {
@@ -373,6 +377,7 @@
   background-color: #4a4a5a;
 }
 
+/* Modal overlay común */
 .modal-overlay {
   position: fixed;
   top: 0;
@@ -387,6 +392,7 @@
   backdrop-filter: blur(5px);
 }
 
+/* Modal de cambio de estado */
 .status-modal-content {
   background-color: #2d2d3a;
   border-radius: 10px;
@@ -473,6 +479,291 @@
   cursor: not-allowed;
 }
 
+/* ===== ESTILOS DEL MODAL DE DETALLES ===== */
+.details-modal-content {
+  background-color: #2d2d3a;
+  border-radius: 12px;
+  width: 90%;
+  max-width: 800px;
+  max-height: 90vh;
+  overflow-y: auto;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4);
+  border: 1px solid #3d3d4a;
+}
+
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 24px;
+  border-bottom: 1px solid #3d3d4a;
+}
+
+.modal-title {
+  display: flex;
+  align-items: center;
+  font-size: 20px;
+  font-weight: 600;
+  color: #ffffff;
+  margin: 0;
+}
+
+.modal-title-icon {
+  margin-right: 10px;
+  color: #00bf63;
+}
+
+.modal-close-btn {
+  background: none;
+  border: none;
+  padding: 8px;
+  cursor: pointer;
+  border-radius: 6px;
+  transition: background-color 0.2s;
+  color: #a0a0a0;
+}
+
+.modal-close-btn:hover {
+  background-color: #3d3d4a;
+  color: #ffffff;
+}
+
+.modal-body {
+  padding: 24px;
+}
+
+.details-section {
+  margin-bottom: 32px;
+}
+
+.section-title {
+  display: flex;
+  align-items: center;
+  font-size: 18px;
+  font-weight: 600;
+  margin-bottom: 16px;
+  color: #ffffff;
+}
+
+.section-icon {
+  margin-right: 10px;
+  color: #00bf63;
+}
+
+.details-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 16px;
+}
+
+.detail-item {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.detail-label {
+  font-weight: 500;
+  color: #a0a0a0;
+  font-size: 14px;
+  display: flex;
+  align-items: center;
+}
+
+.detail-icon {
+  margin-right: 6px;
+  width: 14px;
+  height: 14px;
+}
+
+.detail-value {
+  font-weight: 600;
+  color: #ffffff;
+  font-size: 15px;
+}
+
+.status-badge {
+  padding: 6px 12px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 600;
+  width: fit-content;
+}
+
+.status-pendiente {
+  background-color: #854d0e;
+  color: #fcd34d;
+}
+
+.status-en-proceso {
+  background-color: #1e3a8a;
+  color: #93c5fd;
+}
+
+.status-entregado {
+  background-color: #064e3b;
+  color: #6ee7b7;
+}
+
+.status-cancelado {
+  background-color: #7f1d1d;
+  color: #fca5a5;
+}
+
+.products-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  max-height: 300px;
+  overflow-y: auto;
+}
+
+.product-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px;
+  background-color: #3d3d4a;
+  border-radius: 8px;
+  border: 1px solid #4a4a5a;
+}
+
+.product-info {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.product-name {
+  font-weight: 600;
+  color: #ffffff;
+  font-size: 15px;
+}
+
+.product-quantity {
+  font-size: 13px;
+  color: #a0a0a0;
+}
+
+.product-pricing {
+  text-align: right;
+}
+
+.product-price {
+  font-weight: 600;
+  color: #00bf63;
+  font-size: 16px;
+}
+
+.totals-summary {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 20px;
+  background-color: #3d3d4a;
+  border-radius: 8px;
+  border: 1px solid #4a4a5a;
+}
+
+.total-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.total-final {
+  border-top: 1px solid #4a4a5a;
+  padding-top: 12px;
+  font-size: 18px;
+  font-weight: 700;
+}
+
+.total-label {
+  color: #a0a0a0;
+  font-size: 14px;
+}
+
+.total-value {
+  color: #ffffff;
+  font-weight: 600;
+}
+
+.total-final .total-value {
+  color: #00bf63;
+  font-size: 20px;
+}
+
+.notes-content {
+  padding: 16px;
+  background-color: #3d3d4a;
+  border-radius: 8px;
+  color: #ffffff;
+  line-height: 1.6;
+  border: 1px solid #4a4a5a;
+}
+
+.modal-footer {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+  padding: 24px;
+  border-top: 1px solid #3d3d4a;
+}
+
+.secondary-btn {
+  padding: 12px 20px;
+  border: 1px solid #4a4a5a;
+  background: #3d3d4a;
+  color: #ffffff;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.2s;
+  font-family: "Poppins", sans-serif;
+  font-weight: 500;
+}
+
+.secondary-btn:hover {
+  background-color: #4a4a5a;
+}
+
+.primary-btn {
+  padding: 12px 20px;
+  background: #00bf63;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.2s;
+  font-family: "Poppins", sans-serif;
+  font-weight: 500;
+}
+
+.primary-btn:hover {
+  background: #00a955;
+}
+
+/* Scrollbar personalizado para el modal */
+.details-modal-content::-webkit-scrollbar,
+.products-list::-webkit-scrollbar {
+  width: 6px;
+}
+
+.details-modal-content::-webkit-scrollbar-track,
+.products-list::-webkit-scrollbar-track {
+  background: #2d2d3a;
+}
+
+.details-modal-content::-webkit-scrollbar-thumb,
+.products-list::-webkit-scrollbar-thumb {
+  background: #4a4a5a;
+  border-radius: 3px;
+}
+
+.details-modal-content::-webkit-scrollbar-thumb:hover,
+.products-list::-webkit-scrollbar-thumb:hover {
+  background: #5a5a6a;
+}
+
 /* Estilos responsivos */
 @media (max-width: 768px) {
   .admin-toolbar1 {
@@ -504,5 +795,44 @@
   .selection-action-btn {
     flex: 1;
     justify-content: center;
+  }
+
+  /* Modal responsive */
+  .details-modal-content {
+    width: 95%;
+    max-height: 95vh;
+  }
+
+  .modal-header {
+    padding: 20px;
+  }
+
+  .modal-body {
+    padding: 20px;
+  }
+
+  .modal-footer {
+    padding: 20px;
+    flex-direction: column;
+  }
+
+  .secondary-btn,
+  .primary-btn {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .details-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .product-item {
+    flex-direction: column;
+    gap: 10px;
+    align-items: flex-start;
+  }
+
+  .product-pricing {
+    align-self: flex-end;
   }
 }

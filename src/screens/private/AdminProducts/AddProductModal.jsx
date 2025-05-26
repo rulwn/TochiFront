@@ -1,236 +1,251 @@
-import React, { useState, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { LuX, LuUpload } from 'react-icons/lu';
+import Lottie from 'lottie-react';
+import successAnimation from '../../../assets/success-animation.json';
+import useProductData from './hook/useProductData';
+import { useForm } from 'react-hook-form';
 
 const AddProductModal = ({ onClose, onSave }) => {
-  const [formData, setFormData] = useState({
-    name: '',
-    description: '',
-    price: '',
-    stock: '',
-    idCategory: '',
-    imageFile: null
-  });
-
-  const [errors, setErrors] = useState({});
   const fileInputRef = useRef(null);
-  const [previewImage, setPreviewImage] = useState(null);
+  const [showSuccessAnimation, setShowSuccessAnimation] = useState(false);
 
-  const categories = [
-    { value: 'lacteos', label: 'Lácteos' },
-    { value: 'carnes', label: 'Carnes' },
-    { value: 'frutas', label: 'Frutas' },
-    { value: 'verduras', label: 'Verduras' }
-  ];
+  const {
+    formData,
+    errors,
+    previewImage,
+    categories,
+    isLoading,
+    handleInputChange,
+    handleFileChange,
+    createProduct,
+    cleanData,
+  } = useProductData();
 
-  const validateForm = () => {
-    const newErrors = {};
-    
-    if (!formData.name.trim()) newErrors.name = 'El nombre es requerido';
-    if (!formData.description.trim()) newErrors.description = 'La descripción es requerida';
-    if (!formData.price || isNaN(formData.price) || parseFloat(formData.price) <= 0) 
-      newErrors.price = 'Precio inválido';
-    if (!formData.stock || isNaN(formData.stock) || parseInt(formData.stock) < 0) 
-      newErrors.stock = 'Stock inválido';
-    if (!formData.idCategory) newErrors.idCategory = 'Seleccione una categoría';
-    if (!formData.imageFile) newErrors.imageFile = 'La imagen es requerida';
-    
-    setErrors(newErrors);
-    return Object.keys(newErrors).length === 0;
-  };
+  // React Hook Form setup
+  const {
+    register,
+    setValue,
+    trigger,
+    formState: { errors: rhfErrors },
+  } = useForm();
 
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormData(prev => ({
-      ...prev,
-      [name]: value
-    }));
-    // Limpiar error al cambiar
-    if (errors[name]) {
-      setErrors(prev => ({ ...prev, [name]: '' }));
-    }
-  };
+  // Sync formData with react-hook-form values
+  useEffect(() => {
+    setValue('name', formData.name);
+    setValue('description', formData.description);
+    setValue('price', formData.price);
+    setValue('stock', formData.stock);
+    setValue('idCategory', formData.idCategory);
+  }, [formData, setValue]);
 
-  const handleFileChange = (e) => {
-    const file = e.target.files[0];
-    if (file) {
-      // Validar tipo de archivo
-      if (!file.type.match('image.*')) {
-        setErrors(prev => ({ ...prev, imageFile: 'Solo se permiten imágenes' }));
-        return;
-      }
-      
-      // Validar tamaño (ejemplo: máximo 2MB)
-      if (file.size > 2 * 1024 * 1024) {
-        setErrors(prev => ({ ...prev, imageFile: 'La imagen debe ser menor a 2MB' }));
-        return;
-      }
-
-      setFormData(prev => ({
-        ...prev,
-        imageFile: file
-      }));
-      
-      // Crear vista previa
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        setPreviewImage(reader.result);
-      };
-      reader.readAsDataURL(file);
-      
-      // Limpiar error si existe
-      if (errors.imageFile) {
-        setErrors(prev => ({ ...prev, imageFile: '' }));
-      }
-    }
-  };
-
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    if (validateForm()) {
-      onSave({
-        ...formData,
-        price: parseFloat(formData.price),
-        stock: parseInt(formData.stock)
-      });
+    const valid = await trigger();
+    if (!valid) return;
+
+    const success = await createProduct();
+    if (success) {
+      setShowSuccessAnimation(true);
+      setTimeout(() => {
+        setShowSuccessAnimation(false);
+        onSave?.();
+        onClose();
+      }, 2000);
     }
+  };
+
+  const handleClose = () => {
+    cleanData();
+    onClose();
   };
 
   return (
     <div className="modal-overlay">
       <div className="modal-content">
-        <button className="modal-close-btn" onClick={onClose}>
+        <button className="modal-close-btn" onClick={handleClose}>
           <LuX size={20} />
         </button>
-        
+
         <h2 className="modal-title">Agregar Nuevo Producto</h2>
-        
-        <div className="modal-body">
-          <form onSubmit={handleSubmit} className="product-form" noValidate>
-            <div className="form-group-product">
-              <label htmlFor="name">Nombre del Producto*</label>
-              <input
-                type="text"
-                id="name"
-                name="name"
-                value={formData.name}
-                onChange={handleChange}
-                className={errors.name ? 'error' : ''}
-                required
-              />
-              {errors.name && <span className="error-message">{errors.name}</span>}
-            </div>
-          
-            <div className="form-group-product">
-              <label htmlFor="description">Descripción*</label>
-              <textarea
-                id="description"
-                name="description"
-                value={formData.description}
-                onChange={handleChange}
-                className={errors.description ? 'error' : ''}
-                required
-                rows="3"
-              />
-              {errors.description && <span className="error-message">{errors.description}</span>}
-            </div>
-          
-            <div className="form-row">
-              <div className="form-group-product">
-                <label htmlFor="price">Precio ($)*</label>
-                <input
-                  type="number"
-                  id="price"
-                  name="price"
-                  value={formData.price}
-                  onChange={handleChange}
-                  min="0.01"
-                  step="0.01"
-                  className={errors.price ? 'error' : ''}
-                  required
-                />
-                {errors.price && <span className="error-message">{errors.price}</span>}
-              </div>
-              
-              <div className="form-group-product">
-                <label htmlFor="stock">Stock*</label>
-                <input
-                  type="number"
-                  id="stock"
-                  name="stock"
-                  value={formData.stock}
-                  onChange={handleChange}
-                  min="0"
-                  className={errors.stock ? 'error' : ''}
-                  required
-                />
-                {errors.stock && <span className="error-message">{errors.stock}</span>}
-              </div>
-            </div>
-          
-            <div className="form-group-product">
-              <label htmlFor="idCategory">Categoría*</label>
-              <select
-                id="idCategory"
-                name="idCategory"
-                value={formData.idCategory}
-                onChange={handleChange}
-                className={errors.idCategory ? 'error' : ''}
-                required
-              >
-                <option value="">Seleccione una categoría</option>
-                {categories.map(category => (
-                  <option key={category.value} value={category.value}>
-                    {category.label}
-                  </option>
-                ))}
-              </select>
-              {errors.idCategory && <span className="error-message">{errors.idCategory}</span>}
-            </div>
-          
-            <div className="form-group-product">
-              <label htmlFor="imageFile">Imagen del Producto*</label>
-              <div className="file-upload-container">
-                <button 
-                  type="button" 
-                  className={`file-upload-btn ${errors.imageFile ? 'error' : ''}`}
-                  onClick={() => fileInputRef.current.click()}
-                >
-                  <LuUpload size={18} />
-                  <span>Seleccionar archivo</span>
-                </button>
-                <input
-                  type="file"
-                  id="imageFile"
-                  ref={fileInputRef}
-                  onChange={handleFileChange}
-                  accept="image/*"
-                  style={{ display: 'none' }}
-                  required
-                />
-                {previewImage && (
-                  <div className="image-preview">
-                    <img src={previewImage} alt="Vista previa" />
-                  </div>
-                )}
-                {formData.imageFile && (
-                  <div className="file-name">{formData.imageFile.name}</div>
-                )}
-                {errors.imageFile && <span className="error-message">{errors.imageFile}</span>}
-              </div>
-            </div>
-          </form>
-        </div>
-        
-        <div className="modal-footer">
-          <div className="form-actions">
-            <button type="button" className="cancel-btn" onClick={onClose}>
-              Cancelar
-            </button>
-            <button type="submit" className="save-btn" onClick={handleSubmit}>
-              Guardar Producto
-            </button>
+
+        {showSuccessAnimation && (
+          <div className="success-animation-container">
+            <Lottie animationData={successAnimation} loop={false} />
           </div>
-        </div>
+        )}
+
+        {!showSuccessAnimation && (
+          <div className="modal-body">
+            <form onSubmit={handleSubmit} className="product-form" noValidate>
+              <div className="form-group-product">
+                <label htmlFor="name">Nombre del Producto*</label>
+                <input
+                  type="text"
+                  id="name"
+                  name="name"
+                  {...register('name', { required: 'El nombre es obligatorio' })}
+                  value={formData.name}
+                  onChange={handleInputChange}
+                  onBlur={() => trigger('name')}
+                  className={rhfErrors.name ? 'error' : ''}
+                  disabled={isLoading}
+                />
+                {rhfErrors.name && <span className="error-message">{rhfErrors.name.message}</span>}
+              </div>
+
+              <div className="form-group-product">
+                <label htmlFor="description">Descripción*</label>
+                <textarea
+                  id="description"
+                  name="description"
+                  {...register('description', { required: 'La descripción es obligatoria' })}
+                  value={formData.description}
+                  onChange={handleInputChange}
+                  onBlur={() => trigger('description')}
+                  className={rhfErrors.description ? 'error' : ''}
+                  rows="3"
+                  disabled={isLoading}
+                />
+                {rhfErrors.description && (
+                  <span className="error-message">{rhfErrors.description.message}</span>
+                )}
+              </div>
+
+              <div className="form-row">
+                <div className="form-group-product">
+                  <label htmlFor="price">Precio ($)*</label>
+                  <input
+                    type="number"
+                    id="price"
+                    name="price"
+                    {...register('price', {
+                      required: 'El precio es obligatorio',
+                      min: { value: 0.01, message: 'Debe ser mayor que 0' },
+                    })}
+                    value={formData.price}
+                    onChange={handleInputChange}
+                    onBlur={() => trigger('price')}
+                    className={rhfErrors.price ? 'error' : ''}
+                    min="0.01"
+                    step="0.01"
+                    disabled={isLoading}
+                  />
+                  {rhfErrors.price && <span className="error-message">{rhfErrors.price.message}</span>}
+                </div>
+
+                <div className="form-group-product">
+                  <label htmlFor="stock">Stock*</label>
+                  <input
+                    type="number"
+                    id="stock"
+                    name="stock"
+                    {...register('stock', {
+                      required: 'El stock es obligatorio',
+                      min: { value: 0, message: 'No puede ser negativo' },
+                    })}
+                    value={formData.stock}
+                    onChange={handleInputChange}
+                    onBlur={() => trigger('stock')}
+                    className={rhfErrors.stock ? 'error' : ''}
+                    min="0"
+                    disabled={isLoading}
+                  />
+                  {rhfErrors.stock && <span className="error-message">{rhfErrors.stock.message}</span>}
+                </div>
+              </div>
+
+              <div className="form-group-product">
+                <label htmlFor="idCategory">Categoría*</label>
+                <select
+                  id="idCategory"
+                  name="idCategory"
+                  {...register('idCategory', { required: 'Seleccione una categoría' })}
+                  value={formData.idCategory}
+                  onChange={handleInputChange}
+                  onBlur={() => trigger('idCategory')}
+                  className={rhfErrors.idCategory ? 'error' : ''}
+                  disabled={isLoading}
+                >
+                  <option value="">Seleccione una categoría</option>
+                  {categories.map((category) => (
+                    <option key={category._id} value={category._id}>
+                      {category.name}
+                    </option>
+                  ))}
+                </select>
+                {rhfErrors.idCategory && (
+                  <span className="error-message">{rhfErrors.idCategory.message}</span>
+                )}
+              </div>
+
+              <div className="form-group-product">
+                <label htmlFor="imageUrl">Imagen del Producto*</label>
+                <div className="file-upload-container">
+                  <button
+                    type="button"
+                    className={`file-upload-btn ${rhfErrors.imageUrl ? 'error' : ''}`}
+                    onClick={() => fileInputRef.current.click()}
+                    disabled={isLoading}
+                  >
+                    <LuUpload size={18} />
+                    <span>Seleccionar archivo</span>
+                  </button>
+                  <input
+                    type="file"
+                    id="imageUrl"
+                    name="imageUrl"
+                    accept="image/*"
+                    style={{ display: 'none' }}
+                    ref={(e) => {
+                      fileInputRef.current = e;
+                      register('imageUrl', {
+                        required: 'La imagen es obligatoria',
+                        validate: {
+                          isImage: (fileList) =>
+                            fileList?.[0]?.type?.startsWith('image/') || 'El archivo debe ser una imagen',
+                        },
+                      }).ref(e);
+                    }}
+                    onChange={(e) => {
+                      handleFileChange(e);
+                      setValue('imageUrl', e.target.files);
+                      trigger('imageUrl');
+                    }}
+                    disabled={isLoading}
+                  />
+                  {previewImage && (
+                    <div className="image-preview">
+                      <img src={previewImage} alt="Vista previa" />
+                    </div>
+                  )}
+                  {formData.imageUrl && (
+                    <div className="file-name">{formData.imageUrl.name}</div>
+                  )}
+                  {rhfErrors.imageUrl && (
+                    <span className="error-message">{rhfErrors.imageUrl.message}</span>
+                  )}
+                </div>
+              </div>
+
+
+              <div className="modal-footer">
+                <div className="form-actions">
+                  <button
+                    type="button"
+                    className="cancel-btn"
+                    onClick={handleClose}
+                    disabled={isLoading}
+                  >
+                    Cancelar
+                  </button>
+                  <button type="submit" className="save-btn" disabled={isLoading}>
+                    {isLoading ? 'Guardando...' : 'Guardar Producto'}
+                  </button>
+                </div>
+              </div>
+            </form>
+          </div>
+        )}
       </div>
     </div>
   );
