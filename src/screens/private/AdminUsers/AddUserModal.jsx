@@ -1,53 +1,79 @@
 import React, { useState, useRef } from 'react';
 import { LuX, LuUpload } from 'react-icons/lu';
+import { useForm } from 'react-hook-form';
 
 const AddUserModal = ({ onClose, onSave }) => {
-  const [formData, setFormData] = useState({
-    name: '',
-    email: '',
-    password: '',
-    phone: '',
-    role: 'Cliente',
-    address: '',
-    imgUrl: '',
-    imageFile: null
-  });
-
-  const [errors, setErrors] = useState({});
   const fileInputRef = useRef(null);
   const [previewImage, setPreviewImage] = useState(null);
+  const [imageFile, setImageFile] = useState(null);
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState(null);
+
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+    setError: setFormError,
+    clearErrors,
+    watch
+  } = useForm({
+    defaultValues: {
+      name: '',
+      email: '',
+      password: '',
+      phone: '',
+      role: 'Cliente',
+      address: ''
+    },
+    mode: 'onChange' // Validación en tiempo real
+  });
 
   const roles = [
     { value: 'Cliente', label: 'Cliente' },
-    { value: 'Empleado', label: 'Empleado' },
-    { value: 'Admin', label: 'Administrador' }
+    { value: 'Administrador', label: 'Administrador' },
+    { value: 'Empleado', label: 'Empleado'}
   ];
 
-  const validateForm = () => {
-    const newErrors = {};
-    
-    if (!formData.name.trim()) newErrors.name = 'El nombre es requerido';
-    if (!formData.email.trim()) newErrors.email = 'El email es requerido';
-    else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) 
-      newErrors.email = 'Email inválido';
-    if (!formData.password || formData.password.length < 6) 
-      newErrors.password = 'La contraseña debe tener al menos 6 caracteres';
-    if (!formData.phone.trim()) newErrors.phone = 'El teléfono es requerido';
-    if (!formData.role) newErrors.role = 'Seleccione un rol';
-    
-    setErrors(newErrors);
-    return Object.keys(newErrors).length === 0;
-  };
-
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormData(prev => ({
-      ...prev,
-      [name]: value
-    }));
-    // Limpiar error al cambiar
-    if (errors[name]) {
-      setErrors(prev => ({ ...prev, [name]: '' }));
+  // Validaciones personalizadas
+  const validationRules = {
+    name: {
+      required: 'El nombre es requerido',
+      minLength: {
+        value: 2,
+        message: 'El nombre debe tener al menos 2 caracteres'
+      },
+      maxLength: {
+        value: 50,
+        message: 'El nombre no puede tener más de 50 caracteres'
+      }
+    },
+    email: {
+      required: 'El email es requerido',
+      pattern: {
+        value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
+        message: 'Formato de email inválido'
+      }
+    },
+    password: {
+      required: 'La contraseña es requerida',
+      minLength: {
+        value: 6,
+        message: 'La contraseña debe tener al menos 6 caracteres'
+      },
+      pattern: {
+        value: /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)/,
+        message: 'La contraseña debe contener al menos una mayúscula, una minúscula y un número'
+      }
+    },
+    phone: {
+      required: 'El teléfono es requerido',
+      pattern: {
+        value: /^[\+]?[0-9\s\-\(\)]{8,15}$/,
+        message: 'Formato de teléfono inválido'
+      }
+    },
+    role: {
+      required: 'Seleccione un rol'
     }
   };
 
@@ -56,21 +82,23 @@ const AddUserModal = ({ onClose, onSave }) => {
     if (file) {
       // Validar tipo de archivo
       if (!file.type.match('image.*')) {
-        setErrors(prev => ({ ...prev, imageFile: 'Solo se permiten imágenes' }));
+        setFormError('imageFile', { 
+          type: 'manual', 
+          message: 'Solo se permiten imágenes' 
+        });
         return;
       }
       
-      // Validar tamaño (ejemplo: máximo 2MB)
-      if (file.size > 2 * 1024 * 1024) {
-        setErrors(prev => ({ ...prev, imageFile: 'La imagen debe ser menor a 2MB' }));
+      // Validar tamaño (máximo 5MB)
+      if (file.size > 5 * 1024 * 1024) {
+        setFormError('imageFile', { 
+          type: 'manual', 
+          message: 'La imagen debe ser menor a 5MB' 
+        });
         return;
       }
 
-      setFormData(prev => ({
-        ...prev,
-        imageFile: file,
-        imgUrl: URL.createObjectURL(file)
-      }));
+      setImageFile(file);
       
       // Crear vista previa
       const reader = new FileReader();
@@ -81,53 +109,121 @@ const AddUserModal = ({ onClose, onSave }) => {
       
       // Limpiar error si existe
       if (errors.imageFile) {
-        setErrors(prev => ({ ...prev, imageFile: '' }));
+        clearErrors('imageFile');
       }
     }
   };
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    if (validateForm()) {
-      onSave(formData);
+  const onSubmit = async (data) => {
+    try {
+      setIsLoading(true);
+      setError(null);
+      
+      console.log('Datos del formulario en AddUserModal:', data);
+      
+      // Preparar los datos del usuario
+      const userData = {
+        ...data,
+        imageFile: imageFile
+      };
+
+      console.log('Datos completos a enviar:', userData);
+
+      // Llamar al callback onSave que viene desde AdminUsers
+      // Este callback se encargará de llamar a createUser
+      if (onSave) {
+        await onSave(userData);
+      }
+      
+      // Cerrar el modal
+      onClose();
+      
+      // Mensaje de éxito
+      alert('Usuario creado exitosamente');
+      
+    } catch (err) {
+      console.error('Error en onSubmit:', err);
+      setError(err.message || 'Error al crear el usuario. Intente nuevamente.');
+      setFormError('submit', { 
+        type: 'manual', 
+        message: err.message || 'Error al crear el usuario. Intente nuevamente.' 
+      });
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleModalClose = () => {
+    if (!isLoading) {
+      onClose();
     }
   };
 
   return (
     <div className="modal-overlay1">
       <div className="modal-content1">
-        <button className="modal-close-btn1" onClick={onClose}>
+        <button 
+          className="modal-close-btn1" 
+          onClick={handleModalClose}
+          disabled={isLoading}
+        >
           <LuX size={20} />
         </button>
         
         <h2 className="modal-title1">Agregar Nuevo Usuario</h2>
         
         <div className="modal-body1">
-          <form onSubmit={handleSubmit} className="user-form" noValidate>
+          <form onSubmit={handleSubmit(onSubmit)} className="user-form" noValidate>
+            {/* Error general del submit */}
+            {errors.submit && (
+              <div className="error-message-general" style={{ 
+                backgroundColor: '#fee', 
+                color: '#c33', 
+                padding: '8px 12px', 
+                borderRadius: '4px', 
+                marginBottom: '16px',
+                border: '1px solid #fcc'
+              }}>
+                {errors.submit.message}
+              </div>
+            )}
+
+            {/* Error local del modal */}
+            {error && (
+              <div className="error-message-general" style={{ 
+                backgroundColor: '#fee', 
+                color: '#c33', 
+                padding: '8px 12px', 
+                borderRadius: '4px', 
+                marginBottom: '16px',
+                border: '1px solid #fcc'
+              }}>
+                {error}
+              </div>
+            )}
+            
             <div className="form-row">
               <div className="form-group-user">
                 <label htmlFor="name">Nombre Completo*</label>
                 <input
                   type="text"
                   id="name"
-                  name="name"
-                  value={formData.name}
-                  onChange={handleChange}
+                  {...register('name', validationRules.name)}
                   className={errors.name ? 'error' : ''}
-                  required
+                  disabled={isLoading}
                 />
-                {errors.name && <span className="error-message">{errors.name}</span>}
+                {errors.name && (
+                  <span className="error-message">{errors.name.message}</span>
+                )}
               </div>
               
               <div className="form-group-user">
                 <label htmlFor="role">Rol*</label>
                 <select
                   id="role"
-                  name="role"
-                  value={formData.role}
-                  onChange={handleChange}
+                  {...register('role', validationRules.role)}
                   className={errors.role ? 'error' : ''}
-                  required
+                  disabled={isLoading}
                 >
                   {roles.map(role => (
                     <option key={role.value} value={role.value}>
@@ -135,7 +231,9 @@ const AddUserModal = ({ onClose, onSave }) => {
                     </option>
                   ))}
                 </select>
-                {errors.role && <span className="error-message">{errors.role}</span>}
+                {errors.role && (
+                  <span className="error-message">{errors.role.message}</span>
+                )}
               </div>
             </div>
           
@@ -145,13 +243,13 @@ const AddUserModal = ({ onClose, onSave }) => {
                 <input
                   type="email"
                   id="email"
-                  name="email"
-                  value={formData.email}
-                  onChange={handleChange}
+                  {...register('email', validationRules.email)}
                   className={errors.email ? 'error' : ''}
-                  required
+                  disabled={isLoading}
                 />
-                {errors.email && <span className="error-message">{errors.email}</span>}
+                {errors.email && (
+                  <span className="error-message">{errors.email.message}</span>
+                )}
               </div>
               
               <div className="form-group-user">
@@ -159,13 +257,13 @@ const AddUserModal = ({ onClose, onSave }) => {
                 <input
                   type="password"
                   id="password"
-                  name="password"
-                  value={formData.password}
-                  onChange={handleChange}
+                  {...register('password', validationRules.password)}
                   className={errors.password ? 'error' : ''}
-                  required
+                  disabled={isLoading}
                 />
-                {errors.password && <span className="error-message">{errors.password}</span>}
+                {errors.password && (
+                  <span className="error-message">{errors.password.message}</span>
+                )}
               </div>
             </div>
           
@@ -175,13 +273,13 @@ const AddUserModal = ({ onClose, onSave }) => {
                 <input
                   type="tel"
                   id="phone"
-                  name="phone"
-                  value={formData.phone}
-                  onChange={handleChange}
+                  {...register('phone', validationRules.phone)}
                   className={errors.phone ? 'error' : ''}
-                  required
+                  disabled={isLoading}
                 />
-                {errors.phone && <span className="error-message">{errors.phone}</span>}
+                {errors.phone && (
+                  <span className="error-message">{errors.phone.message}</span>
+                )}
               </div>
               
               <div className="form-group-user">
@@ -189,9 +287,8 @@ const AddUserModal = ({ onClose, onSave }) => {
                 <input
                   type="text"
                   id="address"
-                  name="address"
-                  value={formData.address}
-                  onChange={handleChange}
+                  {...register('address')}
+                  disabled={isLoading}
                 />
               </div>
             </div>
@@ -203,6 +300,7 @@ const AddUserModal = ({ onClose, onSave }) => {
                   type="button" 
                   className={`file-upload-btn ${errors.imageFile ? 'error' : ''}`}
                   onClick={() => fileInputRef.current.click()}
+                  disabled={isLoading}
                 >
                   <LuUpload size={18} />
                   <span>Seleccionar archivo</span>
@@ -214,16 +312,19 @@ const AddUserModal = ({ onClose, onSave }) => {
                   onChange={handleFileChange}
                   accept="image/*"
                   style={{ display: 'none' }}
+                  disabled={isLoading}
                 />
                 {previewImage && (
                   <div className="image-preview">
                     <img src={previewImage} alt="Vista previa" />
                   </div>
                 )}
-                {formData.imageFile && (
-                  <div className="file-name">{formData.imageFile.name}</div>
+                {imageFile && (
+                  <div className="file-name">{imageFile.name}</div>
                 )}
-                {errors.imageFile && <span className="error-message">{errors.imageFile}</span>}
+                {errors.imageFile && (
+                  <span className="error-message">{errors.imageFile.message}</span>
+                )}
               </div>
             </div>
           </form>
@@ -231,11 +332,21 @@ const AddUserModal = ({ onClose, onSave }) => {
         
         <div className="modal-footer">
           <div className="form-actions">
-            <button type="button" className="cancel-btn" onClick={onClose}>
+            <button 
+              type="button" 
+              className="cancel-btn" 
+              onClick={handleModalClose}
+              disabled={isLoading}
+            >
               Cancelar
             </button>
-            <button type="submit" className="save-btn" onClick={handleSubmit}>
-              Guardar Usuario
+            <button 
+              type="submit" 
+              className="save-btn" 
+              onClick={handleSubmit(onSubmit)}
+              disabled={isLoading}
+            >
+              {isLoading ? 'Guardando...' : 'Guardar Usuario'}
             </button>
           </div>
         </div>
