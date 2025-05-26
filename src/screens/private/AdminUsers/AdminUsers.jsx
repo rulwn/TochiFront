@@ -99,7 +99,7 @@ function AdminUsers() {
     createUser,
     updateUser,
     deleteUser
-    } = useUserData();
+  } = useUserData();
 
   // Cargar usuarios al montar el componente
   useEffect(() => {
@@ -160,18 +160,18 @@ function AdminUsers() {
 
 
 
-const handleSaveUser = async (userData) => {
-  console.log('Datos recibidos en handleSaveUser:', userData);
-  
-  try {
-    const newUser = await createUser(userData);
-    console.log('Usuario creado exitosamente:', newUser);
-    await fetchUsers();
-  } catch (err) {
-    console.error('Error al crear usuario:', err);
-    throw err;
-  }
-};
+  const handleSaveUser = async (userData) => {
+    console.log('Datos recibidos en handleSaveUser:', userData);
+
+    try {
+      const newUser = await createUser(userData);
+      console.log('Usuario creado exitosamente:', newUser);
+      await fetchUsers();
+    } catch (err) {
+      console.error('Error al crear usuario:', err);
+      throw err;
+    }
+  };
   const handleEditUser = (user) => {
     setEditingUser(user);
     setIsEditModalOpen(true);
@@ -179,16 +179,20 @@ const handleSaveUser = async (userData) => {
 
   const handleUpdateUser = async (updatedUserData) => {
   try {
+    console.log('Actualizando usuario con datos:', updatedUserData);
+    
     await updateUser(editingUser._id, updatedUserData);
+    
+    console.log('Usuario actualizado exitosamente');
     
     // Recargar la lista de usuarios después de una actualización exitosa
     await fetchUsers();
     
-    setIsEditModalOpen(false);
-    setEditingUser(null);
     setSelectedUsers([]);
+    
   } catch (err) {
     console.error('Error al actualizar usuario:', err);
+    throw new Error(err.message || 'Error al actualizar el usuario');
   }
 };
 
@@ -336,7 +340,10 @@ const handleSaveUser = async (userData) => {
       {isEditModalOpen && (
         <EditUserModal
           user={editingUser}
-          onClose={() => setIsEditModalOpen(false)}
+          onClose={() => {
+            setIsEditModalOpen(false);
+            setEditingUser(null);
+          }}
           onSave={handleUpdateUser}
           isLoading={isLoading}
         />
