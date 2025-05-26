@@ -11,11 +11,10 @@ function Login() {
   const [error, setError] = useState('');
   const [isLoading, setIsLoading] = useState(false);
 
-  const handleLogin = async (e) => {
+ const handleLogin = async (e) => {
     e.preventDefault();
     setError('');
 
-    // Validación básica
     if (!email || !password) {
       setError('Por favor completa todos los campos');
       return;
@@ -38,6 +37,8 @@ function Login() {
       if (!response.ok) {
         throw new Error(data.message || 'Error en el login');
       }
+  localStorage.setItem('authToken', data.token);
+localStorage.setItem('userEmail', email);
 
       // Decodificar el token para obtener el rol
       const tokenPayload = JSON.parse(atob(data.token.split('.')[1]));
@@ -50,12 +51,12 @@ function Login() {
         navigate('/');
       }
 
-      // Opcional: Guardar datos de usuario en el estado global o localStorage
-      localStorage.setItem('userRole', userRole);
-
     } catch (error) {
       console.error('Login error:', error);
       setError(error.message || 'Credenciales incorrectas');
+      // Limpiar almacenamiento en caso de error
+      localStorage.removeItem('authToken');
+      localStorage.removeItem('userEmail');
     } finally {
       setIsLoading(false);
     }
