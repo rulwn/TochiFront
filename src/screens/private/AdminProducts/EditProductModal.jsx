@@ -1,33 +1,42 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
+import { useForm } from 'react-hook-form';
 import { LuX, LuUpload } from 'react-icons/lu';
 import useProductData from './hook/useProductData';
 
 const EditProductModal = ({ product, onClose, onSave }) => {
-  // Usar el hook personalizado
-  const { 
-    categories, 
-    updateProduct, 
-    isLoading,
-    getCategoryNameById,
-    getCategoryIdByName 
+  const {
+    categories,
+    updateProduct,
+    isLoading
   } = useProductData();
 
-  const [formData, setFormData] = useState({
-    name: '',
-    description: '',
-    price: '',
-    stock: '',
-    idCategory: '',
-    imageFile: null
+  const {
+    register,
+    handleSubmit,
+    setValue,
+    watch,
+    reset,
+    formState: { errors }
+  } = useForm({
+    defaultValues: {
+      name: '',
+      description: '',
+      price: '',
+      stock: '',
+      idCategory: '',
+      imageFile: null
+    }
   });
 
-  const [errors, setErrors] = useState({});
   const fileInputRef = useRef(null);
   const [previewImage, setPreviewImage] = useState(null);
 
+  // Watch imageFile to update preview
+  const imageFile = watch('imageFile');
+
   useEffect(() => {
     if (product && categories.length > 0) {
-      setFormData({
+      reset({
         name: product.name || '',
         description: product.description || '',
         price: product.price?.toString() || '',
@@ -35,172 +44,134 @@ const EditProductModal = ({ product, onClose, onSave }) => {
         idCategory: product.idCategory || '',
         imageFile: null
       });
-      
-      if (product.imageUrl) {
-        setPreviewImage(product.imageUrl);
-      }
+      setPreviewImage(product.imageUrl || null);
     }
-  }, [product, categories]);
+  }, [product, categories, reset]);
 
-  const validateForm = () => {
-    const newErrors = {};
-    
-    if (!formData.name.trim()) newErrors.name = 'El nombre es requerido';
-    if (!formData.description.trim()) newErrors.description = 'La descripción es requerida';
-    if (!formData.price || isNaN(formData.price) || parseFloat(formData.price) <= 0) 
-      newErrors.price = 'Precio inválido';
-    if (!formData.stock || isNaN(formData.stock) || parseInt(formData.stock) < 0) 
-      newErrors.stock = 'Stock inválido';
-    if (!formData.idCategory) newErrors.idCategory = 'Seleccione una categoría';
-    
-    setErrors(newErrors);
-    return Object.keys(newErrors).length === 0;
-  };
-
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormData(prev => ({
-      ...prev,
-      [name]: value
-    }));
-    if (errors[name]) {
-      setErrors(prev => ({ ...prev, [name]: '' }));
+  useEffect(() => {
+    if (imageFile && imageFile.length > 0) {
+      const file = imageFile[0];
+      if (file) {
+        const reader = new FileReader();
+        reader.onloadend = () => {
+          setPreviewImage(reader.result);
+        };
+        reader.readAsDataURL(file);
+      }
+    } else if (product?.imageUrl) {
+      setPreviewImage(product.imageUrl);
+    } else {
+      setPreviewImage(null);
     }
-  };
+  }, [imageFile, product]);
 
-  const handleFileChange = (e) => {
-    const file = e.target.files[0];
-    if (file) {
-      if (!file.type.match('image.*')) {
-        setErrors(prev => ({ ...prev, imageFile: 'Solo se permiten imágenes' }));
-        return;
-      }
-      
-      if (file.size > 2 * 1024 * 1024) {
-        setErrors(prev => ({ ...prev, imageFile: 'La imagen debe ser menor a 2MB' }));
-        return;
-      }
+  const onSubmit = async (data) => {
+    // data.imageFile is a FileList, convert to single file or null
+    const imageFileObj = data.imageFile && data.imageFile.length > 0 ? data.imageFile[0] : null;
 
-      setFormData(prev => ({
-        ...prev,
-        imageFile: file
-      }));
-      
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        setPreviewImage(reader.result);
-      };
-      reader.readAsDataURL(file);
-      
-      if (errors.imageFile) {
-        setErrors(prev => ({ ...prev, imageFile: '' }));
-      }
+    const productData = {
+      name: data.name,
+      description: data.description,
+      price: parseFloat(data.price),
+      stock: parseInt(data.stock),
+      idCategory: data.idCategory,
+      imageFile: imageFileObj
+    };
+
+    const success = await updateProduct(product._id, productData);
+    if (success) {
+      onSave();
     }
   };
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    if (validateForm()) {
-      const productData = {
-        name: formData.name,
-        description: formData.description,
-        price: parseFloat(formData.price),
-        stock: parseInt(formData.stock),
-        idCategory: formData.idCategory,
-        imageFile: formData.imageFile 
-      };
-    
-      const success = await updateProduct(product._id, productData);
-      if (success) {
-        onSave(); 
-      }
+  const handleFileButtonClick = () => {
+    if (!isLoading) {
+      fileInputRef.current.click();
     }
   };
 
   return (
     <div className="modal-overlay">
       <div className="modal-content">
-        <button className="modal-close-btn" onClick={onClose} disabled={isLoading}>
+        <button
+          className="modal-close-btn"
+          onClick={onClose}
+          disabled={isLoading}
+          type="button"
+        >
           <LuX size={20} />
         </button>
-        
+
         <h2 className="modal-title">Editar Producto</h2>
         <div className="modal-body">
-          <form onSubmit={handleSubmit} className="product-form" noValidate>
-            <div className="form-group">
+          <form onSubmit={handleSubmit(onSubmit)} className="product-form" noValidate>
+            <div className="form-group-product">
               <label htmlFor="name">Nombre del Producto*</label>
               <input
-                type="text"
                 id="name"
-                name="name"
-                value={formData.name}
-                onChange={handleChange}
+                {...register('name', { required: 'El nombre es requerido' })}
                 className={errors.name ? 'error' : ''}
-                required
                 disabled={isLoading}
               />
-              {errors.name && <span className="error-message">{errors.name}</span>}
+              {errors.name && <span className="error-message">{errors.name.message}</span>}
             </div>
-          
-            <div className="form-group">
+
+            <div className="form-group-product">
               <label htmlFor="description">Descripción*</label>
               <textarea
                 id="description"
-                name="description"
-                value={formData.description}
-                onChange={handleChange}
-                className={errors.description ? 'error' : ''}
-                required
                 rows="3"
+                {...register('description', { required: 'La descripción es requerida' })}
+                className={errors.description ? 'error' : ''}
                 disabled={isLoading}
               />
-              {errors.description && <span className="error-message">{errors.description}</span>}
+              {errors.description && <span className="error-message">{errors.description.message}</span>}
             </div>
-          
+
             <div className="form-row">
-              <div className="form-group">
+              <div className="form-group-product">
                 <label htmlFor="price">Precio ($)*</label>
                 <input
-                  type="number"
                   id="price"
-                  name="price"
-                  value={formData.price}
-                  onChange={handleChange}
-                  min="0.01"
+                  type="number"
                   step="0.01"
+                  min="0.01"
+                  {...register('price', {
+                    required: 'El precio es requerido',
+                    valueAsNumber: true,
+                    min: { value: 0.01, message: 'Precio debe ser mayor que 0' }
+                  })}
                   className={errors.price ? 'error' : ''}
-                  required
                   disabled={isLoading}
                 />
-                {errors.price && <span className="error-message">{errors.price}</span>}
+                {errors.price && <span className="error-message">{errors.price.message}</span>}
               </div>
-              
-              <div className="form-group">
+
+              <div className="form-group-product">
                 <label htmlFor="stock">Stock*</label>
                 <input
-                  type="number"
                   id="stock"
-                  name="stock"
-                  value={formData.stock}
-                  onChange={handleChange}
+                  type="number"
                   min="0"
+                  {...register('stock', {
+                    required: 'El stock es requerido',
+                    valueAsNumber: true,
+                    min: { value: 0, message: 'Stock no puede ser negativo' },
+                    validate: value => Number.isInteger(value) || 'Stock debe ser un número entero'
+                  })}
                   className={errors.stock ? 'error' : ''}
-                  required
                   disabled={isLoading}
                 />
-                {errors.stock && <span className="error-message">{errors.stock}</span>}
+                {errors.stock && <span className="error-message">{errors.stock.message}</span>}
               </div>
             </div>
-          
-            <div className="form-group">
+
+            <div className="form-group-product">
               <label htmlFor="idCategory">Categoría*</label>
               <select
                 id="idCategory"
-                name="idCategory"
-                value={formData.idCategory}
-                onChange={handleChange}
+                {...register('idCategory', { required: 'Seleccione una categoría' })}
                 className={errors.idCategory ? 'error' : ''}
-                required
                 disabled={isLoading}
               >
                 <option value="">Seleccione una categoría</option>
@@ -210,16 +181,16 @@ const EditProductModal = ({ product, onClose, onSave }) => {
                   </option>
                 ))}
               </select>
-              {errors.idCategory && <span className="error-message">{errors.idCategory}</span>}
+              {errors.idCategory && <span className="error-message">{errors.idCategory.message}</span>}
             </div>
-          
+
             <div className="form-group">
               <label htmlFor="imageFile">Imagen del Producto</label>
               <div className="file-upload-container">
-                <button 
-                  type="button" 
+                <button
+                  type="button"
                   className={`file-upload-btn ${errors.imageFile ? 'error' : ''}`}
-                  onClick={() => fileInputRef.current.click()}
+                  onClick={handleFileButtonClick}
                   disabled={isLoading}
                 >
                   <LuUpload size={18} />
@@ -228,44 +199,59 @@ const EditProductModal = ({ product, onClose, onSave }) => {
                 <input
                   type="file"
                   id="imageFile"
-                  ref={fileInputRef}
-                  onChange={handleFileChange}
                   accept="image/*"
                   style={{ display: 'none' }}
+                  {...register('imageFile', {
+                    validate: {
+                      isImage: files => {
+                        if (!files || files.length === 0) return true; // optional
+                        const file = files[0];
+                        return file.type.startsWith('image/') || 'Solo se permiten imágenes';
+                      },
+                      maxSize: files => {
+                        if (!files || files.length === 0) return true; // optional
+                        const file = files[0];
+                        return file.size <= 2 * 1024 * 1024 || 'La imagen debe ser menor a 2MB';
+                      }
+                    }
+                  })}
+                  ref={e => {
+                    register('imageFile').ref(e);
+                    fileInputRef.current = e;
+                  }}
                 />
-                {(previewImage || product.imageUrl) && (
+                {previewImage && (
                   <div className="image-preview">
-                    <img src={previewImage || product.imageUrl} alt="Vista previa" />
+                    <img src={previewImage} alt="Vista previa" />
                   </div>
                 )}
-                {formData.imageFile && (
-                  <div className="file-name">{formData.imageFile.name}</div>
+                {imageFile && imageFile.length > 0 && (
+                  <div className="file-name">{imageFile[0].name}</div>
                 )}
-                {errors.imageFile && <span className="error-message">{errors.imageFile}</span>}
+                {errors.imageFile && <span className="error-message">{errors.imageFile.message}</span>}
+              </div>
+            </div>
+
+            <div className="modal-footer">
+              <div className="form-actions">
+                <button
+                  type="button"
+                  className="cancel-btn"
+                  onClick={onClose}
+                  disabled={isLoading}
+                >
+                  Cancelar
+                </button>
+                <button
+                  type="submit"
+                  className="save-btn"
+                  disabled={isLoading}
+                >
+                  {isLoading ? 'Actualizando...' : 'Actualizar Producto'}
+                </button>
               </div>
             </div>
           </form>
-        </div>
-        
-        <div className="modal-footer">
-          <div className="form-actions">
-            <button 
-              type="button" 
-              className="cancel-btn" 
-              onClick={onClose}
-              disabled={isLoading}
-            >
-              Cancelar
-            </button>
-            <button 
-              type="submit" 
-              className="save-btn" 
-              onClick={handleSubmit}
-              disabled={isLoading}
-            >
-              {isLoading ? 'Actualizando...' : 'Actualizar Producto'}
-            </button>
-          </div>
         </div>
       </div>
     </div>

@@ -1,8 +1,9 @@
-import React, { useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { LuX, LuUpload } from 'react-icons/lu';
 import Lottie from 'lottie-react';
-import successAnimation from '../../../assets/success-animation.json'; // Asegúrate de tener el archivo
+import successAnimation from '../../../assets/success-animation.json';
 import useProductData from './hook/useProductData';
+import { useForm } from 'react-hook-form';
 
 const AddProductModal = ({ onClose, onSave }) => {
   const fileInputRef = useRef(null);
@@ -17,11 +18,31 @@ const AddProductModal = ({ onClose, onSave }) => {
     handleInputChange,
     handleFileChange,
     createProduct,
-    cleanData
+    cleanData,
   } = useProductData();
+
+  // React Hook Form setup
+  const {
+    register,
+    setValue,
+    trigger,
+    formState: { errors: rhfErrors },
+  } = useForm();
+
+  // Sync formData with react-hook-form values
+  useEffect(() => {
+    setValue('name', formData.name);
+    setValue('description', formData.description);
+    setValue('price', formData.price);
+    setValue('stock', formData.stock);
+    setValue('idCategory', formData.idCategory);
+  }, [formData, setValue]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    const valid = await trigger();
+    if (!valid) return;
+
     const success = await createProduct();
     if (success) {
       setShowSuccessAnimation(true);
@@ -62,13 +83,14 @@ const AddProductModal = ({ onClose, onSave }) => {
                   type="text"
                   id="name"
                   name="name"
+                  {...register('name', { required: 'El nombre es obligatorio' })}
                   value={formData.name}
                   onChange={handleInputChange}
-                  className={errors.name ? 'error' : ''}
-                  required
+                  onBlur={() => trigger('name')}
+                  className={rhfErrors.name ? 'error' : ''}
                   disabled={isLoading}
                 />
-                {errors.name && <span className="error-message">{errors.name}</span>}
+                {rhfErrors.name && <span className="error-message">{rhfErrors.name.message}</span>}
               </div>
 
               <div className="form-group-product">
@@ -76,14 +98,17 @@ const AddProductModal = ({ onClose, onSave }) => {
                 <textarea
                   id="description"
                   name="description"
+                  {...register('description', { required: 'La descripción es obligatoria' })}
                   value={formData.description}
                   onChange={handleInputChange}
-                  className={errors.description ? 'error' : ''}
-                  required
+                  onBlur={() => trigger('description')}
+                  className={rhfErrors.description ? 'error' : ''}
                   rows="3"
                   disabled={isLoading}
                 />
-                {errors.description && <span className="error-message">{errors.description}</span>}
+                {rhfErrors.description && (
+                  <span className="error-message">{rhfErrors.description.message}</span>
+                )}
               </div>
 
               <div className="form-row">
@@ -93,15 +118,19 @@ const AddProductModal = ({ onClose, onSave }) => {
                     type="number"
                     id="price"
                     name="price"
+                    {...register('price', {
+                      required: 'El precio es obligatorio',
+                      min: { value: 0.01, message: 'Debe ser mayor que 0' },
+                    })}
                     value={formData.price}
                     onChange={handleInputChange}
+                    onBlur={() => trigger('price')}
+                    className={rhfErrors.price ? 'error' : ''}
                     min="0.01"
                     step="0.01"
-                    className={errors.price ? 'error' : ''}
-                    required
                     disabled={isLoading}
                   />
-                  {errors.price && <span className="error-message">{errors.price}</span>}
+                  {rhfErrors.price && <span className="error-message">{rhfErrors.price.message}</span>}
                 </div>
 
                 <div className="form-group-product">
@@ -110,14 +139,18 @@ const AddProductModal = ({ onClose, onSave }) => {
                     type="number"
                     id="stock"
                     name="stock"
+                    {...register('stock', {
+                      required: 'El stock es obligatorio',
+                      min: { value: 0, message: 'No puede ser negativo' },
+                    })}
                     value={formData.stock}
                     onChange={handleInputChange}
+                    onBlur={() => trigger('stock')}
+                    className={rhfErrors.stock ? 'error' : ''}
                     min="0"
-                    className={errors.stock ? 'error' : ''}
-                    required
                     disabled={isLoading}
                   />
-                  {errors.stock && <span className="error-message">{errors.stock}</span>}
+                  {rhfErrors.stock && <span className="error-message">{rhfErrors.stock.message}</span>}
                 </div>
               </div>
 
@@ -126,20 +159,23 @@ const AddProductModal = ({ onClose, onSave }) => {
                 <select
                   id="idCategory"
                   name="idCategory"
+                  {...register('idCategory', { required: 'Seleccione una categoría' })}
                   value={formData.idCategory}
                   onChange={handleInputChange}
-                  className={errors.idCategory ? 'error' : ''}
-                  required
+                  onBlur={() => trigger('idCategory')}
+                  className={rhfErrors.idCategory ? 'error' : ''}
                   disabled={isLoading}
                 >
                   <option value="">Seleccione una categoría</option>
-                  {categories.map(category => (
+                  {categories.map((category) => (
                     <option key={category._id} value={category._id}>
                       {category.name}
                     </option>
                   ))}
                 </select>
-                {errors.idCategory && <span className="error-message">{errors.idCategory}</span>}
+                {rhfErrors.idCategory && (
+                  <span className="error-message">{rhfErrors.idCategory.message}</span>
+                )}
               </div>
 
               <div className="form-group-product">
@@ -147,7 +183,7 @@ const AddProductModal = ({ onClose, onSave }) => {
                 <div className="file-upload-container">
                   <button
                     type="button"
-                    className={`file-upload-btn ${errors.imageUrl ? 'error' : ''}`}
+                    className={`file-upload-btn ${rhfErrors.imageUrl ? 'error' : ''}`}
                     onClick={() => fileInputRef.current.click()}
                     disabled={isLoading}
                   >
@@ -157,11 +193,24 @@ const AddProductModal = ({ onClose, onSave }) => {
                   <input
                     type="file"
                     id="imageUrl"
-                    ref={fileInputRef}
-                    onChange={handleFileChange}
+                    name="imageUrl"
                     accept="image/*"
                     style={{ display: 'none' }}
-                    required
+                    ref={(e) => {
+                      fileInputRef.current = e;
+                      register('imageUrl', {
+                        required: 'La imagen es obligatoria',
+                        validate: {
+                          isImage: (fileList) =>
+                            fileList?.[0]?.type?.startsWith('image/') || 'El archivo debe ser una imagen',
+                        },
+                      }).ref(e);
+                    }}
+                    onChange={(e) => {
+                      handleFileChange(e);
+                      setValue('imageUrl', e.target.files);
+                      trigger('imageUrl');
+                    }}
                     disabled={isLoading}
                   />
                   {previewImage && (
@@ -172,25 +221,24 @@ const AddProductModal = ({ onClose, onSave }) => {
                   {formData.imageUrl && (
                     <div className="file-name">{formData.imageUrl.name}</div>
                   )}
-                  {errors.imageUrl && <span className="error-message">{errors.imageUrl}</span>}
+                  {rhfErrors.imageUrl && (
+                    <span className="error-message">{rhfErrors.imageUrl.message}</span>
+                  )}
                 </div>
               </div>
 
+
               <div className="modal-footer">
                 <div className="form-actions">
-                  <button 
-                    type="button" 
-                    className="cancel-btn" 
+                  <button
+                    type="button"
+                    className="cancel-btn"
                     onClick={handleClose}
                     disabled={isLoading}
                   >
                     Cancelar
                   </button>
-                  <button 
-                    type="submit" 
-                    className="save-btn"
-                    disabled={isLoading}
-                  >
+                  <button type="submit" className="save-btn" disabled={isLoading}>
                     {isLoading ? 'Guardando...' : 'Guardar Producto'}
                   </button>
                 </div>
