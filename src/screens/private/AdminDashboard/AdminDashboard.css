@@ -121,3 +121,75 @@
       grid-template-columns: 1fr;
     }
   }
+
+
+  /* ...tu CSS original aquí... */
+
+/* Responsive mejorado */
+@media (max-width: 992px) {
+  .charts-row {
+    grid-template-columns: 1fr;
+  }
+
+  .chart-container {
+    padding: 15px;
+  }
+
+  .stat-card {
+    padding: 15px;
+  }
+
+  .recent-orders {
+    padding: 15px;
+    overflow-x: auto;
+  }
+
+  table {
+    font-size: 0.9rem;
+    min-width: 600px; /* para permitir scroll horizontal en pantallas pequeñas */
+  }
+
+  th, td {
+    padding: 10px;
+  }
+}
+
+@media (max-width: 576px) {
+  .admin-dashboard {
+    padding: 10px;
+  }
+
+  .dashboard-title {
+    font-size: 1.4rem;
+  }
+
+  .stat-card h3 {
+    font-size: 1rem;
+  }
+
+  .stat-card p {
+    font-size: 1.4rem;
+  }
+
+  .stat-card span {
+    font-size: 0.8rem;
+  }
+
+  .chart-container h3,
+  .recent-orders h3 {
+    font-size: 1rem;
+  }
+
+  th, td {
+    padding: 8px;
+    font-size: 0.85rem;
+  }
+
+  .chart-container {
+    padding: 10px;
+  }
+
+  .recent-orders {
+    padding: 10px;
+  }
+}
