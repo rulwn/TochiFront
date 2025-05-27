@@ -110,7 +110,6 @@ function AdminUsers() {
 
   const roles = [
     { value: 'all', label: 'Todos los roles' },
-    { value: 'Empleado', label: 'Empleados' },
     { value: 'Cliente', label: 'Clientes' }
   ];
 
@@ -119,7 +118,7 @@ function AdminUsers() {
       user.email?.toLowerCase().includes(searchTerm.toLowerCase());
     const matchesRole = selectedRole === 'all' || user.role === selectedRole;
     const matchesTab = activeTab === 'all' ||
-      (activeTab === 'empleados' && user.role === 'Empleado') ||
+      (activeTab === 'Administradores' && user.role === 'Administrador') ||
       (activeTab === 'clientes' && user.role === 'Cliente');
 
     return matchesSearch && matchesRole && matchesTab;
@@ -218,10 +217,10 @@ function AdminUsers() {
               Todos
             </button>
             <button
-              className={`tab-btn ${activeTab === 'empleados' ? 'active' : ''}`}
-              onClick={() => setActiveTab('empleados')}
+              className={`tab-btn ${activeTab === 'Administradores' ? 'active' : ''}`}
+              onClick={() => setActiveTab('Administradores')}
             >
-              Empleados
+              Administradores
             </button>
             <button
               className={`tab-btn ${activeTab === 'clientes' ? 'active' : ''}`}
