@@ -6,9 +6,11 @@ import useProductData from './hook/useProductData';
 import { useForm } from 'react-hook-form';
 
 const AddProductModal = ({ onClose, onSave }) => {
+  // Refs y estados
   const fileInputRef = useRef(null);
   const [showSuccessAnimation, setShowSuccessAnimation] = useState(false);
 
+  // Custom hook para manejar los datos del producto
   const {
     formData,
     errors,
@@ -21,7 +23,7 @@ const AddProductModal = ({ onClose, onSave }) => {
     cleanData,
   } = useProductData();
 
-  // React Hook Form setup
+  // Configuración de react-hook-form
   const {
     register,
     setValue,
@@ -29,7 +31,7 @@ const AddProductModal = ({ onClose, onSave }) => {
     formState: { errors: rhfErrors },
   } = useForm();
 
-  // Sync formData with react-hook-form values
+  // Sincroniza los valores de formData con react-hook-form
   useEffect(() => {
     setValue('name', formData.name);
     setValue('description', formData.description);
@@ -38,6 +40,7 @@ const AddProductModal = ({ onClose, onSave }) => {
     setValue('idCategory', formData.idCategory);
   }, [formData, setValue]);
 
+  // Maneja el envío del formulario
   const handleSubmit = async (e) => {
     e.preventDefault();
     const valid = await trigger();
@@ -54,6 +57,7 @@ const AddProductModal = ({ onClose, onSave }) => {
     }
   };
 
+  // Maneja el cierre del modal
   const handleClose = () => {
     cleanData();
     onClose();
@@ -68,15 +72,18 @@ const AddProductModal = ({ onClose, onSave }) => {
 
         <h2 className="modal-title">Agregar Nuevo Producto</h2>
 
+        {/* Animación de éxito al guardar */}
         {showSuccessAnimation && (
           <div className="success-animation-container">
             <Lottie animationData={successAnimation} loop={false} />
           </div>
         )}
 
+        {/* Formulario principal */}
         {!showSuccessAnimation && (
           <div className="modal-body">
             <form onSubmit={handleSubmit} className="product-form" noValidate>
+              {/* Campo Nombre */}
               <div className="form-group-product">
                 <label htmlFor="name">Nombre del Producto*</label>
                 <input
@@ -93,6 +100,7 @@ const AddProductModal = ({ onClose, onSave }) => {
                 {rhfErrors.name && <span className="error-message">{rhfErrors.name.message}</span>}
               </div>
 
+              {/* Campo Descripción */}
               <div className="form-group-product">
                 <label htmlFor="description">Descripción*</label>
                 <textarea
@@ -111,7 +119,9 @@ const AddProductModal = ({ onClose, onSave }) => {
                 )}
               </div>
 
+              {/* Fila con Precio y Stock */}
               <div className="form-row">
+                {/* Campo Precio */}
                 <div className="form-group-product">
                   <label htmlFor="price">Precio ($)*</label>
                   <input
@@ -133,6 +143,7 @@ const AddProductModal = ({ onClose, onSave }) => {
                   {rhfErrors.price && <span className="error-message">{rhfErrors.price.message}</span>}
                 </div>
 
+                {/* Campo Stock */}
                 <div className="form-group-product">
                   <label htmlFor="stock">Stock*</label>
                   <input
@@ -154,6 +165,7 @@ const AddProductModal = ({ onClose, onSave }) => {
                 </div>
               </div>
 
+              {/* Campo Categoría */}
               <div className="form-group-product">
                 <label htmlFor="idCategory">Categoría*</label>
                 <select
@@ -178,6 +190,7 @@ const AddProductModal = ({ onClose, onSave }) => {
                 )}
               </div>
 
+              {/* Campo Imagen */}
               <div className="form-group-product">
                 <label htmlFor="imageUrl">Imagen del Producto*</label>
                 <div className="file-upload-container">
@@ -194,17 +207,11 @@ const AddProductModal = ({ onClose, onSave }) => {
                     type="file"
                     id="imageUrl"
                     name="imageUrl"
-                    accept="image/*"
+                    accept='image/*'
                     style={{ display: 'none' }}
                     ref={(e) => {
                       fileInputRef.current = e;
-                      register('imageUrl', {
-                        required: 'La imagen es obligatoria',
-                        validate: {
-                          isImage: (fileList) =>
-                            fileList?.[0]?.type?.startsWith('image/') || 'El archivo debe ser una imagen',
-                        },
-                      }).ref(e);
+                      register('imageUrl').ref(e);
                     }}
                     onChange={(e) => {
                       handleFileChange(e);
@@ -213,6 +220,7 @@ const AddProductModal = ({ onClose, onSave }) => {
                     }}
                     disabled={isLoading}
                   />
+                  {/* Vista previa de la imagen */}
                   {previewImage && (
                     <div className="image-preview">
                       <img src={previewImage} alt="Vista previa" />
@@ -227,7 +235,7 @@ const AddProductModal = ({ onClose, onSave }) => {
                 </div>
               </div>
 
-
+              {/* Botones de acción */}
               <div className="modal-footer">
                 <div className="form-actions">
                   <button
