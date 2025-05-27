@@ -1,10 +1,13 @@
 // Importación de dependencias de React Router y React
 import { Routes, Route, useLocation } from 'react-router-dom';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 
 // Importación del AuthProvider y PrivateRoute
 import { AuthProvider } from './context/AuthContext';
 import PrivateRoute from './components/PrivateRoute';
+
+// Importación del hook personalizado para verificar si existe admin
+import useAdminData from './screens/private/FirstUse/hook/useAdminData';
 
 // Importación de todas las pantallas (screens)
 import Home from './screens/public/Home/Home';
@@ -38,10 +41,46 @@ import Navbar from './components/Nav/Navbar';
 import Footer from './components/Footer/Footer';
 import NavAdmin from './components/Nav/NavAdmin';
 
+// Componente de loading
+const LoadingScreen = () => (
+  <div style={{
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+    height: '100vh',
+    fontSize: '18px',
+    fontFamily: 'Arial, sans-serif'
+  }}>
+    <div>
+      <div style={{ marginBottom: '20px', textAlign: 'center' }}>
+        Verificando configuración inicial...
+      </div>
+      <div style={{
+        width: '50px',
+        height: '50px',
+        border: '3px solid #f3f3f3',
+        borderTop: '3px solid #3498db',
+        borderRadius: '50%',
+        animation: 'spin 1s linear infinite',
+        margin: '0 auto'
+      }}></div>
+      <style>{`
+        @keyframes spin {
+          0% { transform: rotate(0deg); }
+          100% { transform: rotate(360deg); }
+        }
+      `}</style>
+    </div>
+  </div>
+);
+
 // Componente AppContent separado para usar hooks dentro del AuthProvider
 function AppContent() {
   // Estado para manejar los productos en el carrito
   const [cartItems, setCartItems] = useState([]);
+  
+  // Hook para verificar si existe un administrador
+  const { adminExists, loading, error, recheckAdmin } = useAdminData();
   
   // Obtener la ruta actual para decidir qué componentes mostrar
   const location = useLocation();
@@ -67,6 +106,16 @@ function AppContent() {
       return prevItems.filter(item => item.id !== product.id);
     });
   };
+
+  // Si está cargando, mostrar pantalla de loading
+  if (loading) {
+    return <LoadingScreen />;
+  }
+
+  // Si no existe admin (primer uso), mostrar solo el formulario de primer uso
+  if (!adminExists) {
+    return <FirstUser onAdminCreated={recheckAdmin} />;
+  }
 
   // Rutas en las cuales no se debe mostrar el Navbar
   const hideNavbarRoutes = ['/login', '/registro', '/putemail', '/putcode', '/newpassword', '/firstuse'];

@@ -1,44 +1,150 @@
 import React from 'react';
+import { useForm } from 'react-hook-form';
 import './FirstUse.css';    
 import logo from '../../../assets/LogoBlanco.png';
 import { Link } from 'react-router-dom';
+import useAdminCreation from './hook/useAdminData';
 
-function FirstUse() {
+function FirstUse({ onAdminCreated }) {
+  const { createAdmin, loading, error, success } = useAdminCreation();
+  
+  const {
+    register,
+    handleSubmit,
+    formState: { errors }
+  } = useForm();
+
+  const onSubmit = async (data) => {
+    const result = await createAdmin(data);
+    
+    if (result.success && onAdminCreated) {
+      setTimeout(() => {
+        onAdminCreated();
+      }, 2000);
+    }
+  };
+
+  // Pantalla de éxito
+  if (success) {
+    return (
+      <div className="firstuse-container">
+        <div className="firstuse-card">
+          <img src={logo} alt="Tochi Logo" className="firstuse-logo" />
+          <h2>¡Administrador creado exitosamente!</h2>
+          <p>Redirigiendo a la aplicación...</p>
+          <div className="loading-spinner"></div>
+        </div>
+      </div>
+    );
+  }
+
+  // Formulario principal
   return (
     <div className="firstuse-container">
       <div className="firstuse-card">
         <img src={logo} alt="Tochi Logo" className="firstuse-logo" />
-        <h2>First Use sign in</h2>
-        <p>Enter your credentials to continue</p>
-        <form>
-          <label>Username</label>
-          <input type="text" placeholder="Raúl Ochoa" />
-          
-          <label>Email</label>
-          <input type="email" placeholder="raulochoa@gmail.com" />
-          
-          <label>Dirección</label>
-          <input type="text" placeholder="San Salvador, calle 26, av 37." />
-          
-          <label>Teléfono</label>
-          <input type="tel" placeholder="+503 7234-3394" />
-          
-          <label>Password</label>
-          <input type="password" placeholder="********" />
-          
-          <div className="firstuse-terms">
-            By continuing you agree to our{' '}
-            <Link to="/termsAndConditions">Terms of Service</Link> and{' '}
-            <Link to="/termsAndConditions">Privacy Policy</Link>.
+        <h2>Configuración inicial</h2>
+        <p>Crea el primer administrador del sistema</p>
+        
+        {error && (
+          <div className="error-message">
+            {error}
           </div>
+        )}
 
-          <Link to="/login" className="firstuse-btn-link">
-            <button type="button">Sign Up</button>
-          </Link>
-
-          <p className="firstuse-signin-link">
-            Already have an account? <Link to="/login">Log in</Link>
-          </p>
+        <form onSubmit={handleSubmit(onSubmit)}>
+          <label>Nombre completo</label>
+          <input 
+            type="text" 
+            placeholder="Raúl Ochoa" 
+            disabled={loading}
+            {...register('name', {
+              required: 'El nombre es obligatorio',
+              pattern: {
+                value: /^[A-Za-záéíóúÁÉÍÓÚñÑ\s]+$/,
+                message: 'El nombre solo debe contener letras'
+              }
+            })}
+          />
+          {errors.name && <span className="error-text">{errors.name.message}</span>}
+         
+          <label>Email</label>
+          <input 
+            type="email" 
+            placeholder="raulochoa@gmail.com" 
+            disabled={loading}
+            {...register('email', {
+              required: 'El email es obligatorio',
+              pattern: {
+                value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
+                message: 'Ingresa un email válido'
+              }
+            })}
+          />
+          {errors.email && <span className="error-text">{errors.email.message}</span>}
+         
+          <label>Dirección</label>
+          <input 
+            type="text" 
+            placeholder="San Salvador, calle 26, av 37." 
+            disabled={loading}
+            {...register('address', {
+              required: 'La dirección es obligatoria',
+              minLength: {
+                value: 10,
+                message: 'La dirección debe tener al menos 10 caracteres'
+              }
+            })}
+          />
+          {errors.address && <span className="error-text">{errors.address.message}</span>}
+         
+          <label>Teléfono</label>
+          <input 
+            type="tel" 
+            placeholder="+503 7234-3394" 
+            disabled={loading}
+            {...register('phone', {
+              required: 'El teléfono es obligatorio',
+              pattern: {
+                value: /^[\d\s\+\-\(\)]+$/,
+                message: 'El teléfono solo debe contener números y caracteres de formato'
+              }
+            })}
+          />
+          {errors.phone && <span className="error-text">{errors.phone.message}</span>}
+         
+          <label>Contraseña</label>
+          <input 
+            type="password" 
+            placeholder="********" 
+            disabled={loading}
+            {...register('password', {
+              required: 'La contraseña es obligatoria',
+              minLength: {
+                value: 6,
+                message: 'La contraseña debe tener al menos 6 caracteres'
+              },
+              pattern: {
+                value: /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).+$/,
+                message: 'La contraseña debe tener al menos 1 mayúscula, 1 minúscula y 1 número'
+              }
+            })}
+          />
+          {errors.password && <span className="error-text">{errors.password.message}</span>}
+         
+          <div className="firstuse-terms">
+            Al continuar aceptas nuestros{' '}
+            <Link to="/termsAndConditions">Términos de Servicio</Link> y{' '}
+            <Link to="/termsAndConditions">Política de Privacidad</Link>.
+          </div>
+          
+          <button 
+            type="submit" 
+            disabled={loading}
+            className={loading ? 'loading' : ''}
+          >
+            {loading ? 'Creando administrador...' : 'Crear Administrador'}
+          </button>
         </form>
       </div>
     </div>
