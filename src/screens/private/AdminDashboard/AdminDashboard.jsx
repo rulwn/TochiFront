@@ -1,83 +1,38 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import { 
   BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer,
   PieChart, Pie, Cell 
 } from 'recharts';
+import useDashboardData from './hook/useDashboardData';
 import './AdminDashboard.css';
 
 const AdminDashboard = () => {
-  const [salesData, setSalesData] = useState([]);
-  const [productData, setProductData] = useState([]);
-  const [recentOrders, setRecentOrders] = useState([]);
-  const [stats, setStats] = useState({
-    ventasTotales: 0,
-    ordenes: 0,
-    usuarios: 0,
-    productos: 0
-  });
+  const { 
+    salesData, 
+    productData, 
+    recentOrders, 
+    stats, 
+    loading, 
+    error 
+  } = useDashboardData();
 
   const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042', '#A28CFE', '#FF6F61'];
 
-  useEffect(() => {
-    const fetchDashboardData = async () => {
-      try {
-        // Fetch ordenes
-        const resOrder = await fetch('https://tochi-api.onrender.com/api/order');
-        const orders = await resOrder.json();
+  if (loading) {
+    return (
+      <div className="admin-dashboard">
+        <div className="loading">Cargando datos del dashboard...</div>
+      </div>
+    );
+  }
 
-        // Agrupar ventas por mes
-        const monthlySales = {};
-        let totalVentas = 0;
-
-        orders.forEach(order => {
-          const date = new Date(order.createdAt);
-          const month = date.getMonth(); // 0 = Ene
-          const amount = order.total || 0;
-          monthlySales[month] = (monthlySales[month] || 0) + amount;
-          totalVentas += amount;
-        });
-
-        const monthNames = ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic'];
-        const salesArray = Object.entries(monthlySales).map(([month, total]) => ({
-          name: monthNames[parseInt(month)],
-          ventas: total
-        }));
-
-        // Obtener las últimas 4 órdenes
-        const recent = [...orders].sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt)).slice(0, 4);
-
-        // Fetch productos
-        const resProducts = await fetch('https://tochi-api.onrender.com/api/products');
-        const products = await resProducts.json();
-
-        // Contar los productos más vendidos (simulación por falta de campo real)
-        const topProducts = products.slice(0, 4).map(product => ({
-          name: product.name,
-          value: product.sold || Math.floor(Math.random() * 100 + 50) // fallback si no hay campo sold
-        }));
-
-        // Fetch usuarios
-        const resUsers = await fetch('https://tochi-api.onrender.com/api/users');
-        const users = await resUsers.json();
-
-        setStats({
-          ventasTotales: totalVentas.toFixed(2),
-          ordenes: orders.length,
-          usuarios: users.length,
-          productos: products.length
-        });
-
-        setSalesData(salesArray);
-        setProductData(topProducts);
-        setRecentOrders(recent);
-
-      } catch (err) {
-        console.error('Error cargando datos del dashboard:', err);
-      }
-    };
-
-    fetchDashboardData();
-  }, []);
+  if (error) {
+    return (
+      <div className="admin-dashboard">
+        <div className="error">Error al cargar los datos: {error}</div>
+      </div>
+    );
+  }
 
   return (
     <div className="admin-dashboard">
@@ -161,18 +116,18 @@ const AdminDashboard = () => {
             </tr>
           </thead>
           <tbody>
-  {recentOrders.map((order, index) => (
-    <tr key={index}>
-      <td>{order._id}</td>
-      <td>{order.clientName || "Cliente"}</td>
-      <td>{new Date(order.createdAt).toLocaleDateString()}</td>
-      <td>${order.total ? order.total.toFixed(2) : '0.00'}</td>
-      <td className={`status-${order.state?.toLowerCase() || 'pending'}`}>
-        {order.state || 'Pendiente'}
-      </td>
-    </tr>
-  ))}
-</tbody>
+            {recentOrders.map((order, index) => (
+              <tr key={index}>
+                <td>{order._id}</td>
+                <td>{order.clientName || "Cliente"}</td>
+                <td>{new Date(order.createdAt).toLocaleDateString()}</td>
+                <td>${order.total ? order.total.toFixed(2) : '0.00'}</td>
+                <td className={`status-${order.state?.toLowerCase() || 'pending'}`}>
+                  {order.state || 'Pendiente'}
+                </td>
+              </tr>
+            ))}
+          </tbody>
         </table>
       </div>
     </div>
