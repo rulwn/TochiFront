@@ -529,7 +529,7 @@ function AdminProducts() {
             setEditingCategory(null);
             cleanCategoryData(); // Limpiar datos al cerrar
           }}
-          onSave={handleCategorySaved} // Usar el callback corregido
+          onSave={handleCategorySaved}
           formData={categoryFormData}
           editingId={editingId}
           createCategory={createCategory}

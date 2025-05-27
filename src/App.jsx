@@ -2,6 +2,10 @@
 import { Routes, Route, useLocation } from 'react-router-dom';
 import { useState } from 'react';
 
+// Importación del AuthProvider y PrivateRoute
+import { AuthProvider } from './context/AuthContext';
+import PrivateRoute from './components/PrivateRoute';
+
 // Importación de todas las pantallas (screens)
 import Home from './screens/public/Home/Home';
 import Cart from './screens/public/Cart/Cart';
@@ -34,7 +38,8 @@ import Navbar from './components/Nav/Navbar';
 import Footer from './components/Footer/Footer';
 import NavAdmin from './components/Nav/NavAdmin';
 
-function App() {
+// Componente AppContent separado para usar hooks dentro del AuthProvider
+function AppContent() {
   // Estado para manejar los productos en el carrito
   const [cartItems, setCartItems] = useState([]);
   
@@ -67,17 +72,16 @@ function App() {
   const hideNavbarRoutes = ['/login', '/registro', '/putemail', '/putcode', '/newpassword', '/firstuse'];
   
   // Rutas de administrador
-  // En tu App.js, actualiza el array de adminRoutes:
-const adminRoutes = [
-  '/admin-dashboard',
-  '/admin-account',
-  '/admin-orders',
-  '/admin-products',
-  '/admin-users',
-  '/firstuse',
-  '/detailsAdmin',
-  '/termsAndConditionsAdmin',
-];// Puedes agregar más rutas de admin aquí
+  const adminRoutes = [
+    '/admin-dashboard',
+    '/admin-account',
+    '/admin-orders',
+    '/admin-products',
+    '/admin-users',
+    '/firstuse',
+    '/detailsAdmin',
+    '/termsAndConditionsAdmin',
+  ];
 
   // Determinar si estamos en una ruta de admin
   const isAdminRoute = adminRoutes.some(route => location.pathname.startsWith(route));
@@ -99,38 +103,75 @@ const adminRoutes = [
         <Route path="/cart" element={<Cart cartItems={cartItems} onUpdateCart={handleUpdateCart} />} />
         <Route path="/explore" element={<Products onAddToCart={handleUpdateCart} cartItems={cartItems} />} />
         <Route path="/about" element={<About />} />
-        <Route path="/account" element={<Profile />} />
+        
+        {/* Rutas protegidas para usuarios autenticados */}
+        <Route path="/account" element={<PrivateRoute />}>
+          <Route index element={<Profile />} />
+        </Route>
+        <Route path="/orders" element={<PrivateRoute />}>
+          <Route index element={<Orders />} />
+        </Route>
+        <Route path="/userdetails" element={<PrivateRoute />}>
+          <Route index element={<UserDetails />} />
+        </Route>
+        <Route path="/deliveryaddress" element={<PrivateRoute />}>
+          <Route index element={<Deliveryaddress />} />
+        </Route>
+        <Route path="/payment" element={<PrivateRoute />}>
+          <Route index element={<PaymentMethods />} />
+        </Route>
+        <Route path="/checkout" element={<PrivateRoute />}>
+          <Route index element={<Checkout />} />
+        </Route>
+        
+        {/* Rutas públicas de autenticación */}
         <Route path="/termsAndConditions" element={<TermsAndConditions />} />
-        <Route path="/orders" element={<Orders />} />
-        <Route path="/userdetails" element={<UserDetails />} />
-        <Route path="/deliveryaddress" element={<Deliveryaddress />} />
-        <Route path="/payment" element={<PaymentMethods />} />
         <Route path="/login" element={<Login />} />
         <Route path="/registro" element={<Registro />} />
         <Route path="/putemail" element={<PutEmail />} />
         <Route path="/putcode" element={<PutCode />} />
         <Route path="/newpassword" element={<NewPassword />} />
-        <Route path="/checkout" element={<Checkout />} />
         <Route path="/product/:id" element={<DetailProduct onAddToCart={handleUpdateCart} />} />
         
-        {/* Rutas de administrador */}
-        <Route path="/admin-dashboard" element={<DashboardAdmin />} />
-        <Route path="/admin-account" element={<AccountAdmin />} />
-        <Route path="/admin-orders" element={<AdminOrders />} />
-        <Route path="/admin-products" element={<AdminProducts />} />
-        <Route path="/admin-users" element={<AdminUsers />} />
-        <Route path="/firstuse" element={<FirstUser />} />
-        <Route path="/detailsAdmin" element={<DetailsAdmin />} />
-        <Route path="/termsAndConditionsAdmin" element={<TermsAndConditionsAdmin />} />
-        
-        {/* Puedes agregar más rutas de admin aquí */}
-        {/* <Route path="/admin/products" element={<AdminProducts />} /> */}
-        {/* <Route path="/admin/users" element={<AdminUsers />} /> */}
+        {/* Rutas protegidas para administradores */}
+        <Route path="/admin-dashboard" element={<PrivateRoute allowedRoles={['administrador']} />}>
+          <Route index element={<DashboardAdmin />} />
+        </Route>
+        <Route path="/admin-account" element={<PrivateRoute allowedRoles={['administrador']} />}>
+          <Route index element={<AccountAdmin />} />
+        </Route>
+        <Route path="/admin-orders" element={<PrivateRoute allowedRoles={['administrador']} />}>
+          <Route index element={<AdminOrders />} />
+        </Route>
+        <Route path="/admin-products" element={<PrivateRoute allowedRoles={['administrador']} />}>
+          <Route index element={<AdminProducts />} />
+        </Route>
+        <Route path="/admin-users" element={<PrivateRoute allowedRoles={['administrador']} />}>
+          <Route index element={<AdminUsers />} />
+        </Route>
+        <Route path="/firstuse" element={<PrivateRoute allowedRoles={['administrador']} />}>
+          <Route index element={<FirstUser />} />
+        </Route>
+        <Route path="/detailsAdmin" element={<PrivateRoute allowedRoles={['administrador']} />}>
+          <Route index element={<DetailsAdmin />} />
+        </Route>
+        <Route path="/termsAndConditionsAdmin" element={<PrivateRoute allowedRoles={['administrador']} />}>
+          <Route index element={<TermsAndConditionsAdmin />} />
+        </Route>
       </Routes>
 
       {/* Footer solo para rutas no admin y no auth */}
       {!isAdminRoute && !hideNavbarRoutes.includes(location.pathname) && <Footer />}
     </>
+  );
+}
+
+// Componente principal App que envuelve todo con AuthProvider
+function App() {
+  return (
+    <AuthProvider>
+      <AppContent />
+    </AuthProvider>
   );
 }
 

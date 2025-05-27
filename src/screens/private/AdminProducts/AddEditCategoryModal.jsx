@@ -4,70 +4,71 @@ import Lottie from 'lottie-react';
 import successAnimation from '../../../assets/success-animation.json';
 import { useForm } from 'react-hook-form';
 
-const AddEditCategoryModal = ({ 
-    isOpen, 
-    onClose, 
-    onSave, 
+const AddEditCategoryModal = ({
+    isOpen,
+    onClose,
+    onSave,
     formData,
     editingId,
     createCategory,
     updateCategory,
     isLoading
 }) => {
+    // Estado para mostrar la animación de éxito
     const [showSuccessAnimation, setShowSuccessAnimation] = useState(false);
-    
+
+    // Hook de formulario con validación
     const { register, handleSubmit, setValue, reset, formState: { errors } } = useForm({
         defaultValues: {
             name: ''
         }
     });
 
-    // Sincronizar formData con react-hook-form cuando se abre el modal
+    // Efecto para cargar los datos del formulario si se va a editar una categoría
     useEffect(() => {
         if (isOpen) {
             if (editingId && formData.name) {
-                // Modo editar: cargar datos existentes
-                setValue('name', formData.name);
+                setValue('name', formData.name); // Cargar nombre en modo edición
             } else {
-                // Modo agregar: limpiar formulario
-                reset({ name: '' });
+                reset({ name: '' }); // Limpiar el campo en modo creación
             }
         }
     }, [isOpen, editingId, formData.name, setValue, reset]);
 
+    // Función que se ejecuta al enviar el formulario
     const onSubmit = async (data) => {
         try {
             let success = false;
-            
+
             if (editingId) {
-                // Modo editar: pasar el ID y los datos
-                success = await updateCategory(editingId, data);
+                success = await updateCategory(editingId, data); // Actualizar categoría existente
             } else {
-                // Modo agregar: solo pasar los datos
-                success = await createCategory(data);
+                success = await createCategory(data); // Crear nueva categoría
             }
 
+            // Si la operación fue exitosa, mostrar animación de éxito
             if (success) {
                 setShowSuccessAnimation(true);
                 setTimeout(() => {
                     setShowSuccessAnimation(false);
-                    onSave?.(); // Llamar callback para actualizar la lista
-                    onClose(); // Cerrar modal
-                }, 2000);
+                    onSave?.();  // Llama a onSave si está definido
+                    onClose();   // Cierra el modal
+                }, 2000); // Espera 2 segundos para que se vea la animación
             }
         } catch (error) {
             console.error('Error in form submission:', error);
         }
     };
 
+    // Función para cerrar el modal (y resetear formulario)
     const handleClose = () => {
         if (!isLoading) {
-            reset(); // Limpiar el formulario al cerrar
-            onClose();
+            reset();     // Limpia el formulario
+            onClose();   // Cierra el modal
         }
     };
 
-    // Manejar ESC para cerrar modal
+    // Efecto que cierra el modal si se presiona la tecla Escape
     useEffect(() => {
         const handleKeyDown = (event) => {
             if (event.key === 'Escape' && !isLoading) {
@@ -81,17 +82,23 @@ const AddEditCategoryModal = ({
         }
     }, [isOpen, isLoading]);
 
+    // Si el modal no está abierto, no renderizar nada
     if (!isOpen) return null;
 
     return (
-        <div className="modal-overlay" onClick={(e) => {
-            if (e.target === e.currentTarget && !isLoading) {
-                handleClose();
-            }
-        }}>
+        <div
+            className="modal-overlay"
+            onClick={(e) => {
+                // Cierra el modal si se hace clic fuera del contenido
+                if (e.target === e.currentTarget && !isLoading) {
+                    handleClose();
+                }
+            }}
+        >
             <div className="modal-content">
-                <button 
-                    className="modal-close-btn" 
+                {/* Botón para cerrar el modal */}
+                <button
+                    className="modal-close-btn"
                     onClick={handleClose}
                     disabled={isLoading}
                 >
@@ -102,6 +109,7 @@ const AddEditCategoryModal = ({
                     {editingId ? 'Editar Categoría' : 'Agregar Nueva Categoría'}
                 </h2>
 
+                {/* Animación de éxito */}
                 {showSuccessAnimation && (
                     <div className="success-animation-container">
                         <Lottie animationData={successAnimation} loop={false} />
@@ -109,6 +117,7 @@ const AddEditCategoryModal = ({
                     </div>
                 )}
 
+                {/* Formulario solo se muestra si no hay animación de éxito */}
                 {!showSuccessAnimation && (
                     <div className="modal-body">
                         <form onSubmit={handleSubmit(onSubmit)} className="category-form" noValidate>
@@ -117,7 +126,7 @@ const AddEditCategoryModal = ({
                                 <input
                                     type="text"
                                     id="name"
-                                    {...register('name', { 
+                                    {...register('name', {
                                         required: 'El nombre es obligatorio',
                                         minLength: {
                                             value: 2,
@@ -136,6 +145,7 @@ const AddEditCategoryModal = ({
                                     disabled={isLoading}
                                     placeholder="Ingresa el nombre de la categoría"
                                 />
+                                {/* Mostrar mensaje de error si lo hay */}
                                 {errors.name && (
                                     <span className="error-message">{errors.name.message}</span>
                                 )}
@@ -143,6 +153,7 @@ const AddEditCategoryModal = ({
 
                             <div className="modal-footer">
                                 <div className="form-actions">
+                                    {/* Botón de cancelar */}
                                     <button
                                         type="button"
                                         className="cancel-btn"
@@ -151,13 +162,14 @@ const AddEditCategoryModal = ({
                                     >
                                         Cancelar
                                     </button>
-                                    <button 
-                                        type="submit" 
-                                        className="save-btn" 
+                                    {/* Botón de guardar/actualizar */}
+                                    <button
+                                        type="submit"
+                                        className="save-btn"
                                         disabled={isLoading}
                                     >
-                                        {isLoading 
-                                            ? (editingId ? 'Actualizando...' : 'Guardando...') 
+                                        {isLoading
+                                            ? (editingId ? 'Actualizando...' : 'Guardando...')
                                             : (editingId ? 'Actualizar Categoría' : 'Guardar Categoría')
                                         }
                                     </button>

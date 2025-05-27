@@ -2,63 +2,30 @@ import React, { useState } from 'react'
 import './Login.css'
 import logo from '../../../assets/Logo.png';
 import { Link, useNavigate } from 'react-router-dom';
+import { useAuth } from '../../../context/AuthContext';
 
 function Login() {
   const navigate = useNavigate();
+  const { Login: contextLogin, isLoading } = useAuth();
   const [showPassword, setShowPassword] = useState(false);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
-  const [isLoading, setIsLoading] = useState(false);
 
- const handleLogin = async (e) => {
+  const handleLogin = async (e) => {
     e.preventDefault();
     setError('');
 
-    if (!email || !password) {
-      setError('Por favor completa todos los campos');
-      return;
-    }
-
-    setIsLoading(true);
+    const result = await contextLogin(email, password);
     
-    try {
-      const response = await fetch('https://tochi-api.onrender.com/api/login', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ email, password }),
-        credentials: 'include'
-      });
-
-      const data = await response.json();
-
-      if (!response.ok) {
-        throw new Error(data.message || 'Error en el login');
-      }
-  localStorage.setItem('authToken', data.token);
-localStorage.setItem('userEmail', email);
-
-      // Decodificar el token para obtener el rol
-      const tokenPayload = JSON.parse(atob(data.token.split('.')[1]));
-      const userRole = tokenPayload.role;
-
-      // Redirigir según el rol
-      if (userRole.toLowerCase() === 'administrador') {
+    if (result.success) {
+      if (result.role.toLowerCase() === 'administrador') {
         navigate('/admin-dashboard');
       } else {
         navigate('/');
       }
-
-    } catch (error) {
-      console.error('Login error:', error);
-      setError(error.message || 'Credenciales incorrectas');
-      // Limpiar almacenamiento en caso de error
-      localStorage.removeItem('authToken');
-      localStorage.removeItem('userEmail');
-    } finally {
-      setIsLoading(false);
+    } else {
+      setError(result.error || 'Error en el login');
     }
   };
 
