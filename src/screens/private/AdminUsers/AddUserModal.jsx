@@ -33,8 +33,7 @@ const AddUserModal = ({ onClose, onSave }) => {
 
   const roles = [
     { value: 'Cliente', label: 'Cliente' },
-    { value: 'Administrador', label: 'Administrador' },
-    { value: 'Empleado', label: 'Empleado'}
+    { value: 'Administrador', label: 'Administrador' }
   ];
 
   // Validaciones personalizadas

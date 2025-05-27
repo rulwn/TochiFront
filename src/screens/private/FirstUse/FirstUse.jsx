@@ -6,7 +6,7 @@ import { Link } from 'react-router-dom';
 import useAdminCreation from './hook/useAdminData';
 
 function FirstUse({ onAdminCreated }) {
-  const { createAdmin, loading, error, success } = useAdminCreation();
+  const { createAdmin, creationLoading, creationError, success } = useAdminCreation();
   
   const {
     register,
@@ -18,8 +18,18 @@ function FirstUse({ onAdminCreated }) {
     const result = await createAdmin(data);
     
     if (result.success && onAdminCreated) {
+      // Crear objeto con información del admin creado
+      const adminData = {
+        email: data.email,
+        name: data.name,
+        id: result.data?.id || result.data?.userId,
+        role: 'administrador',
+        address: data.address,
+        phone: data.phone
+      };
+
       setTimeout(() => {
-        onAdminCreated();
+        onAdminCreated(adminData);
       }, 2000);
     }
   };
@@ -31,7 +41,7 @@ function FirstUse({ onAdminCreated }) {
         <div className="firstuse-card">
           <img src={logo} alt="Tochi Logo" className="firstuse-logo" />
           <h2>¡Administrador creado exitosamente!</h2>
-          <p>Redirigiendo a la aplicación...</p>
+          <p>Redirigiendo al dashboard...</p>
           <div className="loading-spinner"></div>
         </div>
       </div>
@@ -46,9 +56,9 @@ function FirstUse({ onAdminCreated }) {
         <h2>Configuración inicial</h2>
         <p>Crea el primer administrador del sistema</p>
         
-        {error && (
+        {creationError && (
           <div className="error-message">
-            {error}
+            {creationError}
           </div>
         )}
 
@@ -57,7 +67,7 @@ function FirstUse({ onAdminCreated }) {
           <input 
             type="text" 
             placeholder="Raúl Ochoa" 
-            disabled={loading}
+            disabled={creationLoading}
             {...register('name', {
               required: 'El nombre es obligatorio',
               pattern: {
@@ -72,7 +82,7 @@ function FirstUse({ onAdminCreated }) {
           <input 
             type="email" 
             placeholder="raulochoa@gmail.com" 
-            disabled={loading}
+            disabled={creationLoading}
             {...register('email', {
               required: 'El email es obligatorio',
               pattern: {
@@ -87,7 +97,7 @@ function FirstUse({ onAdminCreated }) {
           <input 
             type="text" 
             placeholder="San Salvador, calle 26, av 37." 
-            disabled={loading}
+            disabled={creationLoading}
             {...register('address', {
               required: 'La dirección es obligatoria',
               minLength: {
@@ -102,7 +112,7 @@ function FirstUse({ onAdminCreated }) {
           <input 
             type="tel" 
             placeholder="+503 7234-3394" 
-            disabled={loading}
+            disabled={creationLoading}
             {...register('phone', {
               required: 'El teléfono es obligatorio',
               pattern: {
@@ -117,7 +127,7 @@ function FirstUse({ onAdminCreated }) {
           <input 
             type="password" 
             placeholder="********" 
-            disabled={loading}
+            disabled={creationLoading}
             {...register('password', {
               required: 'La contraseña es obligatoria',
               minLength: {
@@ -140,10 +150,10 @@ function FirstUse({ onAdminCreated }) {
           
           <button 
             type="submit" 
-            disabled={loading}
-            className={loading ? 'loading' : ''}
+            disabled={creationLoading}
+            className={creationLoading ? 'loading' : ''}
           >
-            {loading ? 'Creando administrador...' : 'Crear Administrador'}
+            {creationLoading ? 'Creando administrador...' : 'Crear Administrador'}
           </button>
         </form>
       </div>

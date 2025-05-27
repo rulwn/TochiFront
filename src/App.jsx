@@ -1,5 +1,5 @@
 // Importación de dependencias de React Router y React
-import { Routes, Route, useLocation } from 'react-router-dom';
+import { Routes, Route, useLocation, useNavigate } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 
 // Importación del AuthProvider y PrivateRoute
@@ -41,6 +41,9 @@ import Navbar from './components/Nav/Navbar';
 import Footer from './components/Footer/Footer';
 import NavAdmin from './components/Nav/NavAdmin';
 
+// Importación del hook de autenticación
+import { useAuth } from './context/AuthContext';
+
 // Componente de loading
 const LoadingScreen = () => (
   <div style={{
@@ -73,6 +76,34 @@ const LoadingScreen = () => (
     </div>
   </div>
 );
+
+// Componente FirstUser envuelto para manejar navegación
+function FirstUserWithNavigation({ onAdminCreated }) {
+  const navigate = useNavigate();
+  const { setIsLoggedIn, setUser } = useAuth();
+
+  const handleAdminCreated = (adminData) => {
+    // Llamar al callback del padre
+    onAdminCreated();
+    
+    // Si se proporciona información del admin, establecer la sesión
+    if (adminData) {
+      // Establecer el estado del usuario como logueado
+      setUser({
+        email: adminData.email,
+        role: 'administrador',
+        id: adminData.id,
+        ...adminData
+      });
+      setIsLoggedIn(true);
+    }
+    
+    // Navegar al dashboard de admin
+    navigate('/admin-dashboard');
+  };
+
+  return <FirstUser onAdminCreated={handleAdminCreated} />;
+}
 
 // Componente AppContent separado para usar hooks dentro del AuthProvider
 function AppContent() {
@@ -114,7 +145,7 @@ function AppContent() {
 
   // Si no existe admin (primer uso), mostrar solo el formulario de primer uso
   if (!adminExists) {
-    return <FirstUser onAdminCreated={recheckAdmin} />;
+    return <FirstUserWithNavigation onAdminCreated={recheckAdmin} />;
   }
 
   // Rutas en las cuales no se debe mostrar el Navbar
@@ -152,16 +183,13 @@ function AppContent() {
         <Route path="/cart" element={<Cart cartItems={cartItems} onUpdateCart={handleUpdateCart} />} />
         <Route path="/explore" element={<Products onAddToCart={handleUpdateCart} cartItems={cartItems} />} />
         <Route path="/about" element={<About />} />
+        <Route path='/account' element={<Profile />} />
+        <Route path='/userDetails' element={<UserDetails />} />
+
         
         {/* Rutas protegidas para usuarios autenticados */}
-        <Route path="/account" element={<PrivateRoute />}>
-          <Route index element={<Profile />} />
-        </Route>
         <Route path="/orders" element={<PrivateRoute />}>
           <Route index element={<Orders />} />
-        </Route>
-        <Route path="/userdetails" element={<PrivateRoute />}>
-          <Route index element={<UserDetails />} />
         </Route>
         <Route path="/deliveryaddress" element={<PrivateRoute />}>
           <Route index element={<Deliveryaddress />} />

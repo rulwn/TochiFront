@@ -67,7 +67,19 @@ const useAdminData = () => {
         setSuccess(true);
         // Después de crear el admin, verificar nuevamente
         await checkAdminExists();
-        return { success: true, data };
+        
+        // Retornar la información completa del usuario creado
+        return { 
+          success: true, 
+          data: {
+            ...data,
+            // Asegurar que el email esté incluido
+            email: adminData.email,
+            name: adminData.name,
+            address: adminData.address,
+            phone: adminData.phone
+          }
+        };
       } else {
         const errorMessage = data.message || 'Error al crear el administrador';
         setCreationError(errorMessage);
