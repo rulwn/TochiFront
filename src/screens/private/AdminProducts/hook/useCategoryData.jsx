@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import toast from 'react-hot-toast';
 
 const useCategoryData = () => {
-    const apiCategories = 'https://tochi-api.onrender.com/api/categories';
+    const apiCategories = 'https://api-rest-bl9i.onrender.com/api/categories';
     // const apiCategories = 'http://localhost:4000/api/categories';
 
     // Estados para categorías

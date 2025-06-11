@@ -20,7 +20,7 @@ const useDashboardData = () => {
         setError(null);
 
         // Fetch ordenes
-        const resOrder = await fetch('https://tochi-api.onrender.com/api/order');
+        const resOrder = await fetch('https://api-rest-bl9i.onrender.com/api/order');
         const orders = await resOrder.json();
 
         // Agrupar ventas por mes
@@ -45,7 +45,7 @@ const useDashboardData = () => {
         const recent = [...orders].sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt)).slice(0, 4);
 
         // Fetch productos
-        const resProducts = await fetch('https://tochi-api.onrender.com/api/products');
+        const resProducts = await fetch('https://api-rest-bl9i.onrender.com/api/products');
         const products = await resProducts.json();
 
         // Contar los productos más vendidos (simulación por falta de campo real)
@@ -55,7 +55,7 @@ const useDashboardData = () => {
         }));
 
         // Fetch usuarios
-        const resUsers = await fetch('https://tochi-api.onrender.com/api/users');
+        const resUsers = await fetch('https://api-rest-bl9i.onrender.com/api/users');
         const users = await resUsers.json();
 
         setStats({

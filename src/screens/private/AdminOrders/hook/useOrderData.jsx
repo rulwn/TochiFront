@@ -13,7 +13,7 @@ export const useOrderData = () => {
     
     try {
       // const res = await fetch('http://localhost:4000/api/order');
-      const res = await fetch('https://tochi-api.onrender.com/api/order');
+      const res = await fetch('https://api-rest-bl9i.onrender.com/api/order');
       const ordersData = await res.json();
 
       const mapped = await Promise.all(ordersData.map(async order => {
@@ -28,7 +28,7 @@ export const useOrderData = () => {
         if (userId) {
           try {
             // const userRes = await fetch(`http://localhost:4000/api/users/${userId}`);
-            const userRes = await fetch(`https://tochi-api.onrender.com/api/users/${userId}`);
+            const userRes = await fetch(`https://api-rest-bl9i.onrender.com/api/users/${userId}`);
             if (userRes.ok) {
               const userData = await userRes.json();
               customerName = userData.name?.trim() || customerName;
@@ -79,7 +79,7 @@ export const useOrderData = () => {
   const updateOrderStatus = async (orderId, newStatus) => {
     try {
       // const response = await fetch(`http://localhost:4000/api/order/${orderId}`, {
-      const response = await fetch(`https://tochi-api.onrender.com/api/order/${orderId}`, {
+      const response = await fetch(`https://api-rest-bl9i.onrender.com/api/order/${orderId}`, {
         method: 'PUT',
         headers: { 
           'Content-Type': 'application/json' 

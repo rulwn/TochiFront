@@ -17,7 +17,7 @@ const useAdminData = () => {
       setLoading(true);
       setError('');
 
-      const response = await fetch('https://tochi-api.onrender.com/api/users');
+      const response = await fetch('https://api-rest-bl9i.onrender.com/api/users');
       
       if (!response.ok) {
         throw new Error('Error al verificar administradores');
@@ -50,7 +50,7 @@ const useAdminData = () => {
     setSuccess(false);
 
     try {
-      const response = await fetch('https://tochi-api.onrender.com/api/users', {
+      const response = await fetch('https://api-rest-bl9i.onrender.com/api/users', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

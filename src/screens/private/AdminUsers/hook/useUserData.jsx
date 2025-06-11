@@ -5,7 +5,7 @@ const useUserData = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
 
-  const apiUsers = 'https://tochi-api.onrender.com/api/users';
+  const apiUsers = 'https://api-rest-bl9i.onrender.com/api/users';
   //const apiUsers = 'http://localhost:4000/api/users'
 
   // Obtener todos los usuarios
