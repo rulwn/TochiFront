@@ -3,8 +3,8 @@ import toast, { Toaster } from 'react-hot-toast';
 
 const useProductData = () => {
     const [activeTab, setActiveTab] = useState('Product');
-    const apiProducto = 'https://tochi-api.onrender.com/api/products';
-    const apiCategories = 'https://tochi-api.onrender.com/api/categories';
+    const apiProducto = 'https://api-rest-bl9i.onrender.com/api/products';
+    const apiCategories = 'https://api-rest-bl9i.onrender.com/api/categories';
 
     //const apiProducto = 'http://localhost:4000/api/products';
     //const apiCategories = 'http://localhost:4000/api/categories';
