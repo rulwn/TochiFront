@@ -1,6 +1,6 @@
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap');
 
-.product-card {
+.card-products-product-card {
   width: 200px;
   padding: 15px;
   border-radius: 8px;
@@ -17,11 +17,11 @@
   z-index: auto;
 }
 
-.product-card:hover {
+.card-products-product-card:hover {
   transform: translateY(-5px);
 }
 
-.product-image-container {
+.card-products-product-image-container {
   width: 100%;
   height: 150px;
   margin-bottom: 10px;
@@ -32,45 +32,45 @@
   border-radius: 4px;
 }
 
-.product-image {
+.card-products-product-image {
   max-width: 100%;
   max-height: 100%;
   object-fit: contain;
   transition: transform 0.3s ease;
 }
 
-.product-image:hover {
+.card-products-product-image:hover {
   transform: scale(1.05);
 }
 
-.product-name {
+.card-products-product-name {
   font-size: 18px;
   font-weight: 600;
   margin-bottom: 5px;
   color: #333;
 }
 
-.product-details {
+.card-products-product-details {
   font-size: 14px;
   color: #666;
   margin-bottom: 15px;
   font-weight: 400;
 }
 
-.product-footer {
+.card-products-product-footer {
   display: flex;
   justify-content: space-between;
   align-items: center;
   margin-top: auto;
 }
 
-.product-price {
+.card-products-product-price {
   font-size: 20px;
   font-weight: 700;
   color: #000;
 }
 
-.add-to-cart-btn {
+.card-products-add-to-cart-btn {
   background-color: #00BF63;
   color: white;
   border: none;
@@ -86,12 +86,12 @@
   overflow: hidden;
 }
 
-.add-to-cart-btn:hover {
+.card-products-add-to-cart-btn:hover {
   background-color: #009955;
   transform: scale(1.1);
 }
 
-.add-to-cart-btn.added {
+.card-products-add-to-cart-btn.added {
   background-color: #00BF63;
   transform: scale(1.1);
 }
@@ -102,13 +102,13 @@
   100% { transform: scale(1); }
 }
 
-.cart-icon {
+.card-products-cart-icon {
   font-size: 18px;
   transition: transform 0.3s ease, opacity 0.3s ease;
 }
 
 /* Estilos para el diálogo */
-.dialog-overlay {
+.card-products-dialog-overlay {
   position: fixed;
   top: 0;
   left: 0;
@@ -122,7 +122,7 @@
   animation: fadeIn 0.3s ease;
 }
 
-.quantity-dialog {
+.card-products-quantity-dialog {
   background-color: white;
   padding: 25px;
   border-radius: 12px;
@@ -134,7 +134,7 @@
   z-index: 1001; /* Mayor que el overlay */
 }
 
-.dialog-close-btn {
+.card-products-dialog-close-btn {
   position: absolute;
   top: 15px;
   right: 15px;
@@ -145,23 +145,23 @@
   transition: color 0.2s ease;
 }
 
-.dialog-close-btn:hover {
+.card-products-dialog-close-btn:hover {
   color: #333;
 }
 
-.quantity-dialog h3 {
+.card-products-quantity-dialog h3 {
   margin: 0 0 10px;
   color: #333;
   font-size: 1.2rem;
 }
 
-.quantity-dialog p {
+.card-products-quantity-dialog p {
   margin: 0 0 20px;
   color: #666;
   font-size: 0.9rem;
 }
 
-.quantity-selector {
+.card-products-quantity-selector {
   display: flex;
   align-items: center;
   justify-content: center;
@@ -169,7 +169,7 @@
   gap: 10px;
 }
 
-.quantity-btn {
+.card-products-quantity-btn {
   width: 40px;
   height: 40px;
   border-radius: 50%;
@@ -182,16 +182,16 @@
   transition: all 0.2s ease;
 }
 
-.quantity-btn:hover {
+.card-products-quantity-btn:hover {
   background-color: #f5f5f5;
 }
 
-.quantity-btn:disabled {
+.card-products-quantity-btn:disabled {
   opacity: 0.5;
   cursor: not-allowed;
 }
 
-.quantity-input {
+.card-products-quantity-input {
   width: 60px;
   height: 40px;
   text-align: center;
@@ -201,13 +201,13 @@
   font-family: 'Poppins', sans-serif;
 }
 
-.dialog-buttons {
+.card-products-dialog-buttons {
   display: flex;
   gap: 10px;
   margin-top: 20px;
 }
 
-.dialog-btn {
+.card-products-dialog-btn {
   flex: 1;
   padding: 10px;
   border-radius: 8px;
@@ -218,21 +218,21 @@
   transition: all 0.2s ease;
 }
 
-.cancel-btn {
+.card-products-cancel-btn {
   background-color: #f5f5f5;
   color: #666;
 }
 
-.cancel-btn:hover {
+.card-products-cancel-btn:hover {
   background-color: #e0e0e0;
 }
 
-.confirm-btn {
+.card-products-confirm-btn {
   background-color: #00BF63;
   color: white;
 }
 
-.confirm-btn:hover {
+.card-products-confirm-btn:hover {
   background-color: #009955;
 }
 
@@ -253,7 +253,7 @@
   }
 }
 
-.product-clickable-area {
+.card-products-product-clickable-area {
   flex-grow: 1;
   cursor: pointer;
 }

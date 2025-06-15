@@ -1,7 +1,7 @@
 @import url("https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap");
 
 /* Estilos generales */
-.admin-products-container {
+.admin-orders-container {
   font-family: "Poppins", sans-serif;
   padding: 20px;
   margin: 0 auto;
@@ -14,7 +14,7 @@
 }
 
 /* Barra de herramientas */
-.admin-toolbar1 {
+.admin-orders-toolbar {
   display: flex;
   align-items: center;
   flex-wrap: wrap;
@@ -25,26 +25,26 @@
   width: 95%;
 }
 
-.admin-title1 {
+.admin-orders-title {
   font-size: 24px;
   font-weight: 600;
   color: #ffffff;
   margin-right: auto;
 }
 
-.search-container-products {
+.admin-orders-search-container {
   position: relative;
   display: flex;
   align-items: center;
 }
 
-.search-icon-products {
+.admin-orders-search-icon {
   position: absolute;
   left: 12px;
   color: #a0a0a0;
 }
 
-.search-input-products {
+.admin-orders-search-input {
   padding: 10px 15px 10px 40px;
   border-radius: 8px;
   border: 1px solid #2d2d3a;
@@ -56,28 +56,28 @@
   color: #ffffff;
 }
 
-.search-input-products::placeholder {
+.admin-orders-search-input::placeholder {
   color: #a0a0a0;
 }
 
-.search-input-products:focus {
+.admin-orders-search-input:focus {
   outline: none;
   border-color: #00bf63;
 }
 
-.filter-container {
+.admin-orders-filter-container {
   position: relative;
   display: flex;
   align-items: center;
 }
 
-.filter-icon {
+.admin-orders-filter-icon {
   position: absolute;
   left: 12px;
   color: #a0a0a0;
 }
 
-.category-filter {
+.admin-orders-category-filter {
   padding: 10px 15px 10px 40px;
   border-radius: 8px;
   border: 1px solid #2d2d3a;
@@ -90,19 +90,19 @@
   color: #ffffff;
 }
 
-.category-filter:focus {
+.admin-orders-category-filter:focus {
   outline: none;
   border-color: #00bf63;
 }
 
-.orders-dropdown-arrow {
+.admin-orders-dropdown-arrow {
   position: absolute;
   right: 12px;
   color: #a0a0a0;
   pointer-events: none;
 }
 
-.select-products-btn {
+.admin-orders-select-btn {
   display: flex;
   align-items: center;
   gap: 8px;
@@ -117,23 +117,23 @@
   color: #ffffff;
 }
 
-.select-products-btn:hover {
+.admin-orders-select-btn:hover {
   background-color: #00bf63;
 }
 
-.select-products-btn.active {
+.admin-orders-select-btn.active {
   background-color: #c92323;
 }
 
 /* Grid de órdenes */
-.orders-list-grid {
+.admin-orders-list-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
   gap: 20px;
   width: 95%;
 }
 
-.no-products-message {
+.admin-orders-no-message {
   grid-column: 1 / -1;
   text-align: center;
   padding: 40px;
@@ -142,7 +142,7 @@
 }
 
 /* Tarjeta de orden */
-.orders-card {
+.admin-orders-card {
   position: relative;
   border-radius: 10px;
   overflow: hidden;
@@ -152,27 +152,27 @@
   border: 1px solid #3d3d4a;
 }
 
-.orders-card:hover {
+.admin-orders-card:hover {
   transform: translateY(-5px);
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
 }
 
 /* Modo de selección */
-.orders-card.selection-mode {
+.admin-orders-card.selection-mode {
   cursor: pointer;
   border: 2px solid #4a4a5a;
   transition: border-color 0.2s ease;
 }
 
-.orders-card.selection-mode:hover {
+.admin-orders-card.selection-mode:hover {
   border-color: #4dabf7;
 }
 
-.orders-card.selection-mode.selected {
+.admin-orders-card.selection-mode.selected {
   border-color: #00bf63;
 }
 
-.selection-checkmark {
+.admin-orders-selection-checkmark {
   position: absolute;
   top: 10px;
   right: 10px;
@@ -187,7 +187,7 @@
   z-index: 2;
 }
 
-.orders-card-header {
+.admin-orders-card-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -195,63 +195,63 @@
   border-bottom: 1px solid #3d3d4a;
 }
 
-.orders-card-title {
+.admin-orders-card-title {
   margin: 0;
   font-size: 16px;
   font-weight: 600;
   color: #ffffff;
 }
 
-.orders-status-badge {
+.admin-orders-status-badge {
   padding: 4px 10px;
   border-radius: 12px;
   font-size: 12px;
   font-weight: 500;
 }
 
-.orders-status-pendiente {
+.admin-orders-status-pendiente {
   background-color: #854d0e;
   color: #fcd34d;
 }
 
-.orders-status-en-proceso {
+.admin-orders-status-en-proceso {
   background-color: #1e3a8a;
   color: #93c5fd;
 }
 
-.orders-status-entregado {
+.admin-orders-status-entregado {
   background-color: #064e3b;
   color: #6ee7b7;
 }
 
-.orders-status-cancelado {
+.admin-orders-status-cancelado {
   background-color: #7f1d1d;
   color: #fca5a5;
 }
 
-.orders-card-details {
+.admin-orders-card-details {
   padding: 15px;
 }
 
-.orders-detail-row {
+.admin-orders-detail-row {
   display: flex;
   align-items: center;
   gap: 10px;
   margin-bottom: 12px;
 }
 
-.orders-detail-icon {
+.admin-orders-detail-icon {
   color: #a0a0a0;
   min-width: 16px;
 }
 
-.orders-detail-text {
+.admin-orders-detail-text {
   font-size: 14px;
   color: #ffffff;
   line-height: 1.4;
 }
 
-.orders-metrics-row {
+.admin-orders-metrics-row {
   display: flex;
   justify-content: space-between;
   margin-top: 15px;
@@ -259,23 +259,23 @@
   border-top: 1px solid #3d3d4a;
 }
 
-.orders-metric {
+.admin-orders-metric {
   display: flex;
   align-items: center;
   gap: 5px;
 }
 
-.orders-metric-icon {
+.admin-orders-metric-icon {
   color: #a0a0a0;
   font-size: 14px;
 }
 
-.orders-metric-text {
+.admin-orders-metric-text {
   font-size: 13px;
   color: #ffffff;
 }
 
-.orders-delivery-tag {
+.admin-orders-delivery-tag {
   background-color: #3d3d4a;
   padding: 4px 8px;
   border-radius: 4px;
@@ -283,12 +283,12 @@
   color: #ffffff;
 }
 
-.orders-card-actions {
+.admin-orders-card-actions {
   display: flex;
   border-top: 1px solid #3d3d4a;
 }
 
-.orders-action-btn {
+.admin-orders-action-btn {
   flex: 1;
   padding: 10px;
   border: none;
@@ -304,26 +304,26 @@
   gap: 6px;
 }
 
-.orders-view-details {
+.admin-orders-view-details {
   color: #93c5fd;
   border-right: 1px solid #3d3d4a;
 }
 
-.orders-view-details:hover {
+.admin-orders-view-details:hover {
   background-color: #2c365d;
 }
 
-.orders-quick-action {
+.admin-orders-quick-action {
   color: #ffffff;
   font-weight: 500;
 }
 
-.orders-quick-action:hover {
+.admin-orders-quick-action:hover {
   background-color: #3d3d4a;
 }
 
 /* Barra de acciones de selección */
-.selection-actions-bar {
+.admin-orders-selection-actions-bar {
   position: fixed;
   bottom: 20px;
   left: 50%;
@@ -339,17 +339,17 @@
   border: 1px solid #3d3d4a;
 }
 
-.selected-count {
+.admin-orders-selected-count {
   font-weight: 600;
   color: #ffffff;
 }
 
-.selection-actions {
+.admin-orders-selection-actions {
   display: flex;
   gap: 10px;
 }
 
-.selection-action-btn {
+.admin-orders-selection-action-btn {
   display: flex;
   align-items: center;
   gap: 6px;
@@ -364,21 +364,21 @@
   color: #ffffff;
 }
 
-.selection-action-btn:hover {
+.admin-orders-selection-action-btn:hover {
   background-color: #00a955;
 }
 
-.selection-action-btn.cancel {
+.admin-orders-selection-action-btn.cancel {
   background-color: #3d3d4a;
   color: #a0a0a0;
 }
 
-.selection-action-btn.cancel:hover {
+.admin-orders-selection-action-btn.cancel:hover {
   background-color: #4a4a5a;
 }
 
 /* Modal overlay común */
-.modal-overlay {
+.admin-orders-modal-overlay {
   position: fixed;
   top: 0;
   left: 0;
@@ -393,7 +393,7 @@
 }
 
 /* Modal de cambio de estado */
-.status-modal-content {
+.admin-orders-status-modal-content {
   background-color: #2d2d3a;
   border-radius: 10px;
   padding: 25px;
@@ -403,25 +403,25 @@
   border: 1px solid #3d3d4a;
 }
 
-.modal-title {
+.admin-orders-modal-title {
   font-size: 18px;
   margin-bottom: 20px;
   color: #ffffff;
   text-align: center;
 }
 
-.form-group {
+.admin-orders-form-group {
   margin-bottom: 20px;
 }
 
-.form-group label {
+.admin-orders-form-group label {
   display: block;
   margin-bottom: 8px;
   color: #a0a0a0;
   font-size: 14px;
 }
 
-.status-select {
+.admin-orders-status-select {
   width: 100%;
   padding: 10px 15px;
   border-radius: 6px;
@@ -433,19 +433,19 @@
   transition: border-color 0.3s ease;
 }
 
-.status-select:focus {
+.admin-orders-status-select:focus {
   outline: none;
   border-color: #00bf63;
 }
 
-.modal-actions {
+.admin-orders-modal-actions {
   display: flex;
   justify-content: flex-end;
   gap: 10px;
   margin-top: 20px;
 }
 
-.modal-btn {
+.admin-orders-modal-btn {
   padding: 10px 20px;
   border-radius: 6px;
   border: none;
@@ -455,32 +455,32 @@
   transition: all 0.2s ease;
 }
 
-.cancel-btn {
+.admin-orders-cancel-btn {
   background-color: #3d3d4a;
   color: #ffffff;
 }
 
-.cancel-btn:hover {
+.admin-orders-cancel-btn:hover {
   background-color: #4a4a5a;
 }
 
-.confirm-btn {
+.admin-orders-confirm-btn {
   background-color: #00bf63;
   color: white;
 }
 
-.confirm-btn:hover {
+.admin-orders-confirm-btn:hover {
   background-color: #00a955;
 }
 
-.confirm-btn:disabled {
+.admin-orders-confirm-btn:disabled {
   background-color: #2d2d3a;
   color: #a0a0a0;
   cursor: not-allowed;
 }
 
 /* ===== ESTILOS DEL MODAL DE DETALLES ===== */
-.details-modal-content {
+.admin-orders-details-modal-content {
   background-color: #2d2d3a;
   border-radius: 12px;
   width: 90%;
@@ -491,7 +491,7 @@
   border: 1px solid #3d3d4a;
 }
 
-.modal-header {
+.admin-orders-modal-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -499,7 +499,7 @@
   border-bottom: 1px solid #3d3d4a;
 }
 
-.modal-title {
+.admin-orders-modal-title {
   display: flex;
   align-items: center;
   font-size: 20px;
@@ -508,12 +508,12 @@
   margin: 0;
 }
 
-.modal-title-icon {
+.admin-orders-modal-title-icon {
   margin-right: 10px;
   color: #00bf63;
 }
 
-.modal-close-btn {
+.admin-orders-modal-close-btn {
   background: none;
   border: none;
   padding: 8px;
@@ -523,20 +523,20 @@
   color: #a0a0a0;
 }
 
-.modal-close-btn:hover {
+.admin-orders-modal-close-btn:hover {
   background-color: #3d3d4a;
   color: #ffffff;
 }
 
-.modal-body {
+.admin-orders-modal-body {
   padding: 24px;
 }
 
-.details-section {
+.admin-orders-details-section {
   margin-bottom: 32px;
 }
 
-.section-title {
+.admin-orders-section-title {
   display: flex;
   align-items: center;
   font-size: 18px;
@@ -545,24 +545,24 @@
   color: #ffffff;
 }
 
-.section-icon {
+.admin-orders-section-icon {
   margin-right: 10px;
   color: #00bf63;
 }
 
-.details-grid {
+.admin-orders-details-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
   gap: 16px;
 }
 
-.detail-item {
+.admin-orders-detail-item {
   display: flex;
   flex-direction: column;
   gap: 6px;
 }
 
-.detail-label {
+.admin-orders-detail-label {
   font-weight: 500;
   color: #a0a0a0;
   font-size: 14px;
@@ -570,19 +570,19 @@
   align-items: center;
 }
 
-.detail-icon {
+.admin-orders-detail-icon {
   margin-right: 6px;
   width: 14px;
   height: 14px;
 }
 
-.detail-value {
+.admin-orders-detail-value {
   font-weight: 600;
   color: #ffffff;
   font-size: 15px;
 }
 
-.status-badge {
+.admin-orders-status-badge {
   padding: 6px 12px;
   border-radius: 20px;
   font-size: 12px;
@@ -590,27 +590,27 @@
   width: fit-content;
 }
 
-.status-pendiente {
+.admin-orders-status-pendiente {
   background-color: #854d0e;
   color: #fcd34d;
 }
 
-.status-en-proceso {
+.admin-orders-status-en-proceso {
   background-color: #1e3a8a;
   color: #93c5fd;
 }
 
-.status-entregado {
+.admin-orders-status-entregado {
   background-color: #064e3b;
   color: #6ee7b7;
 }
 
-.status-cancelado {
+.admin-orders-status-cancelado {
   background-color: #7f1d1d;
   color: #fca5a5;
 }
 
-.products-list {
+.admin-orders-products-list {
   display: flex;
   flex-direction: column;
   gap: 12px;
@@ -618,7 +618,7 @@
   overflow-y: auto;
 }
 
-.product-item {
+.admin-orders-product-item {
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -628,34 +628,34 @@
   border: 1px solid #4a4a5a;
 }
 
-.product-info {
+.admin-orders-product-info {
   display: flex;
   flex-direction: column;
   gap: 4px;
 }
 
-.product-name {
+.admin-orders-product-name {
   font-weight: 600;
   color: #ffffff;
   font-size: 15px;
 }
 
-.product-quantity {
+.admin-orders-product-quantity {
   font-size: 13px;
   color: #a0a0a0;
 }
 
-.product-pricing {
+.admin-orders-product-pricing {
   text-align: right;
 }
 
-.product-price {
+.admin-orders-product-price {
   font-weight: 600;
   color: #00bf63;
   font-size: 16px;
 }
 
-.totals-summary {
+.admin-orders-totals-summary {
   display: flex;
   flex-direction: column;
   gap: 12px;
@@ -665,35 +665,35 @@
   border: 1px solid #4a4a5a;
 }
 
-.total-item {
+.admin-orders-total-item {
   display: flex;
   justify-content: space-between;
   align-items: center;
 }
 
-.total-final {
+.admin-orders-total-final {
   border-top: 1px solid #4a4a5a;
   padding-top: 12px;
   font-size: 18px;
   font-weight: 700;
 }
 
-.total-label {
+.admin-orders-total-label {
   color: #a0a0a0;
   font-size: 14px;
 }
 
-.total-value {
+.admin-orders-total-value {
   color: #ffffff;
   font-weight: 600;
 }
 
-.total-final .total-value {
+.admin-orders-total-final .admin-orders-total-value {
   color: #00bf63;
   font-size: 20px;
 }
 
-.notes-content {
+.admin-orders-notes-content {
   padding: 16px;
   background-color: #3d3d4a;
   border-radius: 8px;
@@ -702,7 +702,7 @@
   border: 1px solid #4a4a5a;
 }
 
-.modal-footer {
+.admin-orders-modal-footer {
   display: flex;
   justify-content: flex-end;
   gap: 12px;
@@ -710,7 +710,7 @@
   border-top: 1px solid #3d3d4a;
 }
 
-.secondary-btn {
+.admin-orders-secondary-btn {
   padding: 12px 20px;
   border: 1px solid #4a4a5a;
   background: #3d3d4a;
@@ -722,11 +722,11 @@
   font-weight: 500;
 }
 
-.secondary-btn:hover {
+.admin-orders-secondary-btn:hover {
   background-color: #4a4a5a;
 }
 
-.primary-btn {
+.admin-orders-primary-btn {
   padding: 12px 20px;
   background: #00bf63;
   color: white;
@@ -738,101 +738,101 @@
   font-weight: 500;
 }
 
-.primary-btn:hover {
+.admin-orders-primary-btn:hover {
   background: #00a955;
 }
 
 /* Scrollbar personalizado para el modal */
-.details-modal-content::-webkit-scrollbar,
-.products-list::-webkit-scrollbar {
+.admin-orders-details-modal-content::-webkit-scrollbar,
+.admin-orders-products-list::-webkit-scrollbar {
   width: 6px;
 }
 
-.details-modal-content::-webkit-scrollbar-track,
-.products-list::-webkit-scrollbar-track {
+.admin-orders-details-modal-content::-webkit-scrollbar-track,
+.admin-orders-products-list::-webkit-scrollbar-track {
   background: #2d2d3a;
 }
 
-.details-modal-content::-webkit-scrollbar-thumb,
-.products-list::-webkit-scrollbar-thumb {
+.admin-orders-details-modal-content::-webkit-scrollbar-thumb,
+.admin-orders-products-list::-webkit-scrollbar-thumb {
   background: #4a4a5a;
   border-radius: 3px;
 }
 
-.details-modal-content::-webkit-scrollbar-thumb:hover,
-.products-list::-webkit-scrollbar-thumb:hover {
+.admin-orders-details-modal-content::-webkit-scrollbar-thumb:hover,
+.admin-orders-products-list::-webkit-scrollbar-thumb:hover {
   background: #5a5a6a;
 }
 
 /* Estilos responsivos */
 @media (max-width: 768px) {
-  .admin-toolbar1 {
+  .admin-orders-toolbar {
     flex-direction: column;
     align-items: stretch;
   }
 
-  .search-container-products,
-  .filter-container,
-  .select-products-btn {
+  .admin-orders-search-container,
+  .admin-orders-filter-container,
+  .admin-orders-select-btn {
     width: 100%;
   }
 
-  .orders-list-grid {
+  .admin-orders-list-grid {
     grid-template-columns: 1fr;
   }
 
-  .selection-actions-bar {
+  .admin-orders-selection-actions-bar {
     width: 90%;
     flex-direction: column;
     gap: 10px;
   }
 
-  .selection-actions {
+  .admin-orders-selection-actions {
     width: 100%;
     justify-content: space-between;
   }
 
-  .selection-action-btn {
+  .admin-orders-selection-action-btn {
     flex: 1;
     justify-content: center;
   }
 
   /* Modal responsive */
-  .details-modal-content {
+  .admin-orders-details-modal-content {
     width: 95%;
     max-height: 95vh;
   }
 
-  .modal-header {
+  .admin-orders-modal-header {
     padding: 20px;
   }
 
-  .modal-body {
+  .admin-orders-modal-body {
     padding: 20px;
   }
 
-  .modal-footer {
+  .admin-orders-modal-footer {
     padding: 20px;
     flex-direction: column;
   }
 
-  .secondary-btn,
-  .primary-btn {
+  .admin-orders-secondary-btn,
+  .admin-orders-primary-btn {
     width: 100%;
     justify-content: center;
   }
 
-  .details-grid {
+  .admin-orders-details-grid {
     grid-template-columns: 1fr;
   }
 
-  .product-item {
+  .admin-orders-product-item {
     flex-direction: column;
     gap: 10px;
     align-items: flex-start;
   }
 
-  .product-pricing {
+  .admin-orders-product-pricing {
     align-self: flex-end;
   }
 }

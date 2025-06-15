@@ -1,5 +1,5 @@
 /* Modal overlay común */
-.modal-overlay {
+.detail-order-modal-overlay {
   position: fixed;
   top: 0;
   left: 0;
@@ -13,7 +13,7 @@
   backdrop-filter: blur(5px);
 }
 
-.details-modal-content {
+.detail-order-modal-content {
   background-color: #2d2d3a;
   border-radius: 12px;
   width: 90%;
@@ -24,7 +24,7 @@
   border: 1px solid #3d3d4a;
 }
 
-.modal-header {
+.detail-order-modal-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -32,7 +32,7 @@
   border-bottom: 1px solid #3d3d4a;
 }
 
-.modal-title {
+.detail-order-modal-title {
   display: flex;
   align-items: center;
   font-size: 20px;
@@ -41,12 +41,12 @@
   margin: 0;
 }
 
-.modal-title-icon {
+.detail-order-modal-title-icon {
   margin-right: 10px;
   color: #00bf63;
 }
 
-.modal-close-btn {
+.detail-order-modal-close-btn {
   background: none;
   border: none;
   padding: 8px;
@@ -56,20 +56,20 @@
   color: #a0a0a0;
 }
 
-.modal-close-btn:hover {
+.detail-order-modal-close-btn:hover {
   background-color: #3d3d4a;
   color: #ffffff;
 }
 
-.modal-body {
+.detail-order-modal-body {
   padding: 24px;
 }
 
-.details-section {
+.detail-order-details-section {
   margin-bottom: 32px;
 }
 
-.section-title {
+.detail-order-section-title {
   display: flex;
   align-items: center;
   font-size: 18px;
@@ -78,24 +78,24 @@
   color: #ffffff;
 }
 
-.section-icon {
+.detail-order-section-icon {
   margin-right: 10px;
   color: #00bf63;
 }
 
-.details-grid {
+.detail-order-details-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
   gap: 16px;
 }
 
-.detail-item {
+.detail-order-detail-item {
   display: flex;
   flex-direction: column;
   gap: 6px;
 }
 
-.detail-label {
+.detail-order-detail-label {
   font-weight: 500;
   color: #a0a0a0;
   font-size: 14px;
@@ -103,19 +103,19 @@
   align-items: center;
 }
 
-.detail-icon {
+.detail-order-detail-icon {
   margin-right: 6px;
   width: 14px;
   height: 14px;
 }
 
-.detail-value {
+.detail-order-detail-value {
   font-weight: 600;
   color: #ffffff;
   font-size: 15px;
 }
 
-.status-badge {
+.detail-order-status-badge {
   padding: 6px 12px;
   border-radius: 20px;
   font-size: 12px;
@@ -123,27 +123,27 @@
   width: fit-content;
 }
 
-.status-pendiente {
+.detail-order-status-pendiente {
   background-color: #854d0e;
   color: #fcd34d;
 }
 
-.status-en-proceso {
+.detail-order-status-en-proceso {
   background-color: #1e3a8a;
   color: #93c5fd;
 }
 
-.status-entregado {
+.detail-order-status-entregado {
   background-color: #064e3b;
   color: #6ee7b7;
 }
 
-.status-cancelado {
+.detail-order-status-cancelado {
   background-color: #7f1d1d;
   color: #fca5a5;
 }
 
-.products-list {
+.detail-order-products-list {
   display: flex;
   flex-direction: column;
   gap: 12px;
@@ -151,7 +151,7 @@
   overflow-y: auto;
 }
 
-.product-item {
+.detail-order-product-item {
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -161,34 +161,34 @@
   border: 1px solid #4a4a5a;
 }
 
-.product-info {
+.detail-order-product-info {
   display: flex;
   flex-direction: column;
   gap: 4px;
 }
 
-.product-name {
+.detail-order-product-name {
   font-weight: 600;
   color: #ffffff;
   font-size: 15px;
 }
 
-.product-quantity {
+.detail-order-product-quantity {
   font-size: 13px;
   color: #a0a0a0;
 }
 
-.product-pricing {
+.detail-order-product-pricing {
   text-align: right;
 }
 
-.product-price {
+.detail-order-product-price {
   font-weight: 600;
   color: #00bf63;
   font-size: 16px;
 }
 
-.totals-summary {
+.detail-order-totals-summary {
   display: flex;
   flex-direction: column;
   gap: 12px;
@@ -198,35 +198,35 @@
   border: 1px solid #4a4a5a;
 }
 
-.total-item {
+.detail-order-total-item {
   display: flex;
   justify-content: space-between;
   align-items: center;
 }
 
-.total-final {
+.detail-order-total-final {
   border-top: 1px solid #4a4a5a;
   padding-top: 12px;
   font-size: 18px;
   font-weight: 700;
 }
 
-.total-label {
+.detail-order-total-label {
   color: #a0a0a0;
   font-size: 14px;
 }
 
-.total-value {
+.detail-order-total-value {
   color: #ffffff;
   font-weight: 600;
 }
 
-.total-final .total-value {
+.detail-order-total-final .detail-order-total-value {
   color: #00bf63;
   font-size: 20px;
 }
 
-.notes-content {
+.detail-order-notes-content {
   padding: 16px;
   background-color: #3d3d4a;
   border-radius: 8px;
@@ -235,7 +235,7 @@
   border: 1px solid #4a4a5a;
 }
 
-.modal-footer {
+.detail-order-modal-footer {
   display: flex;
   justify-content: flex-end;
   gap: 12px;
@@ -243,7 +243,7 @@
   border-top: 1px solid #3d3d4a;
 }
 
-.secondary-btn {
+.detail-order-secondary-btn {
   padding: 12px 20px;
   border: 1px solid #4a4a5a;
   background: #3d3d4a;
@@ -255,11 +255,11 @@
   font-weight: 500;
 }
 
-.secondary-btn:hover {
+.detail-order-secondary-btn:hover {
   background-color: #4a4a5a;
 }
 
-.primary-btn {
+.detail-order-primary-btn {
   padding: 12px 20px;
   background: #00bf63;
   color: white;
@@ -271,70 +271,70 @@
   font-weight: 500;
 }
 
-.primary-btn:hover {
+.detail-order-primary-btn:hover {
   background: #00a955;
 }
 
 /* Scrollbar personalizado para el modal */
-.details-modal-content::-webkit-scrollbar,
-.products-list::-webkit-scrollbar {
+.detail-order-modal-content::-webkit-scrollbar,
+.detail-order-products-list::-webkit-scrollbar {
   width: 6px;
 }
 
-.details-modal-content::-webkit-scrollbar-track,
-.products-list::-webkit-scrollbar-track {
+.detail-order-modal-content::-webkit-scrollbar-track,
+.detail-order-products-list::-webkit-scrollbar-track {
   background: #2d2d3a;
 }
 
-.details-modal-content::-webkit-scrollbar-thumb,
-.products-list::-webkit-scrollbar-thumb {
+.detail-order-modal-content::-webkit-scrollbar-thumb,
+.detail-order-products-list::-webkit-scrollbar-thumb {
   background: #4a4a5a;
   border-radius: 3px;
 }
 
-.details-modal-content::-webkit-scrollbar-thumb:hover,
-.products-list::-webkit-scrollbar-thumb:hover {
+.detail-order-modal-content::-webkit-scrollbar-thumb:hover,
+.detail-order-products-list::-webkit-scrollbar-thumb:hover {
   background: #5a5a6a;
 }
 
 /* Estilos responsivos */
 @media (max-width: 768px) {
   /* Modal responsive */
-  .details-modal-content {
+  .detail-order-modal-content {
     width: 95%;
     max-height: 95vh;
   }
 
-  .modal-header {
+  .detail-order-modal-header {
     padding: 20px;
   }
 
-  .modal-body {
+  .detail-order-modal-body {
     padding: 20px;
   }
 
-  .modal-footer {
+  .detail-order-modal-footer {
     padding: 20px;
     flex-direction: column;
   }
 
-  .secondary-btn,
-  .primary-btn {
+  .detail-order-secondary-btn,
+  .detail-order-primary-btn {
     width: 100%;
     justify-content: center;
   }
 
-  .details-grid {
+  .detail-order-details-grid {
     grid-template-columns: 1fr;
   }
 
-  .product-item {
+  .detail-order-product-item {
     flex-direction: column;
     gap: 10px;
     align-items: flex-start;
   }
 
-  .product-pricing {
+  .detail-order-product-pricing {
     align-self: flex-end;
   }
 }
