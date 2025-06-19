@@ -1,6 +1,7 @@
 // Importación de dependencias de React Router y React
 import { Routes, Route, useLocation, useNavigate } from 'react-router-dom';
 import { useState, useEffect } from 'react';
+import { Toaster } from 'react-hot-toast'; // Asegúrate de tener react-hot-toast instalado
 
 // Importación del AuthProvider y PrivateRoute
 import { AuthProvider } from './context/AuthContext';
@@ -8,6 +9,9 @@ import PrivateRoute from './components/PrivateRoute';
 
 // Importación del hook personalizado para verificar si existe admin
 import useAdminData from './screens/private/FirstUse/hook/useAdminData';
+
+// Importación del hook del carrito
+import useCart from '../src/screens/public/Cart/hook/useCart';
 
 // Importación de todas las pantallas (screens)
 import Home from './screens/public/Home/Home';
@@ -107,35 +111,31 @@ function FirstUserWithNavigation({ onAdminCreated }) {
 
 // Componente AppContent separado para usar hooks dentro del AuthProvider
 function AppContent() {
-  // Estado para manejar los productos en el carrito
-  const [cartItems, setCartItems] = useState([]);
-  
   // Hook para verificar si existe un administrador
   const { adminExists, loading, error, recheckAdmin } = useAdminData();
+  
+  // Hook del carrito (reemplaza el estado local anterior)
+  const { 
+    cartItems, 
+    addToCart, 
+    updateCartItem, 
+    removeFromCart, 
+    clearCart, 
+    getCartItemsCount,
+    isInCart,
+    getProductQuantity 
+  } = useCart();
   
   // Obtener la ruta actual para decidir qué componentes mostrar
   const location = useLocation();
 
-  // Función para agregar o eliminar productos del carrito
+  // Función de compatibilidad para los componentes que aún usan la interfaz anterior
   const handleUpdateCart = (product, shouldAdd) => {
-    setCartItems(prevItems => {
-      if (shouldAdd) {
-        const existingIndex = prevItems.findIndex(item => item.id === product.id);
-        if (existingIndex >= 0) {
-          const updatedItems = [...prevItems];
-          updatedItems[existingIndex] = {
-            ...updatedItems[existingIndex],
-            selectedQuantity: product.selectedQuantity || 1
-          };
-          return updatedItems;
-        }
-        return [...prevItems, {
-          ...product,
-          selectedQuantity: product.selectedQuantity || 1
-        }];
-      }
-      return prevItems.filter(item => item.id !== product.id);
-    });
+    if (shouldAdd) {
+      addToCart(product);
+    } else {
+      removeFromCart(product.id);
+    }
   };
 
   // Si está cargando, mostrar pantalla de loading
@@ -168,9 +168,35 @@ function AppContent() {
 
   return (
     <>
-      {/* Navbar condicional */}
+      {/* Toast notifications para feedback del carrito */}
+      <Toaster 
+        position="top-right"
+        toastOptions={{
+          duration: 3000,
+          style: {
+            background: '#363636',
+            color: '#fff',
+          },
+          success: {
+            duration: 2000,
+            iconTheme: {
+              primary: '#4ade80',
+              secondary: '#fff',
+            },
+          },
+          error: {
+            duration: 4000,
+            iconTheme: {
+              primary: '#ef4444',
+              secondary: '#fff',
+            },
+          },
+        }}
+      />
+
+      {/* Navbar condicional con contador de carrito actualizado */}
       {!hideNavbarRoutes.includes(location.pathname) && !isAdminRoute && (
-        <Navbar cartItemCount={cartItems.reduce((sum, item) => sum + (item.selectedQuantity || 1), 0)} />
+        <Navbar cartItemCount={getCartItemsCount()} />
       )}
       
       {/* NavAdmin para rutas de administrador */}
@@ -178,10 +204,10 @@ function AppContent() {
 
       {/* Definición de las rutas de la aplicación */}
       <Routes>
-        {/* Rutas públicas */}
-        <Route path="/" element={<Home onAddToCart={handleUpdateCart} cartItems={cartItems} />} />
-        <Route path="/cart" element={<Cart cartItems={cartItems} onUpdateCart={handleUpdateCart} />} />
-        <Route path="/explore" element={<Products onAddToCart={handleUpdateCart} cartItems={cartItems} />} />
+        {/* Rutas públicas - Ya no necesitan props del carrito */}
+        <Route path="/" element={<Home />} />
+        <Route path="/cart" element={<Cart />} />
+        <Route path="/explore" element={<Products />} />
         <Route path="/about" element={<About />} />
         <Route path='/account' element={<Profile />} />
         <Route path='/userDetails' element={<UserDetails />} />
@@ -208,7 +234,7 @@ function AppContent() {
         <Route path="/putemail" element={<PutEmail />} />
         <Route path="/putcode" element={<PutCode />} />
         <Route path="/newpassword" element={<NewPassword />} />
-        <Route path="/product/:id" element={<DetailProduct onAddToCart={handleUpdateCart} />} />
+        <Route path="/product/:id" element={<DetailProduct />} />
         
         {/* Rutas protegidas para administradores */}
         <Route path="/admin-dashboard" element={<PrivateRoute allowedRoles={['administrador']} />}>

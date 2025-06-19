@@ -7,16 +7,20 @@ import SearchBar from '../../../components/Search Bar/Search';
 import Carousel from '../../../components/Carousel/Carousel';
 import useProducts from '../../public/Products/hook/useProducts';
 import useCategories from '../../../components/Search Bar/hook/useCategories';
+import useCart from '../../../screens/public/Cart/hook/useCart';
 import './Home.css';
 
-// Componente principal Home que recibe props para manejar el carrito
-function Home({ onAddToCart, cartItems }) {
+// Componente principal Home
+function Home() {
   // Estado para controlar el loading del botón "Explorar Productos"
   const [isLoading, setIsLoading] = useState(false);
   
   // Hooks para obtener datos del backend
   const { products, loading: productsLoading, error: productsError } = useProducts();
   const { categories, loading: categoriesLoading, error: categoriesError } = useCategories();
+  
+  // Hook del carrito
+  const { addToCart, isInCart, getProductQuantity } = useCart();
   
   // Estados para productos filtrados
   const [featuredProducts, setFeaturedProducts] = useState([]);
@@ -46,6 +50,11 @@ function Home({ onAddToCart, cartItems }) {
       }
     }
   }, [products, categories]);
+
+  // Manejador para añadir productos al carrito
+  const handleAddToCart = async (product) => {
+    await addToCart(product);
+  };
 
   // Manejador de clic para el botón "Explorar Productos"
   const handleShopNowClick = (e) => {
@@ -114,9 +123,11 @@ function Home({ onAddToCart, cartItems }) {
                 <ProductCard
                   key={product.id} // Clave única para cada producto
                   product={product} // Datos del producto
-                  onAddToCart={onAddToCart} // Función para añadir al carrito
+                  onAddToCart={handleAddToCart} // Función para añadir al carrito
                   // Verifica si el producto ya está en el carrito
-                  isInCart={cartItems.some(item => item.id === product.id)}
+                  isInCart={isInCart(product.id)}
+                  // Cantidad actual del producto en el carrito
+                  cartQuantity={getProductQuantity(product.id)}
                 />
               ))
             ) : (
@@ -164,8 +175,9 @@ function Home({ onAddToCart, cartItems }) {
                 <ProductCard
                   key={product.id}
                   product={product}
-                  onAddToCart={onAddToCart}
-                  isInCart={cartItems.some(item => item.id === product.id)}
+                  onAddToCart={handleAddToCart}
+                  isInCart={isInCart(product.id)}
+                  cartQuantity={getProductQuantity(product.id)}
                 />
               ))
             ) : (
