@@ -17,12 +17,39 @@
   margin-bottom: 40px;
 }
 
+.profile-image-container {
+  position: relative;
+  width: 100px;
+  height: 100px;
+}
+
 .profile-img {
   width: 100px;
   height: 100px;
   border-radius: 50%;
   object-fit: cover;
   border: 3px solid #f0f0f0;
+}
+
+.profile-img-placeholder {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+  background-color: #e0e0e0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 32px;
+  font-weight: bold;
+  color: #555;
+  border: 3px solid #f0f0f0;
+}
+
+.profile-initials {
+  text-transform: uppercase;
 }
 
 .profile-info h1 {
@@ -36,6 +63,7 @@
   flex: 1;
   min-width: 0;
 }
+
 .email {
   color: #718096;
   font-size: 18px;
@@ -46,6 +74,7 @@
   max-width: 250px;
 }
 
+/* Resto del CSS permanece igual */
 .profile-options {
   border-top: 1px solid #e2e8f0;
   padding-top: 25px;
@@ -104,7 +133,7 @@
   margin: 30px auto 0;
   padding: 12px 20px;
   background-color: white;
-  color: #38a169; /* Verde agradable */
+  color: #38a169;
   border: 1px solid #e2e8f0;
   border-radius: 8px;
   font-family: 'Poppins', sans-serif;
@@ -123,4 +152,59 @@
 
 .logout-icon {
   font-size: 18px;
+}
+
+/* Estados de carga */
+.profile-loading {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+}
+
+.loading-spinner {
+  border: 4px solid rgba(0, 0, 0, 0.1);
+  border-radius: 50%;
+  border-top: 4px solid #3498db;
+  width: 40px;
+  height: 40px;
+  animation: spin 1s linear infinite;
+  margin-bottom: 16px;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+.profile-updating {
+  text-align: center;
+  margin-top: 16px;
+  color: #666;
+  font-size: 14px;
+}
+
+.profile-image-container {
+  position: relative;
+  width: 100px;
+  height: 100px;
+}
+
+.profile-img, .profile-img-placeholder {
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+  border: 3px solid #f0f0f0;
+  object-fit: cover;
+}
+
+.profile-img-placeholder {
+  background-color: #e0e0e0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 32px;
+  font-weight: bold;
+  color: #555;
 }
