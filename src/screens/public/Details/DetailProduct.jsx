@@ -1,11 +1,15 @@
 // Import necessary React hooks and components
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 // Import icons from react-icons library
-import { LuShoppingCart, LuX, LuPlus, LuMinus, LuArrowLeft } from 'react-icons/lu';
+import { LuShoppingCart, LuX, LuPlus, LuMinus, LuArrowLeft, LuStar, LuRefreshCw } from 'react-icons/lu';
 // Import routing utilities from react-router-dom
 import { useLocation, useNavigate } from 'react-router-dom';
 // Import CSS styles for this component
 import './DetailProduct.css';
+// Import custom hook for reviews
+import { useReviews } from './hooks/useReviews';
+// Import authentication context to check user login status
+import { useAuth } from '../../../context/AuthContext';
 
 // Main DetailProduct component that receives onAddToCart function as prop
 function DetailProduct({ onAddToCart }) {
@@ -15,6 +19,23 @@ function DetailProduct({ onAddToCart }) {
     // Get product data passed via route state
     const product = location.state?.product;
 
+    // Auth context to check if user is logged in
+    const { user: authUser, isLoggedIn: authIsLoggedIn } = useAuth();
+
+    // Custom hook for reviews management
+    const {
+        reviews,
+        loading: reviewsLoading,
+        error: reviewsError,
+        fetchReviews,
+        getReviewsByProduct,
+        createReview,
+        getAverageRating,
+        getReviewCount,
+        user,
+        isLoggedIn
+    } = useReviews();
+
     // State management for various component features:
     
     // Controls visibility of quantity selection dialog
@@ -23,25 +44,29 @@ function DetailProduct({ onAddToCart }) {
     const [quantity, setQuantity] = useState(1);
     // Manages form state for product reviews
     const [review, setReview] = useState({
-        rating: 0,       // Star rating (0-5)
-        comment: ''      // Review text
+        qualification: 0,
+        comments: ''
     });
-    // Stores all product reviews (initialized with one sample review)
-    const [reviews, setReviews] = useState([
-        {
-            id: 1,
-            author: 'Willfredo Granados',
-            rating: 5,
-            comment: 'Apples are nutritious. Apples may be good for weight loss. Apples may be good for your',
-            date: '2023-05-15'
-        }
-    ]);
+    // Loading state for review submission
+    const [submittingReview, setSubmittingReview] = useState(false);
+    // Success message state
+    const [reviewSuccess, setReviewSuccess] = useState('');
+
+    // Load reviews when component mounts
+    useEffect(() => {
+        fetchReviews();
+    }, []);
 
     // Redirect to home if no product data is available
     if (!product) {
         navigate('/');
         return null;
     }
+
+    // Get reviews for current product
+    const productReviews = getReviewsByProduct(product._id || product.id);
+    const averageRating = getAverageRating(product._id || product.id);
+    const reviewCount = getReviewCount(product._id || product.id);
 
     // Handles adding product to cart with confirmation
     const handleAddToCart = (confirmed) => {
@@ -63,26 +88,46 @@ function DetailProduct({ onAddToCart }) {
 
     // Updates star rating in review form
     const handleRatingChange = (newRating) => {
-        setReview(prev => ({ ...prev, rating: newRating }));
+        setReview(prev => ({ ...prev, qualification: newRating }));
     };
 
     // Handles review form submission
-    const handleSubmitReview = (e) => {
+    const handleSubmitReview = async (e) => {
         e.preventDefault();
-        // Only submit if rating and comment are provided
-        if (review.rating > 0 && review.comment) {
-            // Create new review object
-            const newReview = {
-                id: reviews.length + 1,
-                author: "User", // Placeholder - would be dynamic in real app
-                rating: review.rating,
-                comment: review.comment,
-                date: new Date().toISOString().split('T')[0] // Format as YYYY-MM-DD
+        
+        // Validate required fields
+        if (review.qualification === 0 || !review.comments.trim()) {
+            alert('Por favor, completa todos los campos de la reseña.');
+            return;
+        }
+
+        setSubmittingReview(true);
+        setReviewSuccess('');
+
+        try {
+            // Prepare review data for API (el hook ya maneja la validación de usuario)
+            const reviewData = {
+                productId: product._id || product.id,
+                qualification: review.qualification,
+                comments: review.comments.trim()
             };
-            // Add new review to reviews array
-            setReviews([...reviews, newReview]);
-            // Reset form
-            setReview({ rating: 0, comment: '' });
+
+            await createReview(reviewData);
+            
+            // Reset form and show success message
+            setReview({ qualification: 0, comments: '' });
+            setReviewSuccess('¡Reseña enviada exitosamente!');
+            
+            // Clear success message after 3 seconds
+            setTimeout(() => {
+                setReviewSuccess('');
+            }, 3000);
+
+        } catch (error) {
+            console.error('Error submitting review:', error);
+            alert(error.message || 'Error al enviar la reseña. Por favor, inténtalo de nuevo.');
+        } finally {
+            setSubmittingReview(false);
         }
     };
 
@@ -94,6 +139,30 @@ function DetailProduct({ onAddToCart }) {
     // Decreases product quantity (min 1)
     const decrementQuantity = () => {
         if (quantity > 1) setQuantity(prev => prev - 1);
+    };
+
+    // Format date for display
+    const formatDate = (dateString) => {
+        const date = new Date(dateString);
+        return date.toLocaleDateString('es-ES', {
+            year: 'numeric',
+            month: 'long',
+            day: 'numeric'
+        });
+    };
+
+    // Render star rating
+    const renderStars = (rating, interactive = false, onStarClick = null) => {
+        return [...Array(5)].map((_, i) => (
+            <span
+                key={i}
+                className={`star ${i < rating ? 'filled' : ''} ${interactive ? 'interactive' : ''}`}
+                onClick={interactive ? () => onStarClick?.(i + 1) : undefined}
+                style={{ cursor: interactive ? 'pointer' : 'default' }}
+            >
+                ★
+            </span>
+        ));
     };
 
     // Component render
@@ -127,6 +196,17 @@ function DetailProduct({ onAddToCart }) {
                 <div className="detail-product-info">
                     {/* Product name */}
                     <h2 className="detail-product-name">{product.name}</h2>
+                    
+                    {/* Product rating summary */}
+                    <div className="product-rating-summary">
+                        <div className="rating-stars">
+                            {renderStars(Math.round(averageRating))}
+                        </div>
+                        <span className="rating-text">
+                            {averageRating > 0 ? `${averageRating} (${reviewCount} reseña${reviewCount !== 1 ? 's' : ''})` : 'Sin reseñas'}
+                        </span>
+                    </div>
+
                     {/* Product price */}
                     <div className="detail-product-price">${product.price}</div>
 
@@ -151,29 +231,52 @@ function DetailProduct({ onAddToCart }) {
                     <div className="detail-product-reviews">
                         <h3>Customer Reviews</h3>
 
-                        {/* Map through all reviews and display them */}
-                        {reviews.map(item => (
-                            <div key={item.id} className="detail-review-item">
-                                {/* Review header with author, rating, and date */}
-                                <div className="detail-review-header">
-                                    <div className="detail-review-author">{item.author}</div>
-                                    {/* Star rating display */}
-                                    <div className="detail-review-rating">
-                                        {[...Array(5)].map((_, i) => (
-                                            <span
-                                                key={i}
-                                                className={`star ${i < item.rating ? 'filled' : ''}`}
-                                            >
-                                                ★
-                                            </span>
-                                        ))}
-                                    </div>
-                                    <div className="detail-review-date">{item.date}</div>
-                                </div>
-                                {/* Review text content */}
-                                <p className="detail-review-text">{item.comment}</p>
+                        {/* Loading state */}
+                        {reviewsLoading && (
+                            <div className="reviews-loading">
+                                <LuRefreshCw className="spinner" />
+                                <span>Cargando reseñas...</span>
                             </div>
-                        ))}
+                        )}
+
+                        {/* Error state */}
+                        {reviewsError && (
+                            <div className="reviews-error">
+                                <p>Error al cargar las reseñas: {reviewsError}</p>
+                                <button onClick={fetchReviews} className="retry-btn">
+                                    Reintentar
+                                </button>
+                            </div>
+                        )}
+
+                        {/* Reviews list */}
+                        {!reviewsLoading && !reviewsError && (
+                            <>
+                                {productReviews.length === 0 ? (
+                                    <p className="no-reviews">No hay reseñas para este producto aún.</p>
+                                ) : (
+                                    productReviews.map(reviewItem => (
+                                        <div key={reviewItem._id} className="detail-review-item">
+                                            {/* Review header with author, rating, and date */}
+                                            <div className="detail-review-header">
+                                                <div className="detail-review-author">
+                                                    {reviewItem.usersId?.name || reviewItem.usersId?.username || 'Usuario Anónimo'}
+                                                </div>
+                                                {/* Star rating display */}
+                                                <div className="detail-review-rating">
+                                                    {renderStars(reviewItem.qualification)}
+                                                </div>
+                                                <div className="detail-review-date">
+                                                    {formatDate(reviewItem.createdAt || new Date())}
+                                                </div>
+                                            </div>
+                                            {/* Review text content */}
+                                            <p className="detail-review-text">{reviewItem.comments}</p>
+                                        </div>
+                                    ))
+                                )}
+                            </>
+                        )}
                     </div>
                 </div>
 
@@ -181,6 +284,14 @@ function DetailProduct({ onAddToCart }) {
                 <div className="detail-review-form-container">
                     <div className="detail-review-form">
                         <h4>Add Your Review</h4>
+                        
+                        {/* Success message */}
+                        {reviewSuccess && (
+                            <div className="review-success-message">
+                                {reviewSuccess}
+                            </div>
+                        )}
+                        
                         {/* Review submission form */}
                         <form onSubmit={handleSubmitReview} className="review-form-grid">
                             {/* Star rating input */}
@@ -188,21 +299,11 @@ function DetailProduct({ onAddToCart }) {
                                 <label>Your Rating</label>
                                 <div className="rating-container">
                                     <div className="rating-stars">
-                                        {/* Render 5 clickable stars */}
-                                        {[1, 2, 3, 4, 5].map(star => (
-                                            <span
-                                                key={star}
-                                                className={`star ${star <= review.rating ? 'filled' : ''}`}
-                                                onClick={() => handleRatingChange(star)}
-                                                aria-label={`${star} star`}
-                                            >
-                                                ★
-                                            </span>
-                                        ))}
+                                        {renderStars(review.qualification, true, handleRatingChange)}
                                     </div>
                                     {/* Display current rating text */}
                                     <div className="rating-text">
-                                        {review.rating > 0 ? `${review.rating} star${review.rating > 1 ? 's' : ''}` : 'Select rating'}
+                                        {review.qualification > 0 ? `${review.qualification} estrella${review.qualification > 1 ? 's' : ''}` : 'Selecciona una calificación'}
                                     </div>
                                 </div>
                             </div>
@@ -212,11 +313,12 @@ function DetailProduct({ onAddToCart }) {
                                 <label htmlFor="review-comment">Your Review</label>
                                 <textarea
                                     id="review-comment"
-                                    name="comment"
-                                    value={review.comment}
+                                    name="comments"
+                                    value={review.comments}
                                     onChange={handleReviewChange}
                                     required
-                                    placeholder="Share your experience with this product"
+                                    placeholder="Comparte tu experiencia con este producto"
+                                    disabled={submittingReview}
                                 />
                             </div>
 
@@ -225,10 +327,22 @@ function DetailProduct({ onAddToCart }) {
                                 <button
                                     type="submit"
                                     className="submit-review-btn"
-                                    disabled={!review.rating || !review.comment}
+                                    disabled={!review.qualification || !review.comments.trim() || submittingReview || !isLoggedIn}
                                 >
-                                    Submit Review
+                                    {submittingReview ? (
+                                        <>
+                                            <LuRefreshCw className="spinner" />
+                                            Enviando...
+                                        </>
+                                    ) : (
+                                        'Submit Review'
+                                    )}
                                 </button>
+                                {!isLoggedIn && (
+                                    <p className="login-required">
+                                        Debes iniciar sesión para dejar una reseña
+                                    </p>
+                                )}
                             </div>
                         </form>
                     </div>
