@@ -39,6 +39,7 @@ import AdminOrders from './screens/private/AdminOrders/AdminOrders';
 import FirstUser from './screens/private/FirstUse/FirstUse';
 import DetailsAdmin from './screens/private/AdminDetails/AdminDetails';
 import TermsAndConditionsAdmin from './screens/private/TermsConditionsAdmin/TermsConditionsAdmin';
+import CategoryPage from './screens/public/Categories/CategoryPage';
 
 // Importación de componentes comunes
 import Navbar from './components/Nav/Navbar';
@@ -89,7 +90,7 @@ function FirstUserWithNavigation({ onAdminCreated }) {
   const handleAdminCreated = (adminData) => {
     // Llamar al callback del padre
     onAdminCreated();
-    
+
     // Si se proporciona información del admin, establecer la sesión
     if (adminData) {
       // Establecer el estado del usuario como logueado
@@ -101,7 +102,7 @@ function FirstUserWithNavigation({ onAdminCreated }) {
       });
       setIsLoggedIn(true);
     }
-    
+
     // Navegar al dashboard de admin
     navigate('/admin-dashboard');
   };
@@ -113,19 +114,19 @@ function FirstUserWithNavigation({ onAdminCreated }) {
 function AppContent() {
   // Hook para verificar si existe un administrador
   const { adminExists, loading, error, recheckAdmin } = useAdminData();
-  
+
   // Hook del carrito (reemplaza el estado local anterior)
-  const { 
-    cartItems, 
-    addToCart, 
-    updateCartItem, 
-    removeFromCart, 
-    clearCart, 
+  const {
+    cartItems,
+    addToCart,
+    updateCartItem,
+    removeFromCart,
+    clearCart,
     getCartItemsCount,
     isInCart,
-    getProductQuantity 
+    getProductQuantity
   } = useCart();
-  
+
   // Obtener la ruta actual para decidir qué componentes mostrar
   const location = useLocation();
 
@@ -150,7 +151,7 @@ function AppContent() {
 
   // Rutas en las cuales no se debe mostrar el Navbar
   const hideNavbarRoutes = ['/login', '/registro', '/putemail', '/putcode', '/newpassword', '/firstuse'];
-  
+
   // Rutas de administrador
   const adminRoutes = [
     '/admin-dashboard',
@@ -169,7 +170,7 @@ function AppContent() {
   return (
     <>
       {/* Toast notifications para feedback del carrito */}
-      <Toaster 
+      <Toaster
         position="top-right"
         toastOptions={{
           duration: 3000,
@@ -198,7 +199,7 @@ function AppContent() {
       {!hideNavbarRoutes.includes(location.pathname) && !isAdminRoute && (
         <Navbar cartItemCount={getCartItemsCount()} />
       )}
-      
+
       {/* NavAdmin para rutas de administrador */}
       {isAdminRoute && <NavAdmin />}
 
@@ -212,7 +213,7 @@ function AppContent() {
         <Route path='/account' element={<Profile />} />
         <Route path='/userDetails' element={<UserDetails />} />
 
-        
+
         {/* Rutas protegidas para usuarios autenticados */}
         <Route path="/orders" element={<PrivateRoute />}>
           <Route index element={<Orders />} />
@@ -226,7 +227,7 @@ function AppContent() {
         <Route path="/checkout" element={<PrivateRoute />}>
           <Route index element={<Checkout />} />
         </Route>
-        
+
         {/* Rutas públicas de autenticación */}
         <Route path="/termsAndConditions" element={<TermsAndConditions />} />
         <Route path="/login" element={<Login />} />
@@ -235,7 +236,8 @@ function AppContent() {
         <Route path="/putcode" element={<PutCode />} />
         <Route path="/newpassword" element={<NewPassword />} />
         <Route path="/product/:id" element={<DetailProduct />} />
-        
+        <Route path="/category/:categoryId" element={<CategoryPage />} />
+
         {/* Rutas protegidas para administradores */}
         <Route path="/admin-dashboard" element={<PrivateRoute allowedRoles={['administrador']} />}>
           <Route index element={<DashboardAdmin />} />

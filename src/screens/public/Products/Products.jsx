@@ -3,13 +3,17 @@ import './Products.css';
 import ProductCard from '../../../components/Products/ProductCard';
 import SearchBar from '../../../components/Search Bar/Search';
 import Combobox from '../../../components/Search Bar/Combobox';
-import useProducts from './hook/useProducts'; // Ajusta la ruta según tu estructura
+import useProducts from './hook/useProducts';
+import useCart from '../../../screens/public/Cart/hook/useCart'; // Agregar este import
 
-function Products({onAddToCart, cartItems}) {
+function Products() { // Quitar las props onAddToCart y cartItems
     const DEFAULT_IMAGE = 'https://i.imgur.com/6FpegJL.png';
     
-    // Usar el hook personalizado
+    // Usar el hook personalizado de productos
     const { products, loading, error, refreshProducts } = useProducts();
+    
+    // Usar el hook del carrito (igual que en Home)
+    const { addToCart, isInCart, getProductQuantity } = useCart();
     
     const [searchTerm, setSearchTerm] = useState('');
     const [selectedCategory, setSelectedCategory] = useState('todos');
@@ -58,6 +62,11 @@ function Products({onAddToCart, cartItems}) {
         setSelectedCategory(category);
     };
 
+    // Manejador para añadir productos al carrito (igual que en Home)
+    const handleAddToCart = async (product) => {
+        await addToCart(product);
+    };
+
     // Mostrar estado de carga
     if (loading) {
         return (
@@ -104,8 +113,9 @@ function Products({onAddToCart, cartItems}) {
                             <ProductCard
                                 key={product.id}
                                 product={product}
-                                onAddToCart={onAddToCart}
-                                isInCart={cartItems.some(item => item.id === product.id)}
+                                onAddToCart={handleAddToCart} // Usar la función local
+                                isInCart={isInCart(product.id)} // Usar el hook useCart
+                                cartQuantity={getProductQuantity(product.id)} // Agregar esta prop
                             />
                         ))
                     ) : (

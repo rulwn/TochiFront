@@ -1,0 +1,475 @@
+/* =================================
+   CATEGORY PAGE - ESTILOS PRINCIPALES
+   ================================= */
+
+.category-page-container {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 20px;
+  min-height: 100vh;
+
+}
+
+/* =================================
+   HEADER DE LA CATEGORÍA
+   ================================= */
+
+.category-page-header {
+  background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
+  border-radius: 20px;
+  padding: 30px;
+  margin-bottom: 30px;
+  box-shadow: 
+    0 10px 30px rgba(0, 0, 0, 0.1),
+    0 1px 8px rgba(0, 0, 0, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.8);
+}
+
+.category-page-breadcrumb {
+  display: flex;
+  align-items: center;
+  margin-bottom: 20px;
+  font-size: 14px;
+  color: #6c757d;
+}
+
+.category-page-breadcrumb-link {
+  color: #00BF63;
+  text-decoration: none;
+  font-weight: 500;
+  transition: color 0.3s ease;
+}
+
+.category-page-breadcrumb-link:hover {
+  color: #0056b3;
+  text-decoration: underline;
+}
+
+.category-page-breadcrumb-separator {
+  margin: 0 10px;
+  color: #adb5bd;
+}
+
+.category-page-breadcrumb-current {
+  color: #495057;
+  font-weight: 600;
+}
+
+.category-page-title-section {
+  text-align: center;
+}
+
+.category-page-title {
+  font-size: 3rem;
+  font-weight: 700;
+  color: #212529;
+  margin: 0 0 10px 0;
+  background: linear-gradient(135deg, #00BF63, #00BF63);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.category-page-subtitle {
+  font-size: 1.1rem;
+  color: #6c757d;
+  margin: 0;
+  font-weight: 500;
+}
+
+/* =================================
+   BARRA DE HERRAMIENTAS
+   ================================= */
+
+.category-page-toolbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: white;
+  padding: 25px;
+  border-radius: 15px;
+  margin-bottom: 25px;
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.08);
+  border: 1px solid rgba(0, 0, 0, 0.05);
+  gap: 20px;
+}
+
+.category-page-search-container {
+  flex: 1;
+  max-width: 400px;
+}
+
+.category-page-filters {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+.category-page-sort-container {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.category-page-sort-label {
+  font-weight: 600;
+  color: #495057;
+  font-size: 14px;
+  white-space: nowrap;
+}
+
+.category-page-sort-select {
+  padding: 10px 15px;
+  border: 2px solid #e9ecef;
+  border-radius: 10px;
+  background: white;
+  font-size: 14px;
+  font-weight: 500;
+  color: #495057;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  min-width: 180px;
+}
+
+.category-page-sort-select:focus {
+  outline: none;
+  border-color: #007bff;
+  box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.1);
+}
+
+.category-page-sort-select:hover {
+  border-color: #007bff;
+}
+
+/* =================================
+   INFORMACIÓN DE BÚSQUEDA
+   ================================= */
+
+.category-page-search-info {
+  background: linear-gradient(135deg, #e3f2fd 0%, #bbdefb 100%);
+  padding: 15px 20px;
+  border-radius: 12px;
+  margin-bottom: 25px;
+  border-left: 4px solid #2196f3;
+}
+
+.category-page-search-info p {
+  margin: 0;
+  color: #1565c0;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.category-page-clear-search {
+  background: #2196f3;
+  color: white;
+  border: none;
+  padding: 5px 12px;
+  border-radius: 6px;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.category-page-clear-search:hover {
+  background: #1976d2;
+  transform: translateY(-1px);
+}
+
+/* =================================
+   SECCIÓN DE PRODUCTOS
+   ================================= */
+
+.category-page-products-section {
+  background: white;
+  border-radius: 20px;
+  padding: 30px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+  border: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+.category-page-products-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 25px;
+  margin-bottom: 30px;
+}
+
+/* =================================
+   ESTADO SIN RESULTADOS
+   ================================= */
+
+.category-page-no-results {
+  text-align: center;
+  padding: 60px 20px;
+  background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+  border-radius: 15px;
+  border: 2px dashed #dee2e6;
+}
+
+.category-page-no-results-icon {
+  font-size: 4rem;
+  margin-bottom: 20px;
+  opacity: 0.6;
+}
+
+.category-page-no-results h3 {
+  color: #495057;
+  font-size: 1.5rem;
+  margin-bottom: 10px;
+  font-weight: 600;
+}
+
+.category-page-no-results p {
+  color: #6c757d;
+  font-size: 1rem;
+  margin-bottom: 20px;
+  line-height: 1.5;
+  max-width: 500px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.category-page-clear-search-button {
+  background: linear-gradient(135deg, #007bff, #0056b3);
+  color: white;
+  border: none;
+  padding: 12px 25px;
+  border-radius: 25px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-size: 14px;
+}
+
+.category-page-clear-search-button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(0, 123, 255, 0.3);
+}
+
+/* =================================
+   SECCIÓN DE REGRESO
+   ================================= */
+
+.category-page-back-section {
+  text-align: center;
+  margin-top: 40px;
+  padding-top: 30px;
+  border-top: 1px solid #e9ecef;
+}
+
+.category-page-back-home {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  background: linear-gradient(135deg, #6c757d, #495057);
+  color: white;
+  text-decoration: none;
+  padding: 12px 25px;
+  border-radius: 25px;
+  font-weight: 600;
+  transition: all 0.3s ease;
+  font-size: 14px;
+}
+
+.category-page-back-home:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(108, 117, 125, 0.3);
+  text-decoration: none;
+  color: white;
+}
+
+/* =================================
+   ESTADOS DE CARGA Y ERROR
+   ================================= */
+
+.category-page-loading,
+.category-page-error,
+.category-page-not-found {
+  text-align: center;
+  padding: 80px 20px;
+  background: white;
+  border-radius: 20px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+  margin: 40px auto;
+  max-width: 600px;
+}
+
+.category-page-spinner {
+  width: 50px;
+  height: 50px;
+  border: 4px solid #f3f3f3;
+  border-top: 4px solid #007bff;
+  border-radius: 50%;
+  animation: category-page-spin 1s linear infinite;
+  margin: 0 auto 20px;
+}
+
+@keyframes category-page-spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+.category-page-error h2,
+.category-page-not-found h2 {
+  color: #dc3545;
+  margin-bottom: 15px;
+  font-size: 1.8rem;
+}
+
+.category-page-error p,
+.category-page-not-found p {
+  color: #6c757d;
+  margin-bottom: 25px;
+  font-size: 1.1rem;
+}
+
+.category-page-back-button {
+  background: linear-gradient(135deg, #007bff, #0056b3);
+  color: white;
+  text-decoration: none;
+  padding: 12px 25px;
+  border-radius: 25px;
+  font-weight: 600;
+  transition: all 0.3s ease;
+  display: inline-block;
+}
+
+.category-page-back-button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(0, 123, 255, 0.3);
+  text-decoration: none;
+  color: white;
+}
+
+/* =================================
+   RESPONSIVE DESIGN
+   ================================= */
+
+@media (max-width: 768px) {
+  .category-page-container {
+    padding: 15px;
+  }
+
+  .category-page-header {
+    padding: 20px;
+  }
+
+  .category-page-title {
+    font-size: 2rem;
+  }
+
+  .category-page-toolbar {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 15px;
+  }
+
+  .category-page-search-container {
+    max-width: none;
+  }
+
+  .category-page-filters {
+    justify-content: center;
+  }
+
+  .category-page-products-grid {
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 20px;
+  }
+
+  .category-page-products-section {
+    padding: 20px;
+  }
+
+  .category-page-search-info p {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}
+
+@media (max-width: 480px) {
+  .category-page-title {
+    font-size: 1.5rem;
+  }
+
+  .category-page-products-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .category-page-breadcrumb {
+    flex-wrap: wrap;
+  }
+
+  .category-page-sort-select {
+    min-width: 150px;
+  }
+}
+
+/* =================================
+   ANIMACIONES Y EFECTOS
+   ================================= */
+
+.category-page-container * {
+  box-sizing: border-box;
+}
+
+.category-page-products-grid > * {
+  animation: category-page-fadeInUp 0.6s ease forwards;
+  opacity: 0;
+  transform: translateY(20px);
+}
+
+.category-page-products-grid > *:nth-child(1) { animation-delay: 0.1s; }
+.category-page-products-grid > *:nth-child(2) { animation-delay: 0.2s; }
+.category-page-products-grid > *:nth-child(3) { animation-delay: 0.3s; }
+.category-page-products-grid > *:nth-child(4) { animation-delay: 0.4s; }
+.category-page-products-grid > *:nth-child(n+5) { animation-delay: 0.5s; }
+
+@keyframes category-page-fadeInUp {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* =================================
+   ACCESIBILIDAD Y MEJORAS UX
+   ================================= */
+
+.category-page-sort-select:focus,
+.category-page-clear-search:focus,
+.category-page-clear-search-button:focus,
+.category-page-back-home:focus,
+.category-page-back-button:focus {
+  outline: 2px solid #007bff;
+  outline-offset: 2px;
+}
+
+.category-page-breadcrumb-link:focus {
+  outline: 2px solid #007bff;
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .category-page-products-grid > * {
+    animation: none;
+    opacity: 1;
+    transform: none;
+  }
+  
+  .category-page-spinner {
+    animation: none;
+  }
+  
+  * {
+    transition: none !important;
+  }
+}

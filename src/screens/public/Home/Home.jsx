@@ -10,6 +10,63 @@ import useCategories from '../../../components/Search Bar/hook/useCategories';
 import useCart from '../../../screens/public/Cart/hook/useCart';
 import './Home.css';
 
+// Categorías predeterminadas con sus imágenes
+const DEFAULT_CATEGORIES = {
+  'cuidado personal': {
+    id: 'cuidado-personal',
+    name: 'Cuidado Personal',
+    imageUrl: 'https://png.pngtree.com/png-vector/20240903/ourmid/pngtree-a-set-of-personal-care-items-toothbrushes-toothpaste-shampoo-and-bath-png-image_13738435.png'
+  },
+  'alimentos': {
+    id: 'alimentos',
+    name: 'Alimentos',
+    imageUrl: 'https://www.adolescenciasema.org/wp-content/uploads/2023/05/verduras-corazon-adolescente-1.png'
+  },
+  'frutas': {
+    id: 'frutas',
+    name: 'Frutas',
+    imageUrl: 'https://png.pngtree.com/png-vector/20240709/ourmid/pngtree-fruit-varieties-png-image_13034530.png'
+  },
+  'vegetal': {
+    id: 'vegetal',
+    name: 'Vegetales',
+    imageUrl: 'https://static.vecteezy.com/system/resources/previews/048/051/154/non_2x/a-circular-arrangement-of-vegetables-and-fruits-transparent-background-png.png'
+  }
+};
+
+// Imagen por defecto si no se encuentra coincidencia
+const DEFAULT_IMAGE = 'https://via.placeholder.com/300x200?text=Categoría';
+
+// Función para obtener imagen predeterminada basada en el nombre
+const getCategoryImage = (categoryName) => {
+  if (!categoryName) return DEFAULT_IMAGE;
+  
+  // Normalizar el nombre: convertir a minúsculas y quitar espacios extra
+  const normalizedName = categoryName.toLowerCase().trim();
+  
+  // Buscar coincidencia exacta
+  if (DEFAULT_CATEGORIES[normalizedName]) {
+    return DEFAULT_CATEGORIES[normalizedName].imageUrl;
+  }
+  
+  // Buscar coincidencia parcial
+  for (const [key, category] of Object.entries(DEFAULT_CATEGORIES)) {
+    if (normalizedName.includes(key) || key.includes(normalizedName)) {
+      return category.imageUrl;
+    }
+  }
+  
+  return DEFAULT_IMAGE;
+};
+
+// Función para procesar categorías y añadir imágenes predeterminadas
+const processCategories = (categories) => {
+  return categories.map(category => ({
+    ...category,
+    imageUrl: category.imageUrl || getCategoryImage(category.name)
+  }));
+};
+
 // Componente principal Home
 function Home() {
   // Estado para controlar el loading del botón "Explorar Productos"
@@ -17,14 +74,23 @@ function Home() {
   
   // Hooks para obtener datos del backend
   const { products, loading: productsLoading, error: productsError } = useProducts();
-  const { categories, loading: categoriesLoading, error: categoriesError } = useCategories();
+  const { categories: rawCategories, loading: categoriesLoading, error: categoriesError } = useCategories();
   
   // Hook del carrito
   const { addToCart, isInCart, getProductQuantity } = useCart();
   
-  // Estados para productos filtrados
+  // Estados para productos filtrados y categorías procesadas
   const [featuredProducts, setFeaturedProducts] = useState([]);
   const [freshProducts, setFreshProducts] = useState([]);
+  const [categories, setCategories] = useState([]);
+
+  // Efecto para procesar categorías cuando se cargan
+  useEffect(() => {
+    if (rawCategories.length > 0) {
+      const processedCategories = processCategories(rawCategories);
+      setCategories(processedCategories);
+    }
+  }, [rawCategories]);
 
   // Efecto para filtrar productos cuando se cargan
   useEffect(() => {
@@ -32,12 +98,13 @@ function Home() {
       // Productos destacados: primeros 10 productos
       setFeaturedProducts(products.slice(0, 10));
       
-      // Productos frescos: solo categoría "Vegetales" (buscar por nombre de categoría)
-      // Primero necesitamos encontrar el ID de la categoría "Vegetales"
-      const vegetablesCategory = categories.find(cat => 
-        cat.name.toLowerCase().includes('vegetal') || 
-        cat.name.toLowerCase().includes('verdura')
-      );
+      // Productos frescos: buscar categoría "vegetal" o "vegetales"
+      const vegetablesCategory = categories.find(cat => {
+        const categoryName = cat.name.toLowerCase();
+        return categoryName.includes('vegetal') || 
+               categoryName.includes('verdura') ||
+               categoryName.includes('vegetales');
+      });
       
       if (vegetablesCategory) {
         const vegetableProducts = products.filter(product => 
@@ -144,14 +211,14 @@ function Home() {
         <h2>Explora por Categorías</h2>
         {/* Grid de categorías */}
         <div className="categories-grid">
-          {/* Mapeo de categorías desde el backend */}
+          {/* Mapeo de categorías procesadas con imágenes predeterminadas */}
           {categories.length > 0 ? (
             categories.map((category, index) => (
               // Enlace a la página de categoría específica
               <Link to={`/category/${category.id}`} key={category.id}>
                 <CategoriesCard
                   categoryName={category.name} // Nombre de la categoría
-                  imageUrl={category.imageUrl} // Imagen de la categoría
+                  imageUrl={category.imageUrl} // Imagen predeterminada o de la BD
                   index={index} // Índice para estilos únicos
                 />
               </Link>
