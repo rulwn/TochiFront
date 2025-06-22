@@ -60,44 +60,46 @@ const useCart = () => {
 
   // Función para crear un nuevo carrito
   const createCart = async (firstProduct) => {
-    if (!isLoggedIn || !user?.id) return false;
+  if (!isLoggedIn || !user?.id) return false;
 
-    try {
-      const cartData = {
-        idClient: user.id,
-        Products: [{
-          idProduct: firstProduct.id,
-          quantity: firstProduct.selectedQuantity || 1,
-          subtotal: firstProduct.price * (firstProduct.selectedQuantity || 1)
-        }]
-      };
+  try {
+    const initialQuantity = firstProduct.selectedQuantity || 1;
+    
+    const cartData = {
+      idClient: user.id,
+      Products: [{
+        idProduct: firstProduct.id,
+        quantity: initialQuantity, // Usar la cantidad del producto
+        subtotal: firstProduct.price * initialQuantity
+      }]
+    };
 
-      const response = await fetch('http://localhost:4000/api/cart', {
-        method: 'POST',
-        headers: {
-          'Authorization': `Bearer ${localStorage.getItem('authToken')}`,
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(cartData),
-        credentials: 'include'
-      });
+    const response = await fetch('http://localhost:4000/api/cart', {
+      method: 'POST',
+      headers: {
+        'Authorization': `Bearer ${localStorage.getItem('authToken')}`,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(cartData),
+      credentials: 'include'
+    });
 
-      if (response.ok) {
-        const newCart = await response.json();
-        setCartId(newCart.cart._id);
-        setCartItems([{ ...firstProduct, selectedQuantity: firstProduct.selectedQuantity || 1 }]);
-        calculateTotal([{ ...firstProduct, selectedQuantity: firstProduct.selectedQuantity || 1 }]);
-        toast.success('Producto añadido al carrito');
-        return true;
-      } else {
-        throw new Error('Error creating cart');
-      }
-    } catch (error) {
-      console.error('Error creating cart:', error);
-      toast.error('Error al crear el carrito');
-      return false;
+    if (response.ok) {
+      const newCart = await response.json();
+      setCartId(newCart.cart._id);
+      setCartItems([{ ...firstProduct, selectedQuantity: initialQuantity }]);
+      calculateTotal([{ ...firstProduct, selectedQuantity: initialQuantity }]);
+      toast.success('Producto añadido al carrito');
+      return true;
+    } else {
+      throw new Error('Error creating cart');
     }
-  };
+  } catch (error) {
+    console.error('Error creating cart:', error);
+    toast.error('Error al crear el carrito');
+    return false;
+  }
+};
 
   // Función para actualizar el carrito existente
   const updateCart = async (updatedProducts) => {
@@ -144,39 +146,41 @@ const useCart = () => {
 
   // Función para añadir producto al carrito
   const addToCart = async (product) => {
-    if (!isLoggedIn) {
-      toast.error('Debes iniciar sesión para añadir productos al carrito');
-      return false;
-    }
+  if (!isLoggedIn) {
+    toast.error('Debes iniciar sesión para añadir productos al carrito');
+    return false;
+  }
 
-    // Si no hay carrito, crear uno nuevo
-    if (!cartId) {
-      return await createCart(product);
-    }
+  // Si no hay carrito, crear uno nuevo
+  if (!cartId) {
+    return await createCart(product);
+  }
 
-    // Si ya existe el producto en el carrito, incrementar cantidad
-    const existingItemIndex = cartItems.findIndex(item => item.id === product.id);
-    let updatedItems;
+  // Si ya existe el producto en el carrito, incrementar cantidad
+  const existingItemIndex = cartItems.findIndex(item => item.id === product.id);
+  let updatedItems;
 
-    if (existingItemIndex >= 0) {
-      updatedItems = [...cartItems];
-      updatedItems[existingItemIndex].selectedQuantity = 
-        (updatedItems[existingItemIndex].selectedQuantity || 1) + 1;
-    } else {
-      // Añadir nuevo producto
-      updatedItems = [...cartItems, { ...product, selectedQuantity: 1 }];
-    }
+  if (existingItemIndex >= 0) {
+    updatedItems = [...cartItems];
+    // Sumar la cantidad que viene del producto a la cantidad existente
+    const newQuantity = (updatedItems[existingItemIndex].selectedQuantity || 1) + (product.selectedQuantity || 1);
+    updatedItems[existingItemIndex].selectedQuantity = newQuantity;
+  } else {
+    // Añadir nuevo producto respetando la cantidad que viene del producto
+    const quantityToAdd = product.selectedQuantity || 1;
+    updatedItems = [...cartItems, { ...product, selectedQuantity: quantityToAdd }];
+  }
 
-    setCartItems(updatedItems);
-    calculateTotal(updatedItems);
+  setCartItems(updatedItems);
+  calculateTotal(updatedItems);
 
-    // Actualizar en el backend
-    const success = await updateCart(updatedItems);
-    if (success) {
-      toast.success('Producto añadido al carrito');
-    }
-    return success;
-  };
+  // Actualizar en el backend
+  const success = await updateCart(updatedItems);
+  if (success) {
+    toast.success('Producto añadido al carrito');
+  }
+  return success;
+};
 
   // Función para actualizar cantidad de un producto
   const updateCartItem = async (product, isAdding) => {

@@ -43,8 +43,8 @@ const useRegistration = () => {
         formData.append('password', userData.password);
         formData.append('phone', userData.phone);
         formData.append('address', userData.address);
-        formData.append('role', 'cliente');
-        formData.append('image', userData.profileImage);
+        formData.append('role', 'Cliente'); // Corregido: Con mayúscula
+        formData.append('imageUrl', userData.profileImage); // Corregido: cambio de 'image' a 'imageUrl'
         
         requestBody = formData;
         // No establecer Content-Type para FormData
@@ -56,7 +56,7 @@ const useRegistration = () => {
           password: userData.password,
           phone: userData.phone,
           address: userData.address,
-          role: 'cliente'
+          role: 'Cliente' // Corregido: Con mayúscula
         });
         
         headers['Content-Type'] = 'application/json';

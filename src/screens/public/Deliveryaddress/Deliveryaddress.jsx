@@ -1,61 +1,104 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import './Deliveryaddress.css'; // Asegúrate de tener este archivo CSS para estilos
-import { FiChevronLeft, FiMapPin, FiPlus, FiEdit, FiTrash2 } from 'react-icons/fi';
+import useDeliveryAddresses from './hook/useDeliveryAddresses'; 
+
+import './Deliveryaddress.css';
+import { FiChevronLeft, FiMapPin, FiPlus, FiEdit, FiTrash2, FiCheck } from 'react-icons/fi';
 
 function DeliveryAddress() {
   const navigate = useNavigate();
-  const [addresses, setAddresses] = useState([
-    {
-      id: 1,
-      title: 'Casa',
-      address: 'Av. Las Magnolias #123, Colonia Escalón, San Salvador',
-      isDefault: true,
-      contactNumber: '+503 7890-1234'
-    },
-    {
-      id: 2,
-      title: 'Oficina',
-      address: 'Calle Los Pinos #456, Edificio Corporativo, San Salvador',
-      isDefault: false,
-      contactNumber: '+503 7890-5678'
-    }
-  ]);
+  const {
+    addresses,
+    loading,
+    error,
+    addAddress,
+    updateAddress,
+    deleteAddress,
+    setDefaultAddress
+  } = useDeliveryAddresses();
 
   const [showAddForm, setShowAddForm] = useState(false);
+  const [editingAddress, setEditingAddress] = useState(null);
   const [newAddress, setNewAddress] = useState({
     title: '',
     address: '',
     contactNumber: ''
   });
 
-  const handleAddAddress = () => {
+  const handleAddAddress = async () => {
     if (newAddress.title && newAddress.address) {
-      setAddresses([
-        ...addresses,
-        {
-          id: addresses.length + 1,
-          ...newAddress,
-          isDefault: false
-        }
-      ]);
-      setNewAddress({ title: '', address: '', contactNumber: '' });
-      setShowAddForm(false);
+      const result = await addAddress(newAddress);
+      if (result.success) {
+        setNewAddress({ title: '', address: '', contactNumber: '' });
+        setShowAddForm(false);
+      } else {
+        alert(result.message || 'Error al agregar dirección');
+      }
+    } else {
+      alert('Por favor completa el título y la dirección');
     }
   };
 
-  const setAsDefault = (id) => {
-    setAddresses(addresses.map(addr => ({
-      ...addr,
-      isDefault: addr.id === id
-    })));
+  const handleEditAddress = (address) => {
+    setEditingAddress(address);
+    setNewAddress({
+      title: address.title,
+      address: address.address,
+      contactNumber: address.contactNumber || ''
+    });
+    setShowAddForm(true);
   };
 
-  const deleteAddress = (id) => {
-    if (addresses.length > 1) {
-      setAddresses(addresses.filter(addr => addr.id !== id));
+  const handleUpdateAddress = async () => {
+    if (editingAddress && newAddress.title && newAddress.address) {
+      const result = await updateAddress(editingAddress._id, newAddress);
+      if (result.success) {
+        setNewAddress({ title: '', address: '', contactNumber: '' });
+        setShowAddForm(false);
+        setEditingAddress(null);
+      } else {
+        alert(result.message || 'Error al actualizar dirección');
+      }
     }
   };
+
+  const handleSetDefault = async (addressId) => {
+    const result = await setDefaultAddress(addressId);
+    if (!result.success) {
+      alert(result.message || 'Error al establecer dirección por defecto');
+    }
+  };
+
+  const handleDeleteAddress = async (addressId) => {
+    if (window.confirm('¿Estás seguro de que quieres eliminar esta dirección?')) {
+      const result = await deleteAddress(addressId);
+      if (!result.success) {
+        alert(result.message || 'Error al eliminar dirección');
+      }
+    }
+  };
+
+  const cancelForm = () => {
+    setShowAddForm(false);
+    setEditingAddress(null);
+    setNewAddress({ title: '', address: '', contactNumber: '' });
+  };
+
+  if (loading && addresses.length === 0) {
+    return (
+      <div className="delivery-address-container">
+        <header className="delivery-address-header">
+          <button className="back-button" onClick={() => navigate(-1)}>
+            <FiChevronLeft /> Volver
+          </button>
+          <h1>Dirección de Entrega</h1>
+        </header>
+        <div style={{ textAlign: 'center', padding: '2rem' }}>
+          Cargando direcciones...
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="delivery-address-container">
@@ -66,9 +109,22 @@ function DeliveryAddress() {
         <h1>Dirección de Entrega</h1>
       </header>
 
+      {error && (
+        <div className="error-message" style={{ 
+          background: '#ffebee', 
+          color: '#c62828', 
+          padding: '1rem', 
+          borderRadius: '8px', 
+          marginBottom: '1rem',
+          textAlign: 'center'
+        }}>
+          {error}
+        </div>
+      )}
+
       <div className="address-list">
         {addresses.map(address => (
-          <div key={address.id} className={`address-card ${address.isDefault ? 'default' : ''}`}>
+          <div key={address._id} className={`address-card ${address.isDefault ? 'default' : ''}`}>
             <div className="address-header">
               <FiMapPin className="address-icon" />
               <div className="address-title">
@@ -76,11 +132,28 @@ function DeliveryAddress() {
                 {address.isDefault && <span className="default-badge">Predeterminada</span>}
               </div>
               <div className="address-actions">
-                <button className="icon-btn" onClick={() => setAsDefault(address.id)} disabled={address.isDefault}>
+                <button 
+                  className="icon-btn" 
+                  onClick={() => handleEditAddress(address)}
+                  title="Editar dirección"
+                >
                   <FiEdit />
                 </button>
                 {!address.isDefault && (
-                  <button className="icon-btn delete-btn" onClick={() => deleteAddress(address.id)}>
+                  <button 
+                    className="icon-btn" 
+                    onClick={() => handleSetDefault(address._id)}
+                    title="Establecer como predeterminada"
+                  >
+                    <FiCheck />
+                  </button>
+                )}
+                {addresses.length > 1 && (
+                  <button 
+                    className="icon-btn delete-btn" 
+                    onClick={() => handleDeleteAddress(address._id)}
+                    title="Eliminar dirección"
+                  >
                     <FiTrash2 />
                   </button>
                 )}
@@ -89,7 +162,9 @@ function DeliveryAddress() {
             
             <div className="address-details">
               <p>{address.address}</p>
-              <p className="contact-number">Teléfono: {address.contactNumber}</p>
+              {address.contactNumber && (
+                <p className="contact-number">Teléfono: {address.contactNumber}</p>
+              )}
             </div>
             
             {address.isDefault && (
@@ -103,7 +178,7 @@ function DeliveryAddress() {
 
       {showAddForm ? (
         <div className="add-address-form">
-          <h3>Agregar nueva dirección</h3>
+          <h3>{editingAddress ? 'Editar dirección' : 'Agregar nueva dirección'}</h3>
           <div className="form-group">
             <label>Nombre para la dirección (ej. Casa, Oficina)</label>
             <input 
@@ -123,7 +198,7 @@ function DeliveryAddress() {
             />
           </div>
           <div className="form-group">
-            <label>Número de contacto</label>
+            <label>Número de contacto (opcional)</label>
             <input 
               type="text" 
               value={newAddress.contactNumber}
@@ -132,18 +207,41 @@ function DeliveryAddress() {
             />
           </div>
           <div className="form-actions">
-            <button className="cancel-btn" onClick={() => setShowAddForm(false)}>
+            <button 
+              className="cancel-btn" 
+              onClick={cancelForm}
+              disabled={loading}
+            >
               Cancelar
             </button>
-            <button className="save-btn" onClick={handleAddAddress}>
-              Guardar dirección
+            <button 
+              className="save-btn" 
+              onClick={editingAddress ? handleUpdateAddress : handleAddAddress}
+              disabled={loading}
+            >
+              {loading ? 'Guardando...' : (editingAddress ? 'Actualizar dirección' : 'Guardar dirección')}
             </button>
           </div>
         </div>
       ) : (
-        <button className="add-address-btn" onClick={() => setShowAddForm(true)}>
+        <button 
+          className="add-address-btn" 
+          onClick={() => setShowAddForm(true)}
+          disabled={loading}
+        >
           <FiPlus /> Agregar nueva dirección
         </button>
+      )}
+
+      {loading && addresses.length > 0 && (
+        <div style={{ 
+          textAlign: 'center', 
+          padding: '1rem', 
+          color: '#666',
+          fontSize: '0.9rem'
+        }}>
+          Procesando...
+        </div>
       )}
     </div>
   );
