@@ -133,37 +133,35 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
-  const updateUserProfile = async (updatedData) => {
-    if (!user?.id) return false;
+  const updateUserProfile = async (endpoint, formData) => {
+  setIsLoadingUserData(true);
+  try {
+    const response = await fetch(`http://localhost:4000/api/users/${endpoint}`, {
+      method: 'PUT',
+      headers: {
+        'Authorization': `Bearer ${localStorage.getItem('authToken')}`,
+      },
+      body: formData,
+      credentials: 'include'
+    });
 
-    setIsLoadingUserData(true);
-    try {
-      const response = await fetch(`http://localhost:4000/api/users/${user.id}`, {
-        method: 'PUT',
-        headers: {
-          'Authorization': `Bearer ${localStorage.getItem('authToken')}`,
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(updatedData),
-        credentials: 'include'
-      });
-
-      if (!response.ok) {
-        throw new Error('Error al actualizar perfil');
-      }
-
-      const updatedUser = await response.json();
-      setUserDetails(updatedUser);
-      toast.success("Perfil actualizado correctamente");
-      return true;
-    } catch (error) {
-      console.error('Error updating profile:', error);
-      toast.error("Error al actualizar perfil");
-      return false;
-    } finally {
-      setIsLoadingUserData(false);
+    if (!response.ok) {
+      const errorData = await response.json();
+      throw new Error(errorData.message || 'Error al actualizar perfil');
     }
-  };
+
+    const updatedUser = await response.json();
+    setUserDetails(updatedUser.user || updatedUser); // Ajuste para manejar diferentes formatos de respuesta
+    toast.success(updatedUser.message || "Perfil actualizado correctamente");
+    return true;
+  } catch (error) {
+    console.error('Error updating profile:', error);
+    toast.error(error.message || "Error al actualizar perfil");
+    return false;
+  } finally {
+    setIsLoadingUserData(false);
+  }
+};
 
   const checkAuthStatus = async () => {
     const token = localStorage.getItem('authToken');

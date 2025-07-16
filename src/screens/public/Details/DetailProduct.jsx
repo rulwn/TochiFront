@@ -151,12 +151,25 @@ function DetailProduct({ onAddToCart }) {
         });
     };
 
+<<<<<<< HEAD
     // Render star rating
     const renderStars = (rating, interactive = false, onStarClick = null) => {
         return [...Array(5)].map((_, i) => (
             <span
                 key={i}
                 className={`star ${i < rating ? 'filled' : ''} ${interactive ? 'interactive' : ''}`}
+=======
+    // Render star rating - FIXED VERSION
+    const renderStars = (rating, interactive = false, onStarClick = null) => {
+        // Ensure rating is a number and handle edge cases
+        const numericRating = Number(rating) || 0;
+        const clampedRating = Math.max(0, Math.min(5, numericRating));
+        
+        return [...Array(5)].map((_, i) => (
+            <span
+                key={i}
+                className={`star ${i < clampedRating ? 'filled' : ''} ${interactive ? 'interactive' : ''}`}
+>>>>>>> c73afab59a93be00a110f35a137e81805bd1c92a
                 onClick={interactive ? () => onStarClick?.(i + 1) : undefined}
                 style={{ cursor: interactive ? 'pointer' : 'default' }}
             >
@@ -260,11 +273,20 @@ function DetailProduct({ onAddToCart }) {
                                             {/* Review header with author, rating, and date */}
                                             <div className="detail-review-header">
                                                 <div className="detail-review-author">
+<<<<<<< HEAD
                                                     {reviewItem.usersId?.name || reviewItem.usersId?.username || 'Usuario Anónimo'}
                                                 </div>
                                                 {/* Star rating display */}
                                                 <div className="detail-review-rating">
                                                     {renderStars(reviewItem.qualification)}
+=======
+                                                    {reviewItem.usersId?.name || reviewItem.usersId?.username || reviewItem.usersId?.email || 'Usuario Anónimo'}
+                                                </div>
+                                                {/* Star rating display - FIXED: Now uses the correct qualification */}
+                                                <div className="detail-review-rating">
+                                                    {renderStars(reviewItem.qualification)}
+                                                    <span className="rating-number">({reviewItem.qualification}/5)</span>
+>>>>>>> c73afab59a93be00a110f35a137e81805bd1c92a
                                                 </div>
                                                 <div className="detail-review-date">
                                                     {formatDate(reviewItem.createdAt || new Date())}

@@ -25,6 +25,7 @@ function AdminOrders() {
   const [showStatusModal, setShowStatusModal] = useState(false);
   const [newStatus, setNewStatus] = useState('');
   
+  // Estados para el modal de detalles
   const [showDetailsModal, setShowDetailsModal] = useState(false);
   const [selectedOrderDetails, setSelectedOrderDetails] = useState(null);
 
@@ -82,19 +83,6 @@ function AdminOrders() {
     setShowStatusModal(true);
   };
 
-  // Función para obtener el texto del botón de acción rápida
-  const getQuickActionText = (status) => {
-    switch(status) {
-      case 'Pendiente': return 'Confirmar';
-      case 'Confirmado': return 'Procesar';
-      case 'Procesando': return 'Enviar';
-      case 'Enviado': return 'Marcar como entregado';
-      case 'Entregado': return 'Reabrir';
-      case 'Cancelado': return 'Reabrir';
-      default: return 'Procesar';
-    }
-  };
-
   // Componente para mostrar cada orden
   const OrderCard = ({ order }) => (
     <div
@@ -146,10 +134,7 @@ function AdminOrders() {
           </div>
 
           <div className="admin-orders-metric">
-            <span className="admin-orders-delivery-tag">
-              {order.deliveryMethod === 'standard' ? 'Estándar' : 
-               order.deliveryMethod === 'express' ? 'Express' : 'Recoger'}
-            </span>
+            <span className="admin-orders-delivery-tag">{order.deliveryType}</span>
           </div>
         </div>
       </div>
@@ -173,7 +158,8 @@ function AdminOrders() {
               openStatusModalForSingleOrder(order.id, order.status);
             }}
           >
-            {getQuickActionText(order.status)}
+            {order.status === 'Pendiente' ? 'Procesar' :
+              order.status === 'En proceso' ? 'Completar' : 'Reabrir'}
           </button>
         )}
       </div>
@@ -205,7 +191,7 @@ function AdminOrders() {
           <LuSearch className="admin-orders-search-icon" size={20} />
           <input
             type="text"
-            placeholder="Buscar órdenes por ID, cliente o ID de pago..."
+            placeholder="Buscar órdenes por ID o cliente..."
             className="admin-orders-search-input"
             value={searchTerm}
             onChange={e => setSearchTerm(e.target.value)}
@@ -221,9 +207,7 @@ function AdminOrders() {
           >
             <option>Todas</option>
             <option>Pendiente</option>
-            <option>Confirmado</option>
-            <option>Procesando</option>
-            <option>Enviado</option>
+            <option>En proceso</option>
             <option>Entregado</option>
             <option>Cancelado</option>
           </select>
@@ -286,9 +270,7 @@ function AdminOrders() {
               >
                 <option value="">Seleccionar estado</option>
                 <option value="Pendiente">Pendiente</option>
-                <option value="Confirmado">Confirmado</option>
-                <option value="Procesando">Procesando</option>
-                <option value="Enviado">Enviado</option>
+                <option value="En proceso">En proceso</option>
                 <option value="Entregado">Entregado</option>
                 <option value="Cancelado">Cancelado</option>
               </select>
@@ -316,7 +298,7 @@ function AdminOrders() {
         </div>
       )}
 
-      {/* Modal de detalles */}
+      {/* Modal de detalles usando el componente externo */}
       {showDetailsModal && (
         <DetailOrderModal
           orderDetails={selectedOrderDetails}

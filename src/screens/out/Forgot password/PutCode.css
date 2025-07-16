@@ -178,3 +178,66 @@ body {
     display: none !important;
   }
 }
+
+/* Agregar estos estilos a tu PutCode.css existente */
+
+.code-input {
+    width: 50px;
+    height: 50px;
+    text-align: center;
+    font-size: 18px;
+    font-weight: bold;
+    border: 2px solid #ddd;
+    border-radius: 8px;
+    outline: none;
+    transition: border-color 0.3s ease;
+    margin: 0 5px;
+}
+
+.code-input:focus {
+    border-color: #007bff;
+    box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.1);
+}
+
+.code-input:disabled {
+    background-color: #f8f9fa;
+    cursor: not-allowed;
+}
+
+.error-message {
+    background-color: #f8d7da;
+    color: #721c24;
+    padding: 10px;
+    border-radius: 5px;
+    border: 1px solid #f5c6cb;
+    margin: 15px 0;
+    font-size: 14px;
+    text-align: center;
+}
+
+.resend-code-button {
+    background: transparent;
+    border: none;
+    color: #007bff;
+    text-decoration: underline;
+    cursor: pointer;
+    margin: 10px 0;
+    font-size: 14px;
+    padding: 5px;
+    width: 100%;
+}
+
+.resend-code-button:hover:not(:disabled) {
+    color: #0056b3;
+}
+
+.resend-code-button:disabled {
+    color: #6c757d;
+    cursor: not-allowed;
+}
+
+.send-button:disabled {
+    background-color: #6c757d;
+    cursor: not-allowed;
+    opacity: 0.6;
+}

@@ -19,18 +19,36 @@ const useDashboardData = () => {
         setLoading(true);
         setError(null);
 
-        // Fetch ordenes
-        const resOrder = await fetch('https://api-rest-bl9i.onrender.com/api/order');
-        const orders = await resOrder.json();
+        const token = localStorage.getItem('authToken');
+        if (!token) {
+          throw new Error('No authentication token found');
+        }
 
-        // Agrupar ventas por mes
+        const headers = {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json'
+        };
+
+        // Fetch ordenes - usando la nueva estructura
+        const resOrder = await fetch('https://api-rest-bl9i.onrender.com/api/order', {
+          headers
+        });
+        
+        if (!resOrder.ok) {
+          throw new Error(`Error fetching orders: ${resOrder.status}`);
+        }
+        
+        const orderResponse = await resOrder.json();
+        const orders = orderResponse.success ? orderResponse.data : [];
+
+        // Agrupar ventas por mes usando finalTotal
         const monthlySales = {};
         let totalVentas = 0;
 
         orders.forEach(order => {
           const date = new Date(order.createdAt);
           const month = date.getMonth(); // 0 = Ene
-          const amount = order.total || 0;
+          const amount = order.finalTotal || 0; // Cambiado de order.total a order.finalTotal
           monthlySales[month] = (monthlySales[month] || 0) + amount;
           totalVentas += amount;
         });
@@ -41,12 +59,29 @@ const useDashboardData = () => {
           ventas: total
         }));
 
-        // Obtener las últimas 4 órdenes
-        const recent = [...orders].sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt)).slice(0, 4);
+        // Obtener las últimas 4 órdenes y formatearlas para la tabla
+        const recent = [...orders]
+          .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
+          .slice(0, 4)
+          .map(order => ({
+            _id: order._id,
+            clientName: order.cartId?.idClient?.name || 'Cliente',
+            createdAt: order.createdAt,
+            total: order.finalTotal, // Usando finalTotal para mostrar en la tabla
+            state: order.state
+          }));
 
         // Fetch productos
-        const resProducts = await fetch('https://api-rest-bl9i.onrender.com/api/products');
-        const products = await resProducts.json();
+        const resProducts = await fetch('https://api-rest-bl9i.onrender.com/api/products', {
+          headers
+        });
+        
+        if (!resProducts.ok) {
+          throw new Error(`Error fetching products: ${resProducts.status}`);
+        }
+        
+        const productsResponse = await resProducts.json();
+        const products = productsResponse.success ? productsResponse.data : productsResponse;
 
         // Contar los productos más vendidos (simulación por falta de campo real)
         const topProducts = products.slice(0, 4).map(product => ({
@@ -55,8 +90,16 @@ const useDashboardData = () => {
         }));
 
         // Fetch usuarios
-        const resUsers = await fetch('https://api-rest-bl9i.onrender.com/api/users');
-        const users = await resUsers.json();
+        const resUsers = await fetch('https://api-rest-bl9i.onrender.com/api/users', {
+          headers
+        });
+        
+        if (!resUsers.ok) {
+          throw new Error(`Error fetching users: ${resUsers.status}`);
+        }
+        
+        const usersResponse = await resUsers.json();
+        const users = usersResponse.success ? usersResponse.data : usersResponse;
 
         setStats({
           ventasTotales: totalVentas.toFixed(2),
